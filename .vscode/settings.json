@@ -1,0 +1,7 @@
+{
+  "vue3snippets.enable-compile-vue-file-on-did-save-code": true,
+  "i18n-ally.localesPaths": [
+    "public/langs",
+    "src/langs"
+  ]
+}

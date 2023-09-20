@@ -1,0 +1,1 @@
+export * as AUTH from './module/auth'

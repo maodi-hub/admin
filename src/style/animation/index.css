@@ -1,0 +1,9 @@
+.trans-fade-enter-active {
+  transition: opacity 0.5s ease, transform .5s ease;
+}
+
+.trans-fade-enter-from,
+.trans-fade-leave-active {
+  opacity: 0;
+  transform: translateX(10px);
+}

@@ -1,0 +1,97 @@
+[
+  {
+    "path": "/list",
+    "name": "list",
+    "component": "",
+    "meta": {
+      "icon": "Collection",
+      "title": "列表",
+      "activeMenu": "",
+      "isLink": "",
+      "isHide": false,
+      "isFull": false,
+      "isAffix": false,
+      "isKeepAlive": false
+    },
+    "children": [
+      {
+        "path": "/child_list",
+        "name": "child_list",
+        "component": "",
+        "redirect": "/child_list1-1",
+        "meta": {
+          "icon": "Collection",
+          "title": "子列表",
+          "activeMenu": "",
+          "isLink": "",
+          "isHide": false,
+          "isFull": false,
+          "isAffix": false,
+          "isKeepAlive": false
+        },
+        "children": [
+          {
+            "path": "/child_list1-1",
+            "name": "child_list1-1",
+            "component": "/child_list/index",
+            "meta": {
+              "icon": "Collection",
+              "title": "子列表1-1",
+              "activeMenu": "",
+              "isLink": "",
+              "isHide": false,
+              "isFull": false,
+              "isAffix": false,
+              "isKeepAlive": false
+            }
+          }
+        ]
+      },
+      {
+        "path": "/child_list1",
+        "name": "child_list1",
+        "component": "/child_list/index",
+        "meta": {
+          "icon": "Collection",
+          "title": "子列表2",
+          "activeMenu": "",
+          "isLink": "",
+          "isHide": false,
+          "isFull": false,
+          "isAffix": false,
+          "isKeepAlive": false
+        }
+      },
+      {
+        "path": "/table",
+        "name": "stable",
+        "component": "/table/index",
+        "meta": {
+          "icon": "Collection",
+          "title": "表格",
+          "activeMenu": "",
+          "isLink": "",
+          "isHide": false,
+          "isFull": false,
+          "isAffix": false,
+          "isKeepAlive": true
+        }
+      }
+    ]
+  },
+  {
+    "path": "/dialog",
+    "name": "dialog1",
+    "component": "/dialog/index",
+    "meta": {
+      "icon": "Collection",
+      "title": "对话框",
+      "activeMenu": "",
+      "isLink": "",
+      "isHide": false,
+      "isFull": false,
+      "isAffix": false,
+      "isKeepAlive": false
+    }
+  }
+]

@@ -1,0 +1,119 @@
+.container {
+  padding: 10px;
+}
+
+.m-main.container {
+  background-color: #e9ecef;
+}
+
+.full-page {
+  height: 100%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.flex {
+  display: flex;
+}
+
+.jc-center {
+  justify-content: center;
+}
+
+.jc-between {
+  justify-content: space-between;
+}
+
+.jc-around {
+  justify-content: space-around;
+}
+
+.jc-end {
+  justify-content: flex-end;
+}
+
+.jc-start {
+  justify-content: flex-start;
+}
+
+.ac-center {
+  align-content: center;
+}
+
+.ac-between {
+  align-content: space-between;
+}
+
+.ac-around {
+  align-content: space-around;
+}
+
+.ac-end {
+  align-content: flex-end;
+}
+
+.ac-start {
+  align-content: flex-start;
+}
+
+.ai-center {
+  align-items: center;
+}
+
+.ai-start {
+  align-items:flex-start;
+}
+
+.ai-end {
+  align-items: flex-end;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.fd-column {
+  flex-direction: column;
+}
+
+.fd-row {
+  flex-direction: row;
+}
+
+.gap-5 {
+  gap: 5px
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.gap-20 {
+  gap: 20px
+}
+
+.p-5 {
+  padding: 5px;
+}
+
+.p-10 {
+  padding: 10px;
+}
+
+.p-15 {
+  padding: 15px;
+}
+
+.p-20 {
+  padding: 20px;
+}
+
+.min-h-0 {
+  min-height: 0;
+}
+
+.min-w-0 {
+  min-width: 0;
+}
