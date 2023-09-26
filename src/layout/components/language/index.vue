@@ -29,11 +29,15 @@ import img_language from "@/assets/icons/language.png?inline";
 
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElImage } from "element-plus";
 
-import { useLanguage } from "@/hooks/useLanguage";
-
 import { computed, unref } from "vue";
 
-const { messages, LANGUAGE_CONFIG, setI18nLocale } = useLanguage();
+import { useI18n } from "vue-i18n";
+
+import { setI18nLocale } from "@/langs";
+
+import { LANGUAGE_CONFIG } from "./const";
+
+const { messages } = useI18n();
 
 const language_options = computed(() => {
   return Object.keys(unref(messages)).map((lang) => {
