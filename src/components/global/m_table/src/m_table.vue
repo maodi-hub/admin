@@ -1,38 +1,20 @@
 <template>
   <div class="m-table" :class="{ unset_height }">
     <div class="m-table__wrapper" :class="{ unset_height }">
-      <div
-        class="m-table__content flex fd-column gap-5"
-        :class="{ unset_height }"
-      >
+      <div class="m-table__content flex fd-column gap-5" :class="{ unset_height }">
         <div class="m-table__form p-10">
           <slot name="table_form"></slot>
         </div>
-        <div
-          class="m-table__main flex-1 min-h-0 min-w-0"
-          :class="{ unset_height: !max_height && table_height != '100%' }"
-        >
-          <ElTable
-            v-bind="merge_table_config"
-            :height="getHeight.height"
-            :max-height="getHeight.maxHeight"
-            :data="table_data"
-            v-loading="loading"
-            v-bottom-loading="table_config.onLoadMore"
-            ref="table_ref"
-          >
-            <template
-              v-for="(col, col_index) in columns"
-              :key="col['column-key'] || col_index"
-            >
-              <ElTableColumn v-bind="col" :align="col?.align || 'center'">
-                <template #header="scope">
-                  <component :is="HeaderColumn(col, scope)"></component>
+        <div class="m-table__main flex-1 min-h-0 min-w-0"
+          :class="{ unset_height: !max_height && table_height != '100%' }">
+          <ElTable v-bind="merge_table_config" :height="getHeight.height" :max-height="getHeight.maxHeight"
+            :data="table_data" v-loading="loading" v-bottom-loading="table_config.onLoadMore" ref="table_ref">
+            <template v-for="(col, col_index) in columns" :key="col['column-key'] || col_index">
+              <TableColumn v-bind="col">
+                <template v-for="slot in Object.keys($slots)" #[slot]="scope">
+                  <slot :name="slot" v-bind="scope" />
                 </template>
-                <template #default="scope">
-                  <component :is="ColColumn(col, scope)"></component>
-                </template>
-              </ElTableColumn>
+              </TableColumn>
             </template>
           </ElTable>
         </div>
@@ -45,17 +27,17 @@
 </template>
 
 <script setup lang="ts" generic="D">
-import { ElTable, ElTableColumn } from "element-plus";
+import { ElTable } from "element-plus";
 import MPaginaiton from "./m_pagination.vue";
 
 import { computed, unref } from "vue";
 
-import { HeaderColumn, ColColumn } from "./render";
+import { TableColumn } from "./render";
 
 import { vLoading } from "element-plus";
 import { vBottomLoading } from "./directives";
 
-import { useForm } from "./hooks/useForm";
+import { useForm } from "../../m_form";
 import { useTable } from "./hooks/useTable";
 import { useRefs } from "@/hooks/useRefs";
 
@@ -77,7 +59,6 @@ const $props = withDefaults(defineProps<Prop>(), {
   columns: () => [],
 });
 
-const { form } = useForm<"table">($props.columns);
 const {
   handleFetchData,
   handleSetPagenation,
@@ -126,11 +107,14 @@ defineExpose({
 <style scoped lang="less">
 .m-table {
   height: 100%;
+
   &__wrapper {
     height: 100%;
   }
+
   &__content {
     height: 100%;
+
     .m-table__form {
       background-color: #fff;
     }
@@ -142,3 +126,4 @@ defineExpose({
   height: unset;
 }
 </style>
+../../m_form/src/hooks/useForm

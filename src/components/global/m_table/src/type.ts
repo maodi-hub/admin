@@ -22,16 +22,15 @@ type ElTableType = InstanceType<typeof ElTable>["$props"];
 type ElPaginationType = InstanceType<typeof ElPagination>["$props"];
 
 interface RenderType {
-  type?: ("form" | 'column')[];
-  layout?: {
-
-  } 
+  type?: ("form" | "column")[];
+  layout?: {};
 }
 
-interface TableColumnType<D = any> extends Omit<ElTableColumnType, "renderHeader"> {
+interface TableColumnType<D = any>
+  extends Omit<ElTableColumnType, "renderHeader"> {
   render_header?: (data: HeaderRenderScopeType<D>) => VNode;
   render_cell?: (data: RenderScopeType<D>) => VNode;
-  renderType?: RenderType
+  renderType?: RenderType;
 }
 
 interface TableType<D = any>
@@ -67,28 +66,13 @@ interface TableType<D = any>
   handleProcseeData?: (...arg: any) => D[];
 }
 
-interface PaginationType
-  extends Pick<
-    ElPaginationType,
-    | "defaultCurrentPage"
-    | "defaultPageSize"
-    | "hideOnSinglePage"
-    | "currentPage"
-    | "disabled"
-    | "background"
-    | "onCurrent-change"
-    | "onSize-change"
-    | "onNext-click"
-    | "onPrev-click"
-    | "pageCount"
-    | "pageSize"
-    | "pagerCount"
-    | "pageSizes"
-    | "total"
-  > {
-    layout: string[]
-    [x: string]: any
-  }
+interface PaginationType {
+  currentPage: number;
+  pageSize: number;
+  pageSizes: number[];
+  total: number;
+  layout: string[];
+}
 
 interface UseTableHookConfigType<D = any> {
   table_data: D[];
@@ -102,5 +86,5 @@ export type {
   RenderScopeType,
   HeaderRenderScopeType,
   UseTableHookConfigType,
-  PaginationType
+  PaginationType,
 };

@@ -2,19 +2,12 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 
 import { useGlobalStore } from "@/store/modules/global";
-import { useUserStore } from "@/store/modules/user";
-import { useMenuStore } from "@/store/modules/menu";
-
-import { AUTH } from "@/api";
-import { ElMessage } from "element-plus";
 
 type ToLoginType = Omit<Auth.LoginDTO, "verifyCode"> & { verifyCode: string };
 
 export function useLogin() {
   const $router = useRouter();
   const $global = useGlobalStore();
-  const $user = useUserStore();
-  const $menu = useMenuStore();
 
   const login_loading = ref(false);
   const form = reactive<ToLoginType>({
@@ -33,14 +26,7 @@ export function useLogin() {
     }
     login_loading.value = true;
     try {
-      const res = await toLogin(payload);
-      $global.setToken(res.token);
-      $user.setUserInfo(res);
-
-      const permission_list = await getPermissionList(
-        $user.getUserInfoByKey("roleId")
-      );
-      $menu.setPermission(permission_list.permissions);
+      $global.setToken('12332');
 
       $router.push("/home");
     } finally {
@@ -53,35 +39,4 @@ export function useLogin() {
     login_loading,
     handleLogin,
   };
-}
-
-async function toLogin(payload: ToLoginType) {
-  const param = {
-    ...payload,
-    verifyCode: +payload.verifyCode,
-  };
-  const { code, data, msg } = await AUTH.login(param);
-  if (!!code) {
-    ElMessage.warning(msg);
-    throw msg;
-  }
-  const { token, expiresAt, user } = data!;
-  const userInfo = {
-    token,
-    expiresAt,
-    ...user,
-  };
-  return userInfo;
-}
-
-async function getPermissionList(id: number) {
-  const param = {
-    id,
-  };
-  const { code, data, msg } = await AUTH.getPermission(param);
-  if (!!code) {
-    ElMessage.warning(msg);
-    throw msg;
-  }
-  return data!;
 }

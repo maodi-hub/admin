@@ -1,5 +1,5 @@
 import { MaybeRef, ref } from "vue";
-import type { TableColumnType } from "../type"; 
+import type { TableColumnType } from "../../../m_table/src/type"; 
 
 type GetFormParamType<T extends 'table' | 'form'> = T extends 'table' ? TableColumnType[] : Record<string, unknown>
 

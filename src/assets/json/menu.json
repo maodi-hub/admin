@@ -1,101 +1,11 @@
 [
   {
-    "path": "/account",
-    "name": "account",
-    "component": "/account_management/index",
+    "path": "/table",
+    "name": "table",
+    "component": "/table/index",
     "meta": {
       "icon": "Memo",
-      "title": "账号管理",
-      "activeMenu": "",
-      "isLink": "",
-      "isHide": false,
-      "isFull": false,
-      "isAffix": false,
-      "isKeepAlive": false
-    }
-  },
-  {
-    "path": "/user",
-    "name": "user",
-    "component": "/user_management/index",
-    "meta": {
-      "icon": "Memo",
-      "title": "用户管理",
-      "activeMenu": "",
-      "isLink": "",
-      "isHide": false,
-      "isFull": false,
-      "isAffix": false,
-      "isKeepAlive": false
-    }
-  },
-  {
-    "path": "/section",
-    "name": "section",
-    "component": "/section_management/index",
-    "meta": {
-      "icon": "Memo",
-      "title": "部门管理",
-      "activeMenu": "",
-      "isLink": "",
-      "isHide": false,
-      "isFull": false,
-      "isAffix": false,
-      "isKeepAlive": false
-    }
-  },
-  {
-    "path": "/menu",
-    "name": "menu",
-    "component": "/menu_management/index",
-    "meta": {
-      "icon": "Collection",
-      "title": "菜单管理",
-      "activeMenu": "",
-      "isLink": "",
-      "isHide": false,
-      "isFull": false,
-      "isAffix": false,
-      "isKeepAlive": false
-    }
-  },
-  {
-    "path": "/role",
-    "name": "role",
-    "component": "/role_management/index",
-    "meta": {
-      "icon": "Collection",
-      "title": "角色管理",
-      "activeMenu": "",
-      "isLink": "",
-      "isHide": false,
-      "isFull": false,
-      "isAffix": false,
-      "isKeepAlive": false
-    }
-  },
-  {
-    "path": "/operator",
-    "name": "operator",
-    "component": "/operator_management/index",
-    "meta": {
-      "icon": "Collection",
-      "title": "运营商列表",
-      "activeMenu": "",
-      "isLink": "",
-      "isHide": false,
-      "isFull": false,
-      "isAffix": false,
-      "isKeepAlive": false
-    }
-  },
-  {
-    "path": "/operator_child",
-    "name": "operator_child",
-    "component": "/child_operator_management/index",
-    "meta": {
-      "icon": "Collection",
-      "title": "子运营商列表",
+      "title": "表格",
       "activeMenu": "",
       "isLink": "",
       "isHide": false,

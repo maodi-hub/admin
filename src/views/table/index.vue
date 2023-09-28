@@ -33,13 +33,9 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
     render_cell({ row }) {
       return h("div", row[1] + "123");
     },
-    renderType: {
-      type: ["column"],
-      layout: {},
-    },
   },
   {
-    label: "asdasd2",
+    label: "asdasd10",
     prop: "2",
   },
   {

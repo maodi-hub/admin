@@ -1,21 +1,40 @@
-import type { TableColumnType, HeaderRenderScopeType, RenderScopeType } from "./type";
+import { ElTableColumn } from "element-plus";
 
-export function HeaderColumn(
-  tableColumn: TableColumnType,
-  scope: HeaderRenderScopeType<any>
-) {
-  const { render_header } = tableColumn;
+import type {
+  TableColumnType,
+  HeaderRenderScopeType,
+  RenderScopeType,
+} from "./type";
 
-  if (render_header) return tableColumn.render_header!(scope)
-  return <>{tableColumn?.label || ""}</>;
-}
+import { useSlots } from "vue";
 
-export function ColColumn(
-  tableColumn: TableColumnType,
-  scope: RenderScopeType<any>
-) {
-  const { render_cell } = tableColumn;
-  const row = scope.row || {};
-  if (render_cell) return tableColumn.render_cell!(scope);
-  return <>{row[tableColumn?.prop || ""]}</>;
+export function TableColumn(columnType: TableColumnType) {
+  const $slots = useSlots();
+  return (
+    <ElTableColumn
+      {...columnType}
+      align={columnType.align ?? "center"}
+      showOverflowTooltip={
+        columnType.showOverflowTooltip ?? columnType.prop !== "operation"
+      }
+    >
+      {{
+        default: (scope: RenderScopeType<any>) => {
+          debugger;
+          const { render_cell, prop } = columnType;
+          const row = scope.row || {};
+          if (render_cell) return render_cell(scope);
+          if ($slots[`${prop!}_col`]) return $slots[`${prop!}_col`]!(scope);
+          return row[prop!] || "--";
+        },
+        header: (scope: HeaderRenderScopeType<any>) => {
+          const { render_header, prop } = columnType;
+          if (render_header) return render_header(scope);
+          if ($slots[`${prop!}_header`])
+            return $slots[`${prop!}_header`]!(scope);
+          return columnType.label || "--";
+        },
+      }}
+    </ElTableColumn>
+  );
 }

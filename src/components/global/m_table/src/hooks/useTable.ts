@@ -3,6 +3,7 @@ import { reactive, toRefs } from "vue";
 import request from "@/api/config";
 
 import type { UseTableHookConfigType, TableType } from "../type";
+import { isArray } from "@/utils/is";
 
 interface DefaultProps {
   table_config: Pick<TableType, "handleLoadData" | "handleProcseeData">;
@@ -53,20 +54,15 @@ export const useTable = <D = any>($props: DefaultProps) => {
     return () => request.send(payload);
   };
 
-  const handleSetPagenation = (
+  const handleSetPagenation = <
+    K extends keyof UseTableHookConfigType["pagination"]
+  >(
     payload: Partial<UseTableHookConfigType["pagination"]>
   ) => {
     for (let [key, val] of Object.entries(payload)) {
       if (!config.pagination.hasOwnProperty(key)) continue;
-
-      const keyType = typeof config.pagination[key];
-      let newVal: number | (number | string)[];
-      if (keyType == "object") {
-        newVal = val ?? [];
-      } else {
-        newVal = val ?? 0;
-      }
-      config.pagination[key] = newVal;
+      config.pagination[key as K] =
+        val as UseTableHookConfigType["pagination"][K];
     }
   };
 
