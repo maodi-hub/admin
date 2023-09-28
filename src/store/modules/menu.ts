@@ -18,6 +18,7 @@ export const useMenuStore = defineStore({
     menu_tags: [
       { path: "/home", name: "home", query: {}, params: {}, meta: HOME.meta },
     ],
+    permissions: [],
     exclude_keep_route: [],
     reload: true,
   }),
@@ -112,6 +113,9 @@ export const useMenuStore = defineStore({
     },
     setCollapse(payload: boolean) {
       this.collapse = payload;
+    },
+    setPermission(payload: string[]) {
+      this.permissions = payload;
     },
     async getMenuWithReq() {
       const menu = await AUTH.getAuthMenu();

@@ -1,14 +1,24 @@
-import request from '../config';
+import request from "../config";
+
 import MENU_LIST from "@/assets/json/menu.json";
 
-export const verify = () => {}
+export const verify = () => {};
 
-export const Login = (payload: any) => {
+//  登录
+export const login = (payload: Auth.LoginDTO) => {
+  return request.post<Auth.LoginVO>("/base/login", payload);
+};
 
-}
- 
-export const LogOut = () => {}
+// 退出
+export const logOut = () => {
+  return request.post("/sysUser/jsonInBlacklist");
+};
+
+// 获取权限列表
+export const getPermission = (payload: Auth.PermissionDTO) => {
+  return request.get<Auth.PermissionVO>("/sysUser/getPermissions", payload);
+};
 
 export const getAuthMenu = async () => {
-  return MENU_LIST
+  return MENU_LIST;
 };

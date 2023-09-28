@@ -1,7 +1,13 @@
 <template>
   <div class="m-table" :class="{ unset_height }">
     <div class="m-table__wrapper" :class="{ unset_height }">
-      <div class="m-table__content flex fd-column gap-5" :class="{ unset_height }">
+      <div
+        class="m-table__content flex fd-column gap-5"
+        :class="{ unset_height }"
+      >
+        <div class="m-table__form p-10">
+          <slot name="table_form"></slot>
+        </div>
         <div
           class="m-table__main flex-1 min-h-0 min-w-0"
           :class="{ unset_height: !max_height && table_height != '100%' }"
@@ -80,7 +86,9 @@ const {
   loading,
 } = useTable($props);
 
-const { componentRefs } = useRefs<{ table_ref: InstanceType<typeof ElTable> }>();
+const { componentRefs } = useRefs<{
+  table_ref: InstanceType<typeof ElTable>;
+}>();
 
 const DEFAULT_TABLE_CONFIG = {
   border: true,
@@ -123,6 +131,9 @@ defineExpose({
   }
   &__content {
     height: 100%;
+    .m-table__form {
+      background-color: #fff;
+    }
   }
 }
 
@@ -131,4 +142,3 @@ defineExpose({
   height: unset;
 }
 </style>
-./hooks/hooks

@@ -4,17 +4,33 @@ import { USER } from "./const";
 
 import { UserState } from "../interface";
 
-export default defineStore({
-	id: USER,
-	state: (): UserState => ({
-		info: { account: "", nick_name: "" }
-	}),
-	getters: {},
-	actions: {
-    setUserInfo(payload: Partial<UserState['info']>) {
-      for (let [key, value] of Object.entries(payload)) {
-        this.info[key as keyof typeof payload] = value ?? ""
-      }
-    }
-	}
+export const useUserStore = defineStore({
+  id: USER,
+  state: (): UserState => ({
+    info: {
+      id: 0,
+      createdAt: "",
+      updatedAt: "",
+      username: "",
+      password: "",
+      nickName: "",
+      roleId: 0,
+      status: 0,
+      isPhone: 0,
+      isBankCard: 0,
+      deptId: 0,
+      googleAuthKey: "",
+      token: "",
+      expiresAt: 0,
+    },
+  }),
+  getters: {},
+  actions: {
+    setUserInfo(payload: UserState["info"]) {
+      this.info = payload;
+    },
+    getUserInfoByKey<K extends keyof UserState["info"]>(payload: K) {
+      return this.info[payload] as UserState["info"][K];
+    },
+  },
 });

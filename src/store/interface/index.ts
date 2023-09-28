@@ -3,6 +3,7 @@ import type { RouteLocationNormalizedLoaded } from "vue-router";
 export interface GlobalState {
   token: string;
   size: "large" | "small" | "default" | "";
+  language: string;
 }
 
 export interface LoadingState {
@@ -19,9 +20,10 @@ export interface MenuState {
   > &
     Partial<Pick<Menu.MenuOptions, "meta" | "redirect">>)[];
   exclude_keep_route: string[];
+  permissions: string[];
   reload: boolean;
 }
 
 export interface UserState {
-  info: { account: string; nick_name: string };
+  info: Omit<Auth.LoginVO, "user"> & Auth.LoginVO["user"];
 }

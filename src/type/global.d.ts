@@ -1,4 +1,4 @@
-type MetaGlobTypeWithDefault<T> = Record<string, { default: T }>
+type MetaGlobTypeWithDefault<T> = Record<string, { default: T }>;
 
 /* Menu */
 declare namespace Menu {
@@ -21,3 +21,9 @@ declare namespace Menu {
     isKeepAlive: boolean;
   }
 }
+
+declare interface ViteEnv {
+  readonly VITE_API: string;
+}
+
+interface ImportMetaEnv extends ViteEnv {}

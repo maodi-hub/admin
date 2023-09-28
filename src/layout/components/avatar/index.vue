@@ -23,12 +23,20 @@
 </template>
 
 <script setup lang="ts">
-import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElAvatar } from "element-plus";
+import {
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
+  ElAvatar,
+  ElMessage,
+} from "element-plus";
 
 import { useRouter } from "vue-router";
 
 import { useGlobalStore } from "@/store/modules/global";
 import { useMenuStore } from "@/store/modules/menu";
+
+import { AUTH } from "@/api";
 
 const $router = useRouter();
 const $global = useGlobalStore();
@@ -42,10 +50,16 @@ const size_options = [
 const operation: Record<string, () => void> = {
   edit_password: () => {},
   quit: () => {
-    $global.setToken("");
-    $menu.setMenu([]);
-    $menu.resetMenuTag();
-    $router.replace("/login");
+    AUTH.logOut().then((res) => {
+      if (res.code) {
+        ElMessage.error("退出失败");
+        return;
+      }
+      $global.setToken("");
+      $menu.setMenu([]);
+      $menu.resetMenuTag();
+      $router.replace("/login");
+    });
   },
 };
 

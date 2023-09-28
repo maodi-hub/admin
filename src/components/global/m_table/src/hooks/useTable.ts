@@ -3,7 +3,6 @@ import { reactive, toRefs } from "vue";
 import request from "@/api/config";
 
 import type { UseTableHookConfigType, TableType } from "../type";
-import type { ResultData } from "@/api/interface";
 
 interface DefaultProps {
   table_config: Pick<TableType, "handleLoadData" | "handleProcseeData">;
@@ -39,7 +38,6 @@ export const useTable = <D = any>($props: DefaultProps) => {
       data = handleProcseeData ? handleProcseeData(data) : data;
 
       config.table_data = data;
-
     } catch (error: any) {
       // do something
     } finally {

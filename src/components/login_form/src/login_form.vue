@@ -4,21 +4,40 @@
       <div class="login-form__content">
         <Transition name="el-fade-in-linear" appear>
           <ElForm :model="form" :rules="rules" ref="formRef">
-            <ElFormItem key="account" prop="account">
-              <ElInput type="text" v-model="form.account">
+            <ElFormItem prop="username">
+              <ElInput
+                type="text"
+                v-model="form.username"
+                placeholder="请输入账号"
+              >
                 <template #prefix>
                   <m-icon name="User" />
                 </template>
               </ElInput>
             </ElFormItem>
-            <ElFormItem key="password" prop="password">
-              <ElInput type="password" v-model="form.password">
+            <ElFormItem prop="password">
+              <ElInput
+                type="password"
+                v-model="form.password"
+                placeholder="请输入密码"
+                show-password
+              >
                 <template #prefix>
                   <m-icon name="Lock" />
                 </template>
               </ElInput>
             </ElFormItem>
-            <ElFormItem key="operation">
+            <ElFormItem prop="verifyCode">
+              <ElInput
+                v-model.number="form.verifyCode"
+                placeholder="请输入验证码"
+              >
+                <template #prefix>
+                  <m-icon name="Help" />
+                </template>
+              </ElInput>
+            </ElFormItem>
+            <ElFormItem>
               <div class="flex-1 flex gap-10">
                 <ElButton
                   class="flex-1"
@@ -30,7 +49,12 @@
                 >
                   登录
                 </ElButton>
-                <ElButton class="flex-1" round icon="Setting" @click="handleReset">
+                <ElButton
+                  class="flex-1"
+                  round
+                  icon="Setting"
+                  @click="handleReset"
+                >
                   重置
                 </ElButton>
               </div>
@@ -61,6 +85,10 @@ const rules: FormRules = {
   password: [
     { required: true, message: "密码不允许为空", trigger: "change" },
     { min: 6, max: 18, message: "密码长度在6-18位" },
+  ],
+  code: [
+    { required: true, message: "验证码不允许为空", trigger: "change" },
+    { min: 6, max: 6, message: "验证码长度为6位" },
   ],
 };
 

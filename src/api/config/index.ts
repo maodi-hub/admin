@@ -4,9 +4,9 @@ import axios, {
   AxiosRequestConfig,
   AxiosResponse,
 } from "axios";
-import { ResultData } from "../interface";
 import { ElMessage } from "element-plus";
 import { AxiosCanceler } from "../helper/axiosCancel";
+import { checkCode } from "../helper/checkCode";
 
 import { useGlobalStore } from "@/store/modules/global";
 import { isFunction } from "@/utils/is";
@@ -15,9 +15,9 @@ const axiosCancel = new AxiosCanceler();
 
 const config = {
   timeout: 30000,
-  baseURL: "/API",
+  baseURL: import.meta.env.VITE_API,
   // 跨域时候允许携带凭证
-  withCredentials: true,
+  // withCredentials: true,
 };
 
 class HttpRequest {
@@ -26,13 +26,14 @@ class HttpRequest {
     this.service = axios.create(config);
     this.service.interceptors.request.use(
       (config) => {
-        const { token } = useGlobalStore();
+        const { token, language } = useGlobalStore();
 
         axiosCancel.addPending(config);
 
-        token &&
-          isFunction(config.headers.set) &&
-          config.headers.set("access-token", token);
+        if (isFunction(config.headers.set)) {
+          token && config.headers.set("x-token", token);
+          language && config.headers.set("Accept-Language", language);
+        }
 
         return config;
       },
@@ -53,9 +54,10 @@ class HttpRequest {
 
         return data;
       },
-      async (error: AxiosError<{ msg: string }>) => {
+      async (error: AxiosError) => {
         console.log(error, "error");
-
+        const { code } = error;
+        ElMessage.error(checkCode(code!));
         return Promise.reject(error);
       }
     );
@@ -67,28 +69,28 @@ class HttpRequest {
 
   get<T>(
     url: string,
-    params?: Record<string, unknown>,
+    params?: any,
     _object: AxiosRequestConfig = {}
   ): Promise<ResultData<T>> {
     return this.service.get(url, { params, ..._object });
   }
   post<T>(
     url: string,
-    params?: Record<string, unknown>,
+    params?: any,
     _object: AxiosRequestConfig = {}
   ): Promise<ResultData<T>> {
     return this.service.post(url, params, _object);
   }
   put<T>(
     url: string,
-    params?: Record<string, unknown>,
+    params?: any,
     _object: AxiosRequestConfig = {}
   ): Promise<ResultData<T>> {
     return this.service.put(url, params, _object);
   }
   delete<T>(
     url: string,
-    params?: Record<string, unknown>,
+    params?: any,
     _object: AxiosRequestConfig = {}
   ): Promise<ResultData<T>> {
     return this.service.delete(url, { params, ..._object });
