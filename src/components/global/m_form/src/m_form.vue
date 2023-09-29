@@ -15,8 +15,9 @@
         </template>
 
         <MFormItem :config="item" :params="params">
-          <template #[`${item.prop}_prefix`]>
-            <slot :name="`${item.prop}_prefix`"></slot>
+          <template v-for="slotKey in ['prefix', 'suffix']" :key="slotKey"
+            #[`${item.prop}_${slotKey}`]>
+            <slot :name="`${item.prop}_${slotKey}`"></slot>
           </template>
         </MFormItem>
       </ElFormItem>

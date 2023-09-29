@@ -11,6 +11,7 @@ interface BaseType {
   readonly?: boolean;
   size?: "default" | "large" | "size";
   tips?: string | (() => VNode);
+  clearable?: boolean;
   [x: string]: any;
 }
 
@@ -41,6 +42,24 @@ interface TextAreaType extends Omit<BaseInputType, "size"> {
   autosize?: boolean | { minRows: number; maxRows: number };
 }
 
+interface SelectionType extends BaseType, Pick<InputType, 'suffixIcon' | 'prefix' | 'placeholder'> {
+  el_type: "select";
+  type: "selection";
+  multiple?: boolean;
+  valueKey?: string;
+  collapseTags?: boolean;
+  collapseTagsTooltip?: boolean;
+  multipleLimit?: number;
+  filterable?: boolean;
+  allowCreate?: boolean;
+  filterMethod?: () => void;
+  remote?: boolean;
+  remoteMethod?: () => void;
+  defaultFirstOption?: boolean;
+  fitInputWidth?: boolean;
+  maxCollapseYags?: number;
+}
+
 interface FormBaseConfigType {
   labelWidth: string | number;
   labelPosition: "top" | "left" | "right";
@@ -51,10 +70,17 @@ interface FormBaseConfigType {
   size: "default" | "large" | "small";
 }
 
+type FormItemType = InputType | TextAreaType | SelectionType
+
 interface FormConfigPropType {
   base_config?: Partial<FormBaseConfigType>;
   params?: Record<string, any>;
-  formItems?: (InputType | TextAreaType)[];
+  formItems?: FormItemType[];
 }
 
-export type { FormConfigPropType, TextAreaType, InputType, RenderSlotType, BaseType };
+interface FormItemPropType {
+  params: Record<string, any>
+  config: FormItemType
+}
+
+export type { FormConfigPropType, FormItemPropType, TextAreaType, InputType, SelectionType, RenderSlotType, BaseType };

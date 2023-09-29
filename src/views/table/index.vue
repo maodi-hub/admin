@@ -22,7 +22,8 @@ const form_config = reactive<FormConfigPropType>({
   base_config: { inline: true },
   params: {
     a: "asd",
-    b: 'asdasd'
+    b: 'asdasd',
+    c: ""
   },
   formItems: [
     {
@@ -31,23 +32,13 @@ const form_config = reactive<FormConfigPropType>({
       prop: "a",
       label: "asdasd",
       placeholder: "ahdhasdh",
-      rule: {
-        required: true,
-        message: "asdas",
-        trigger: "blur"
-      }
     },
     {
-      type: "textarea",
-      el_type: "input",
-      prop: "b",
-      label: "文本框",
-      placeholder: "ahdhasdh",
-      rule: {
-        required: true,
-        message: "asdas",
-        trigger: "blur"
-      }
+      type: "selection",
+      el_type: "select",
+      prop: "c",
+      placeholder: "请选择",
+      label: "下拉选框",
     }
   ]
 })

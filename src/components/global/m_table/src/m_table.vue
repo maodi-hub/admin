@@ -4,8 +4,7 @@
       <div class="m-table__content flex fd-column gap-5" :class="{ unset_height }">
         <div class="m-table__form p-10" v-if="show_form">
           <slot name="table_form" :form_param="form_config.params">
-            <MForm v-bind="form_config">
-            </MForm>
+            <MForm v-bind="form_config"/>
           </slot>
         </div>
         <div class="m-table__main flex-1 min-h-0 min-w-0"
@@ -34,8 +33,7 @@ import { ElTable } from "element-plus";
 import { MForm } from "../../m_form";
 import MPaginaiton from "./m_pagination.vue";
 
-import type { FormConfigPropType } from "../../m_form";
-import type { TableColumnType, TableType } from "./type";
+import type {TableConfigPropType} from "./type";
 
 import { computed, unref } from "vue";
 
@@ -44,26 +42,14 @@ import { TableColumn } from "./render";
 import { vLoading } from "element-plus";
 import { vBottomLoading } from "./directives";
 
-import { useForm } from "../../m_form";
 import { useTable } from "./hooks/useTable";
 import { useRefs } from "@/hooks/useRefs";
-
-
-interface Prop {
-  form_config?: FormConfigPropType;
-  table_config?: TableType<D>;
-  columns?: TableColumnType<D>[];
-  max_height?: number | string;
-  table_height?: string | number;
-  show_pagination?: boolean;
-  show_form?: boolean;
-}
 
 defineOptions({
   name: "MTable",
 });
 
-const $props = withDefaults(defineProps<Prop>(), {
+const $props = withDefaults(defineProps<TableConfigPropType<D>>(), {
   form_config: () => ({}),
   table_config: () => ({}),
   columns: () => [],

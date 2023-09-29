@@ -1,7 +1,7 @@
 <template>
   <component v-model="params[config.prop]" :is="`el-${config.el_type}`" v-bind="searchProps">
       <template #prefix>
-        <template v-if="config.type == 'text'">
+        <template v-if="['text', 'selection'].includes(config.type)">
           <component v-if="config.prefix" :is='config.prefix'></component>
           <slot v-else :name="`${config.prop}_prefix`"></slot>
         </template>
@@ -22,27 +22,30 @@
           <component :is='config.append'></component>
         </template>
       </template>
+      <!-- <template v-if="config.el_type == 'select'">
+      <component
+        :is="`el-option`"
+        v-for="(col, index) in columnEnum"
+        :key="index"
+        :label="col[fieldNames.label]"
+        :value="col[fieldNames.value]"
+      ></component>
+    </template> -->
   </component>
 </template>
 
 <script setup lang="ts">
-import type { InputType, TextAreaType } from "./type";
+import type { FormItemPropType } from "./type";
 
 import { computed } from "vue";
 
 import { omit } from "lodash";
 
-
-interface Props {
-  params: Record<string, any>
-  config: InputType | TextAreaType
-}
-
 interface Emits {
-  (e: "update:params", v: Props['params']): void
+  (e: "update:params", v: FormItemPropType['params']): void
 }
 
-const $props = withDefaults(defineProps<Props>(), {
+const $props = withDefaults(defineProps<FormItemPropType>(), {
   params: () => ({})
 })
 

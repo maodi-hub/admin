@@ -3,6 +3,7 @@ import { ElTableColumn, ElTable, ElPagination } from "element-plus";
 import type { VNode } from "vue";
 import type { TableColumnCtx } from "element-plus";
 import type { AxiosRequestConfig } from "axios";
+import type { FormConfigPropType } from "../../m_form";
 
 type RenderScopeType<T> = {
   row: T;
@@ -75,6 +76,16 @@ interface UseTableHookConfigType<D = any> {
   pagination: PaginationType;
 }
 
+interface TableConfigPropType<D> {
+  form_config?: FormConfigPropType;
+  table_config?: TableType<D>;
+  columns?: TableColumnType<D>[];
+  max_height?: number | string;
+  table_height?: string | number;
+  show_pagination?: boolean;
+  show_form?: boolean;
+}
+
 export type {
   TableColumnType,
   TableType,
@@ -82,4 +93,5 @@ export type {
   HeaderRenderScopeType,
   UseTableHookConfigType,
   PaginationType,
+  TableConfigPropType
 };

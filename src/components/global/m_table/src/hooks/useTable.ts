@@ -3,7 +3,6 @@ import { reactive, toRefs } from "vue";
 import request from "@/api/config";
 
 import type { UseTableHookConfigType, TableType } from "../type";
-import { isArray } from "@/utils/is";
 
 interface DefaultProps {
   table_config: Pick<TableType, "handleLoadData" | "handleProcseeData">;
