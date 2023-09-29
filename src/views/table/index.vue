@@ -18,10 +18,11 @@ defineOptions({
 
 const $route = useRoute();
 
-const form_config: FormConfigPropType = reactive({
+const form_config = reactive<FormConfigPropType>({
   base_config: { inline: true },
   params: {
-    a: "asd"
+    a: "asd",
+    b: 'asdasd'
   },
   formItems: [
     {
@@ -29,10 +30,19 @@ const form_config: FormConfigPropType = reactive({
       el_type: "input",
       prop: "a",
       label: "asdasd",
-      prefixIcon: "Plus",
-      suffixIcon: "Search",
       placeholder: "ahdhasdh",
-      disabled: true,
+      rule: {
+        required: true,
+        message: "asdas",
+        trigger: "blur"
+      }
+    },
+    {
+      type: "textarea",
+      el_type: "input",
+      prop: "b",
+      label: "文本框",
+      placeholder: "ahdhasdh",
       rule: {
         required: true,
         message: "asdas",

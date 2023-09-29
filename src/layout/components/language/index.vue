@@ -33,11 +33,12 @@ import { computed, unref } from "vue";
 
 import { useI18n } from "vue-i18n";
 
-import { setI18nLocale } from "@/langs";
+import { useGlobalStore } from "@/store/modules/global";
 
 import { LANGUAGE_CONFIG } from "./const";
 
 const { messages } = useI18n();
+const $global = useGlobalStore();
 
 const language_options = computed(() => {
   return Object.keys(unref(messages)).map((lang) => {
@@ -56,7 +57,7 @@ const language_options = computed(() => {
 });
 
 const onCommandChange = (name: string) => {
-  setI18nLocale(name);
+  $global.setLanguage(name);
 };
 </script>
 

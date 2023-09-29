@@ -4,7 +4,8 @@
       <div class="m-table__content flex fd-column gap-5" :class="{ unset_height }">
         <div class="m-table__form p-10" v-if="show_form">
           <slot name="table_form" :form_param="form_config.params">
-            <MForm v-bind="form_config"/>
+            <MForm v-bind="form_config">
+            </MForm>
           </slot>
         </div>
         <div class="m-table__main flex-1 min-h-0 min-w-0"

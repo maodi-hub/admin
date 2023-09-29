@@ -7,12 +7,17 @@ interface BaseType {
   default?: string;
   modifer?: string;
   rule?: FormRules[keyof FormRules];
-  disabled?: boolean
+  disabled?: boolean;
+  readonly?: boolean;
+  size?: "default" | "large" | "size";
+  tips?: string | (() => VNode);
+  [x: string]: any;
 }
 
 type RenderSlotType = (...arg: any[]) => VNode;
 
 interface BaseInputType extends BaseType {
+  el_type: "input";
   maxlength?: string | number;
   minlength?: string;
   placeholder?: string;
@@ -21,15 +26,19 @@ interface BaseInputType extends BaseType {
 }
 
 interface InputType extends BaseInputType {
-  el_type: "input";
   type: "text";
   prefixIcon?: string | Component;
   suffixIcon?: string | Component;
+  prefix?: RenderSlotType;
+  suffix?: RenderSlotType;
+  prepend?: RenderSlotType;
+  append?: RenderSlotType;
 }
 
-interface TextAreaType extends BaseInputType {
-  el_type: "input";
+interface TextAreaType extends Omit<BaseInputType, "size"> {
   type: "textarea";
+  rows?: number;
+  autosize?: boolean | { minRows: number; maxRows: number };
 }
 
 interface FormBaseConfigType {
@@ -48,4 +57,4 @@ interface FormConfigPropType {
   formItems?: (InputType | TextAreaType)[];
 }
 
-export type { FormConfigPropType, TextAreaType, InputType, RenderSlotType };
+export type { FormConfigPropType, TextAreaType, InputType, RenderSlotType, BaseType };

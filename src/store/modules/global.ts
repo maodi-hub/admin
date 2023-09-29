@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 
 import { GLOBAL } from "./const";
+import { setI18nLocale } from "@/langs";
 
 import type { GlobalState } from "../interface";
 
@@ -20,6 +21,7 @@ export const useGlobalStore = defineStore({
       this.size = payload;
     },
     setLanguage(payload: string) {
+      setI18nLocale(payload);
       this.language = payload;
     },
   },
