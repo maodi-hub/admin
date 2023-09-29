@@ -1,13 +1,15 @@
 <template>
   <div class="table full-page">
-    <MTable :columns="columns" :table_config="table_config" table_height="100%"></MTable>
+    <MTable :columns="columns" :form_config="form_config" :table_config="table_config" table_height="100%">
+    </MTable>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
+import type { FormConfigPropType } from "@/components/global/m_form";
 import type { TableColumnType, TableType } from "@/components/global/m_table";
 
-import { onMounted, onActivated, h } from "vue";
+import { onMounted, onActivated, h, reactive } from "vue";
 import { useRoute } from "vue-router";
 
 defineOptions({
@@ -15,6 +17,30 @@ defineOptions({
 });
 
 const $route = useRoute();
+
+const form_config: FormConfigPropType = reactive({
+  base_config: { inline: true },
+  params: {
+    a: "asd"
+  },
+  formItems: [
+    {
+      type: 'text',
+      el_type: "input",
+      prop: "a",
+      label: "asdasd",
+      prefixIcon: "Plus",
+      suffixIcon: "Search",
+      placeholder: "ahdhasdh",
+      disabled: true,
+      rule: {
+        required: true,
+        message: "asdas",
+        trigger: "blur"
+      }
+    }
+  ]
+})
 
 const table_config: TableType = {
   handleLoadData: async () => ({

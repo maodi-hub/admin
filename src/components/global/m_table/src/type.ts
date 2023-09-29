@@ -21,16 +21,11 @@ type ElTableColumnType = InstanceType<typeof ElTableColumn>["$props"];
 type ElTableType = InstanceType<typeof ElTable>["$props"];
 type ElPaginationType = InstanceType<typeof ElPagination>["$props"];
 
-interface RenderType {
-  type?: ("form" | "column")[];
-  layout?: {};
-}
 
 interface TableColumnType<D = any>
   extends Omit<ElTableColumnType, "renderHeader"> {
   render_header?: (data: HeaderRenderScopeType<D>) => VNode;
   render_cell?: (data: RenderScopeType<D>) => VNode;
-  renderType?: RenderType;
 }
 
 interface TableType<D = any>

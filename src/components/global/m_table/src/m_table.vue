@@ -2,8 +2,10 @@
   <div class="m-table" :class="{ unset_height }">
     <div class="m-table__wrapper" :class="{ unset_height }">
       <div class="m-table__content flex fd-column gap-5" :class="{ unset_height }">
-        <div class="m-table__form p-10">
-          <slot name="table_form"></slot>
+        <div class="m-table__form p-10" v-if="show_form">
+          <slot name="table_form" :form_param="form_config.params">
+            <MForm v-bind="form_config"/>
+          </slot>
         </div>
         <div class="m-table__main flex-1 min-h-0 min-w-0"
           :class="{ unset_height: !max_height && table_height != '100%' }">
@@ -18,7 +20,7 @@
             </template>
           </ElTable>
         </div>
-        <div class="m-table__footer">
+        <div class="m-table__footer" v-if="show_pagination">
           <MPaginaiton :config="pagination" />
         </div>
       </div>
@@ -28,7 +30,11 @@
 
 <script setup lang="ts" generic="D">
 import { ElTable } from "element-plus";
+import { MForm } from "../../m_form";
 import MPaginaiton from "./m_pagination.vue";
+
+import type { FormConfigPropType } from "../../m_form";
+import type { TableColumnType, TableType } from "./type";
 
 import { computed, unref } from "vue";
 
@@ -41,13 +47,15 @@ import { useForm } from "../../m_form";
 import { useTable } from "./hooks/useTable";
 import { useRefs } from "@/hooks/useRefs";
 
-import type { TableColumnType, TableType } from "./type";
 
 interface Prop {
+  form_config?: FormConfigPropType;
   table_config?: TableType<D>;
   columns?: TableColumnType<D>[];
   max_height?: number | string;
   table_height?: string | number;
+  show_pagination?: boolean;
+  show_form?: boolean;
 }
 
 defineOptions({
@@ -55,8 +63,11 @@ defineOptions({
 });
 
 const $props = withDefaults(defineProps<Prop>(), {
+  form_config: () => ({}),
   table_config: () => ({}),
   columns: () => [],
+  show_form: true,
+  show_pagination: true
 });
 
 const {

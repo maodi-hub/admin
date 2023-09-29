@@ -20,7 +20,6 @@ export function TableColumn(columnType: TableColumnType) {
     >
       {{
         default: (scope: RenderScopeType<any>) => {
-          debugger;
           const { render_cell, prop } = columnType;
           const row = scope.row || {};
           if (render_cell) return render_cell(scope);
