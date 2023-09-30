@@ -1,5 +1,5 @@
 <template>
-  <ElForm :model="params" v-bind="base_config">
+  <ElForm :model="params" v-bind="form_base_config">
     <template v-for="item in formItems" :key="item.prop">
       <ElFormItem :label="item.label" :prop="item.prop" :rules="item.rule">
         <template #label="{ label }">
@@ -7,7 +7,7 @@
             <slot :name="`${item.prop}_label`">{{ label }}</slot>
             <el-tooltip v-if="item.tips" placement="top">
               <template #content>
-                <component :is='getTips(item.tips)'></component>
+                <component :is='getTips(item.tips)'/>
               </template>
               <MIcon name="Warning" />
             </el-tooltip>

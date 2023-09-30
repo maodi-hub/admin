@@ -1,4 +1,4 @@
-import { ElTableColumn, ElTable, ElPagination } from "element-plus";
+import { ElTable } from "element-plus";
 
 import type { VNode } from "vue";
 import type { TableColumnCtx } from "element-plus";
@@ -18,16 +18,7 @@ type HeaderRenderScopeType<T> = {
   [key: string]: any;
 };
 
-type ElTableColumnType = InstanceType<typeof ElTableColumn>["$props"];
 type ElTableType = InstanceType<typeof ElTable>["$props"];
-type ElPaginationType = InstanceType<typeof ElPagination>["$props"];
-
-
-interface TableColumnType<D = any>
-  extends Omit<ElTableColumnType, "renderHeader"> {
-  render_header?: (data: HeaderRenderScopeType<D>) => VNode;
-  render_cell?: (data: RenderScopeType<D>) => VNode;
-}
 
 interface TableType<D = any>
   extends Pick<
@@ -60,6 +51,13 @@ interface TableType<D = any>
   onLoadMore?: () => void;
   handleLoadData?: ((...arg: any[]) => any) | AxiosRequestConfig;
   handleProcseeData?: (...arg: any) => D[];
+  default?: string | number | (() => VNode); // cell 无参时默认显示的文案
+}
+
+interface TableColumnType<D = any>
+  extends Omit<Partial<TableColumnCtx<D>>, "renderHeader">, Pick<TableType, "default"> {
+  render_header?: (data: HeaderRenderScopeType<D>) => VNode;
+  render_cell?: (data: RenderScopeType<D>) => VNode;
 }
 
 interface PaginationType {
@@ -76,8 +74,7 @@ interface UseTableHookConfigType<D = any> {
   pagination: PaginationType;
 }
 
-interface TableConfigPropType<D> {
-  form_config?: FormConfigPropType;
+interface TableConfigPropType<D> extends FormConfigPropType {
   table_config?: TableType<D>;
   columns?: TableColumnType<D>[];
   max_height?: number | string;

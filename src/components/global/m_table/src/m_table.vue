@@ -3,8 +3,8 @@
     <div class="m-table__wrapper" :class="{ unset_height }">
       <div class="m-table__content flex fd-column gap-5" :class="{ unset_height }">
         <div class="m-table__form p-10" v-if="show_form">
-          <slot name="table_form" :form_param="form_config.params">
-            <MForm v-bind="form_config"/>
+          <slot name="table_form" :form_param="params">
+            <MForm :params="params" :form_base_config="form_base_config" :form-items="formItems"/>
           </slot>
         </div>
         <div class="m-table__main flex-1 min-h-0 min-w-0"
@@ -12,7 +12,7 @@
           <ElTable v-bind="merge_table_config" :height="getHeight.height" :max-height="getHeight.maxHeight"
             :data="table_data" v-loading="loading" v-bottom-loading="table_config.onLoadMore" ref="table_ref">
             <template v-for="(col, col_index) in columns" :key="col['column-key'] || col_index">
-              <TableColumn v-bind="col">
+              <TableColumn :column="col" :base_config="table_config">
                 <template v-for="slot in Object.keys($slots)" #[slot]="scope">
                   <slot :name="slot" v-bind="scope" />
                 </template>
@@ -21,7 +21,7 @@
           </ElTable>
         </div>
         <div class="m-table__footer" v-if="show_pagination">
-          <MPaginaiton :config="pagination" />
+          <MPaginaiton :config="pagination" algin="left"/>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@ defineOptions({
 });
 
 const $props = withDefaults(defineProps<TableConfigPropType<D>>(), {
-  form_config: () => ({}),
+  form_base_config: () => ({}),
   table_config: () => ({}),
   columns: () => [],
   show_form: true,

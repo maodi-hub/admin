@@ -1,5 +1,6 @@
 <template>
-  <component v-model="params[config.prop]" :is="`el-${config.el_type}`" v-bind="searchProps">
+
+  <component v-model="params[config.prop]" :is="config.type == 'selection' ? 'm-selection': `el-${config.el_type}`" v-bind="searchProps">
       <template #prefix>
         <template v-if="['text', 'selection'].includes(config.type)">
           <component v-if="config.prefix" :is='config.prefix'></component>
@@ -22,38 +23,24 @@
           <component :is='config.append'></component>
         </template>
       </template>
-      <!-- <template v-if="config.el_type == 'select'">
-      <component
-        :is="`el-option`"
-        v-for="(col, index) in columnEnum"
-        :key="index"
-        :label="col[fieldNames.label]"
-        :value="col[fieldNames.value]"
-      ></component>
-    </template> -->
   </component>
+  <!-- <component v-else :is=''></component> -->
 </template>
 
 <script setup lang="ts">
 import type { FormItemPropType } from "./type";
 
 import { computed } from "vue";
-
 import { omit } from "lodash";
-
-interface Emits {
-  (e: "update:params", v: FormItemPropType['params']): void
-}
 
 const $props = withDefaults(defineProps<FormItemPropType>(), {
   params: () => ({})
 })
 
-const $emit = defineEmits<Emits>();
-
 const searchProps = computed(() => {
   const { config } = $props;
-  return omit(config, 'prefix', 'suffix', "append", "prepend", "tips")
+  const exclude_prop = ['prefix', 'suffix', "append", "prepend", "tips", "rule", "modifer", "default", "label"];
+  return omit(config, ...exclude_prop)
 })
 
 </script>

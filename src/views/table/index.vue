@@ -1,6 +1,6 @@
 <template>
   <div class="table full-page">
-    <MTable :columns="columns" :form_config="form_config" :table_config="table_config" table_height="100%">
+    <MTable v-bind="form_config" :columns="columns"  :table_config="table_config" table_height="100%">
     </MTable>
   </div>
 </template>
@@ -19,7 +19,7 @@ defineOptions({
 const $route = useRoute();
 
 const form_config = reactive<FormConfigPropType>({
-  base_config: { inline: true },
+  form_base_config: { inline: true },
   params: {
     a: "asd",
     b: 'asdasd',
@@ -39,6 +39,10 @@ const form_config = reactive<FormConfigPropType>({
       prop: "c",
       placeholder: "请选择",
       label: "下拉选框",
+      multiple: true,
+      filterable: true,
+      filterMethod: () => {}
+      // custom_render_item: (props) => <>{props}</>
     }
   ]
 })
@@ -57,12 +61,16 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
     render_header(data) {
       return h("div", "asd" + data.column.label);
     },
-    render_cell({ row }) {
-      return h("div", row[1] + "123");
-    },
+    // render_cell({ row }) {
+      
+    //   return h("div", row[1] + "123");
+    // },
+    formatter: () => {
+      return "asdasd9865161"
+    }
   },
   {
-    label: "asdasd10",
+    label: "asdasd2",
     prop: "2",
   },
   {
@@ -85,6 +93,7 @@ const data = [
     1: "gdgf12423",
     2: "sdfsd",
     3: "ass",
+    4: "asd62626"
   },
   {
     1: "sdfsdf",

@@ -1,17 +1,18 @@
 import type { FormRules } from "element-plus";
 import type { Component, VNode } from "vue";
+import type { SelectionPropType } from "../../m_select/src/type";
 
 interface BaseType {
   prop: string;
   label?: string;
   default?: string;
-  modifer?: string;
   rule?: FormRules[keyof FormRules];
   disabled?: boolean;
   readonly?: boolean;
   size?: "default" | "large" | "size";
   tips?: string | (() => VNode);
   clearable?: boolean;
+  // custom_render_item?: (props: { modelValue: any }) => VNode;
   [x: string]: any;
 }
 
@@ -42,22 +43,9 @@ interface TextAreaType extends Omit<BaseInputType, "size"> {
   autosize?: boolean | { minRows: number; maxRows: number };
 }
 
-interface SelectionType extends BaseType, Pick<InputType, 'suffixIcon' | 'prefix' | 'placeholder'> {
+interface SelectionType extends SelectionPropType {
   el_type: "select";
   type: "selection";
-  multiple?: boolean;
-  valueKey?: string;
-  collapseTags?: boolean;
-  collapseTagsTooltip?: boolean;
-  multipleLimit?: number;
-  filterable?: boolean;
-  allowCreate?: boolean;
-  filterMethod?: () => void;
-  remote?: boolean;
-  remoteMethod?: () => void;
-  defaultFirstOption?: boolean;
-  fitInputWidth?: boolean;
-  maxCollapseYags?: number;
 }
 
 interface FormBaseConfigType {
@@ -73,7 +61,7 @@ interface FormBaseConfigType {
 type FormItemType = InputType | TextAreaType | SelectionType
 
 interface FormConfigPropType {
-  base_config?: Partial<FormBaseConfigType>;
+  form_base_config?: Partial<FormBaseConfigType>;
   params?: Record<string, any>;
   formItems?: FormItemType[];
 }
@@ -83,4 +71,4 @@ interface FormItemPropType {
   config: FormItemType
 }
 
-export type { FormConfigPropType, FormItemPropType, TextAreaType, InputType, SelectionType, RenderSlotType, BaseType };
+export type { FormConfigPropType, FormItemPropType, TextAreaType, InputType, RenderSlotType, BaseType };
