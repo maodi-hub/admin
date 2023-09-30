@@ -19,7 +19,7 @@ defineOptions({
 const $route = useRoute();
 
 const form_config = reactive<FormConfigPropType>({
-  form_base_config: { inline: true },
+  form_base_config: { inline: true, labelWidth: "80px" },
   params: {
     a: "asd",
     b: 'asdasd',
@@ -42,7 +42,6 @@ const form_config = reactive<FormConfigPropType>({
       multiple: true,
       filterable: true,
       filterMethod: () => {}
-      // custom_render_item: (props) => <>{props}</>
     }
   ]
 })
@@ -59,15 +58,8 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
     label: "asdasd1",
     prop: "1",
     render_header(data) {
-      return h("div", "asd" + data.column.label);
+      return <>"asd"{data.column.label}</> ;
     },
-    // render_cell({ row }) {
-      
-    //   return h("div", row[1] + "123");
-    // },
-    formatter: () => {
-      return "asdasd9865161"
-    }
   },
   {
     label: "asdasd2",

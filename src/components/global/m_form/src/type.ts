@@ -12,7 +12,7 @@ interface BaseType {
   size?: "default" | "large" | "size";
   tips?: string | (() => VNode);
   clearable?: boolean;
-  // custom_render_item?: (props: { modelValue: any }) => VNode;
+  // custom_render_item?: (props: { param: Record<string, any> }) => VNode;
   [x: string]: any;
 }
 

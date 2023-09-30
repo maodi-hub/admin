@@ -22,6 +22,7 @@ const locale = computed(() => {
   return langs[$global.language] || langs['zh'];
 })
 
+
 useEventListener(
   "resize",
   debounce(() => {

@@ -7,19 +7,19 @@
             <slot :name="`${item.prop}_label`">{{ label }}</slot>
             <el-tooltip v-if="item.tips" placement="top">
               <template #content>
-                <component :is='getTips(item.tips)'/>
+                <component :is='getTips(item.tips)' />
               </template>
               <MIcon name="Warning" />
             </el-tooltip>
           </el-space>
         </template>
-
-        <MFormItem :config="item" :params="params">
-          <template v-for="slotKey in ['prefix', 'suffix']" :key="slotKey"
-            #[`${item.prop}_${slotKey}`]>
-            <slot :name="`${item.prop}_${slotKey}`"></slot>
-          </template>
-        </MFormItem>
+        <slot :name="`${item.prop}_item`" :param="params">
+          <MFormItem :config="item" :params="params">
+            <template v-for="slotKey in ['prefix', 'suffix']" :key="slotKey" #[`${item.prop}_${slotKey}`]>
+              <slot :name="`${item.prop}_${slotKey}`"></slot>
+            </template>
+          </MFormItem>
+        </slot>
       </ElFormItem>
     </template>
   </ElForm>
@@ -57,4 +57,10 @@ watch(() => $props.params, (v) => {
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.el-form {
+  :deep(.el-input__wrapper) {
+    min-width: 214px;
+  }
+}
+</style>

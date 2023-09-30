@@ -1,13 +1,47 @@
 <template>
   <div class="m-table" :class="{ unset_height }">
     <div class="m-table__wrapper" :class="{ unset_height }">
-      <div class="m-table__content flex fd-column gap-5" :class="{ unset_height }">
-        <div class="m-table__form p-10" v-if="show_form">
+      <div class="m-table__content flex fd-column" :class="{ unset_height }">
+        <div class="m-table__form p-5 mb-5" v-if="show_form">
           <slot name="table_form" :form_param="params">
-            <MForm :params="params" :form_base_config="form_base_config" :form-items="formItems"/>
+            <div class="base_form__container flex f-wrap gap-5 jc-between">
+              <div class="flex-1 min-w-0 ">
+                <MForm :params="params" :form_base_config="form_base_config" :form-items="formItems">
+                </MForm>
+              </div>
+              <div class="ope-btn flex fd-column gap-5">
+                <el-button type="primary">
+                  搜索
+                </el-button>
+                <el-button type="danger">
+                  重置
+                </el-button>
+              </div>
+            </div>
           </slot>
         </div>
-        <div class="m-table__main flex-1 min-h-0 min-w-0"
+        <div class="m-tabel__ope flex jc-between ai-center p-5">
+          <div class="adcc__ope">
+            <el-button type="primary">
+              增加
+            </el-button>
+            <el-button type="danger">
+              删除
+            </el-button>
+            <el-button type="primary" plain>
+              批量增加
+            </el-button>
+            <el-button type="danger" plain>
+              批量删除
+            </el-button>
+          </div>
+
+          <div class="other__ope">
+            <el-button icon="Refresh" circle></el-button>
+            <el-button icon="Download" circle></el-button>
+          </div>
+        </div>
+        <div class="m-table__main flex-1 min-h-0 min-w-0 p-5 mb-5"
           :class="{ unset_height: !max_height && table_height != '100%' }">
           <ElTable v-bind="merge_table_config" :height="getHeight.height" :max-height="getHeight.maxHeight"
             :data="table_data" v-loading="loading" v-bottom-loading="table_config.onLoadMore" ref="table_ref">
@@ -21,7 +55,7 @@
           </ElTable>
         </div>
         <div class="m-table__footer" v-if="show_pagination">
-          <MPaginaiton :config="pagination" algin="left"/>
+          <MPaginaiton :config="pagination" algin="left" />
         </div>
       </div>
     </div>
@@ -33,9 +67,10 @@ import { ElTable } from "element-plus";
 import { MForm } from "../../m_form";
 import MPaginaiton from "./m_pagination.vue";
 
-import type {TableConfigPropType} from "./type";
+import type { TableConfigPropType } from "./type";
 
 import { computed, unref } from "vue";
+import { omit } from "lodash";
 
 import { TableColumn } from "./render";
 
@@ -64,7 +99,6 @@ const {
   table_data,
   loading,
 } = useTable($props);
-
 const { componentRefs } = useRefs<{
   table_ref: InstanceType<typeof ElTable>;
 }>();
@@ -76,7 +110,7 @@ const DEFAULT_TABLE_CONFIG = {
 };
 const merge_table_config = computed(() => {
   const { table_config } = $props;
-  return Object.assign({}, DEFAULT_TABLE_CONFIG, table_config);
+  return Object.assign({}, DEFAULT_TABLE_CONFIG, omit(table_config, 'onLoadMore', 'handleLoadData', "handleProcseeData", 'default'));
 });
 
 const unset_height = computed(() => {
@@ -115,6 +149,35 @@ defineExpose({
 
     .m-table__form {
       background-color: #fff;
+
+      .base_form__container {
+        min-width: min-content;
+      }
+
+      .ope-btn {
+        width: min-content;
+
+        .el-button+.el-button {
+          margin-left: 0;
+        }
+      }
+    }
+
+    .m-tabel__ope {
+      background-color: #fff;
+      white-space: nowrap;
+    }
+
+    .m-table__main {
+      background-color: #fff;
+
+      .el-table {
+        :deep(.el-table__header) {
+          .cell {
+            white-space: nowrap;
+          }
+        }
+      }
     }
   }
 }
@@ -124,4 +187,3 @@ defineExpose({
   height: unset;
 }
 </style>
-../../m_form/src/hooks/useForm

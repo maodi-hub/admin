@@ -18,6 +18,14 @@
   display: flex;
 }
 
+.f-wrap {
+  flex-wrap: wrap;
+}
+
+.f-n-wrap {
+  flex-wrap: nowrap;
+}
+
 .jc-center {
   justify-content: center;
 }
@@ -108,6 +116,10 @@
 
 .p-20 {
   padding: 20px;
+}
+
+.mb-5 {
+  margin-bottom: 5px;
 }
 
 .min-h-0 {

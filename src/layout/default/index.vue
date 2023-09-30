@@ -84,7 +84,7 @@ watch($route, (route) => {
   }
   & > .m-container {
     .m-header {
-      padding: 0 20px;
+      padding: 0 10px 0 20px;
       height: 60px;
       background-color: #fff;
       &__right {
@@ -95,10 +95,12 @@ watch($route, (route) => {
     .m-main {
       & > .m-container {
         overflow: auto;
+        overflow-x: hidden;
       }
     }
     .m-tags {
       padding-right: 10px;
+      // background-color: #fff;
     }
   }
 }
