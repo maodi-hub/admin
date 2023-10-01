@@ -51,6 +51,7 @@
             v-bottom-loading="table_config.onLoadMore"
             ref="table_ref"
           >
+            <!-- 默认插槽 -->
             <slot />
 
             <template
@@ -100,7 +101,12 @@
           </ElTable>
         </div>
         <div class="m-table__footer" v-if="show_pagination">
-          <MPaginaiton :config="pagination" algin="left" />
+          <MPagination
+            :config="pagination"
+            :align="pagination_position"
+            @size-change="onPageSizeChange"
+            @current-change="onPageCurrentChange"
+          />
         </div>
       </div>
     </div>
@@ -110,7 +116,6 @@
 <script setup lang="ts" generic="D">
 import { ElTable, ElEmpty, ElTableColumn } from "element-plus";
 import { MForm } from "../../m_form";
-import MPaginaiton from "./m_pagination.vue";
 
 import type { TableConfigPropType } from "./type";
 
@@ -122,7 +127,7 @@ import { MTableColumn } from "./render";
 import { vLoading } from "element-plus";
 import { vBottomLoading } from "./directives";
 
-import { useTable } from "./hooks/useTable";
+import { useTable } from "./hooks";
 import { useRefs } from "@/hooks/useRefs";
 
 defineOptions({
@@ -130,8 +135,13 @@ defineOptions({
 });
 
 const $props = withDefaults(defineProps<TableConfigPropType<D>>(), {
+  form_base_config: () => ({
+    inline: true,
+    labelWidth: "80px",
+  }),
   table_config: () => ({}),
   columns: () => [],
+  pagination_position: "left",
   show_form: true,
   show_pagination: true,
 });
@@ -143,10 +153,11 @@ const radio = ref("");
 const {
   handleFetchData,
   handleSetPagenation,
-  pagination,
   table_data,
+  pagination,
   loading,
-} = useTable($props.table_config);
+} = useTable($props.table_config, $props.pagination_config);
+
 const { componentRefs } = useRefs<{
   table_ref: InstanceType<typeof ElTable>;
   form_ref: InstanceType<typeof MForm>;
@@ -180,27 +191,35 @@ const getHeight = computed(() => {
   };
 });
 
+const onPageSizeChange = (v: number) => {
+  handleSetPagenation({ pageSize: v });
+  handleGetTableData();
+};
+const onPageCurrentChange = (v: number) => {
+  handleSetPagenation({ currentPage: v });
+  handleGetTableData();
+};
+
 const handleGetTableData = () => {
   const { params } = $props;
   const { handleProcessParam } = $props.table_config;
   const param = handleProcessParam
-    ? handleProcessParam(toRaw(params), toRaw(unref(pagination)))
+    ? handleProcessParam(toRaw(params), toRaw(pagination))
     : { ...params, ...pick(pagination, "currentPage", "pageSize") };
   handleFetchData(param);
 };
 
 const handleResetFields = () => {
-  console.log(getInstance()("form_ref"));
-  getInstance()("form_ref")?.handleResetFields();
+  unref(componentRefs)("form_ref")?.handleResetFields();
 };
 
 const getInstance = () => unref(componentRefs);
 
 defineExpose({
-  handleGetTableData,
-  handleSetPagenation,
   getInstance,
+  handleGetTableData,
   handleResetFields,
+  handleSetPagenation,
 });
 </script>
 
@@ -255,3 +274,4 @@ defineExpose({
   height: unset;
 }
 </style>
+./hooks

@@ -4,6 +4,7 @@ import type { VNode } from "vue";
 import type { TableColumnCtx } from "element-plus";
 import type { AxiosRequestConfig } from "axios";
 import type { FormConfigPropType } from "../../m_form";
+import type { PaginationType } from "../../m_pagination";
 
 type RenderScopeType<T> = {
   row: T;
@@ -50,7 +51,7 @@ interface TableType<D = any>
   > {
   isDeepReactive?: boolean;
   onLoadMore?: () => void;
-  handleLoadData?: ((...arg: any[]) => Promise<any>) | AxiosRequestConfig;
+  handleLoadData?: (...arg: any[]) => Promise<any>;
   handleProcseeData?: (...arg: any) => D[];
   handleProcessParam?: (params?: Record<string, any>, pagination?: PaginationType) => Record<string, any>
   defaultValue?: string | number; // cell 无参时默认显示的文案
@@ -63,25 +64,13 @@ interface TableColumnType<D = any>
   render_cell?: (data: RenderScopeType<D>) => VNode;
 }
 
-interface PaginationType {
-  currentPage: number;
-  pageSize: number;
-  pageSizes: number[];
-  total: number;
-  layout: string[];
-}
-
-interface UseTableHookConfigType<D = any> {
-  table_data: D[];
-  loading: boolean;
-  pagination: PaginationType;
-}
-
 interface TableConfigPropType<D> extends FormConfigPropType {
   table_config?: TableType<D>;
   columns?: TableColumnType<D>[];
   max_height?: number | string;
   table_height?: string | number;
+  pagination_config?: Partial<PaginationType>;
+  pagination_position?: 'left' | 'center' | 'right';
   show_pagination?: boolean;
   show_form?: boolean;
 }
@@ -91,7 +80,5 @@ export type {
   TableType,
   RenderScopeType,
   HeaderRenderScopeType,
-  UseTableHookConfigType,
-  PaginationType,
   TableConfigPropType
 };

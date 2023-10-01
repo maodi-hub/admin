@@ -4,9 +4,9 @@
       <div class="m-pagination__content p-5">
         <ElScrollbar>
           <ElPagination
-            :class="[algin]"
-            v-model:current-page="config.currentPage"
-            v-model:page-size="config.pageSize"
+            :class="[align]"
+            :current-page="config.currentPage"
+            :page-size="config.pageSize"
             :total="config.total"
             :page-sizes="config.pageSizes"
             :layout="handleParsePaginationLayout(config.layout)"
@@ -22,22 +22,38 @@
 <script setup lang="ts">
 import { ElPagination, ElScrollbar } from "element-plus";
 
-import type { PaginationType } from "./type";
+import type { PaginationEmitType, PaginationPropType } from "./type";
 
-interface Props {
-  config: PaginationType;
-  algin?: "left" | "right" | "center";
-}
-
-withDefaults(defineProps<Props>(), {
-  algin: "center",
+defineOptions({
+  name: "MPagination",
 });
 
-const handleParsePaginationLayout = (layout: any[]) => layout.join(",");
+withDefaults(defineProps<PaginationPropType>(), {
+  config: () => ({
+    currentPage: 1,
+    pageSize: 10,
+    pageSizes: [10, 20, 30, 50, 100],
+    total: 1000,
+    layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
+  }),
+  align: "center",
+});
 
-const onSizeChange = () => {};
+const $emit = defineEmits<PaginationEmitType>();
 
-const onCurrentChange = () => {};
+const handleParsePaginationLayout = (layout: any[]) => {
+  return layout ? layout.join(",") : "";
+};
+
+const onSizeChange = (v: number) => {
+  $emit("sizeChange", v);
+  console.log("size", v);
+};
+
+const onCurrentChange = (v: number) => {
+  $emit("currentChange", v);
+  console.log("currentpage", v);
+};
 </script>
 
 <style scoped lang="less">

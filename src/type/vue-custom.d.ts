@@ -15,6 +15,7 @@ declare module "vue" {
     MForm: typeof import("@/components/global/m_form")["MForm"];
     MFormItem: typeof import("@/components/global/m_form")['MFormItem'];
     MSelection: typeof import("@/components/global/m_select")["MSelection"];
+    MPagination: typeof import("@/components/global/m_pagination")["MPagiantion"];
   }
 }
 

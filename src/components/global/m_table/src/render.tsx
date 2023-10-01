@@ -27,14 +27,19 @@ export function MTableColumn(props: {
         default: (scope: RenderScopeType<any>) => {
           const { render_cell, prop, formatter } = column;
           const row = scope.row || {};
+          // 存在自定义渲染
           if (render_cell) return render_cell(scope);
+          // 处理多级表头
+          if ($slots.default) return $slots.default(scope);
+          // 列属性插槽
           if ($slots[`${prop!}_column`])
             return $slots[`${prop!}_column`]!(scope);
 
+          // 处理数据并格式化
           const cellValue = formatter
             ? formatter(row, scope.column, row[prop!], scope.$index)
             : row[prop!];
-
+          // 无数据，输出默认值
           if (!cellValue && cellValue !== 0) {
             return getDefaultValue(column, base_config);
           }

@@ -7,9 +7,6 @@
       :table_config="table_config"
       table_height="100%"
     >
-      <template #operation_column>
-        <div>asd</div>
-      </template>
     </MTable>
   </div>
 </template>
@@ -30,9 +27,8 @@ defineOptions({
 const $route = useRoute();
 
 const form_config = reactive<FormConfigPropType>({
-  form_base_config: { inline: true, labelWidth: "80px" },
   params: {
-    a: "asd",
+    a: "",
     c: "",
   },
   formItems: [
@@ -41,8 +37,7 @@ const form_config = reactive<FormConfigPropType>({
       el_type: "input",
       prop: "a",
       label: "asdasd",
-      placeholder: "ahdhasdh",
-      defaultValue: "asdasd",
+      placeholder: "请输入",
     },
     {
       type: "selection",
@@ -101,10 +96,6 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
   {
     label: "asdasd5",
   },
-  {
-    label: "Caozuo",
-    prop: "operation",
-  },
 ];
 
 const data = [
@@ -133,6 +124,7 @@ const data = [
     1: "sdfsdf",
     2: "sdfsd",
     3: "ass",
+    4: 0,
   },
   {
     1: "sdfsdf",
