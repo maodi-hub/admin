@@ -1,7 +1,7 @@
 <template>
 
   <component v-model="params[config.prop]" :is="config.type == 'selection' ? 'm-selection': `el-${config.el_type}`" v-bind="searchProps">
-      <template #prefix>
+      <!-- <template #prefix>
         <template v-if="['text', 'selection'].includes(config.type)">
           <component v-if="config.prefix" :is='config.prefix'></component>
           <slot v-else :name="`${config.prop}_prefix`"></slot>
@@ -22,7 +22,7 @@
         <template v-if="config.type == 'text'">
           <component :is='config.append'></component>
         </template>
-      </template>
+      </template> -->
   </component>
   <!-- <component v-else :is=''></component> -->
 </template>

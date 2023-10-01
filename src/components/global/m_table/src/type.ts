@@ -48,14 +48,17 @@ interface TableType<D = any>
     | "onSelection-change"
     | "tooltipOptions"
   > {
+  isDeepReactive?: boolean;
   onLoadMore?: () => void;
-  handleLoadData?: ((...arg: any[]) => any) | AxiosRequestConfig;
+  handleLoadData?: ((...arg: any[]) => Promise<any>) | AxiosRequestConfig;
   handleProcseeData?: (...arg: any) => D[];
-  default?: string | number | (() => VNode); // cell 无参时默认显示的文案
+  handleProcessParam?: (params?: Record<string, any>, pagination?: PaginationType) => Record<string, any>
+  defaultValue?: string | number; // cell 无参时默认显示的文案
+  rowKey?: string
 }
 
 interface TableColumnType<D = any>
-  extends Omit<Partial<TableColumnCtx<D>>, "renderHeader">, Pick<TableType, "default"> {
+  extends Omit<Partial<TableColumnCtx<D>>, "renderHeader">, Pick<TableType, "defaultValue"> {
   render_header?: (data: HeaderRenderScopeType<D>) => VNode;
   render_cell?: (data: RenderScopeType<D>) => VNode;
 }

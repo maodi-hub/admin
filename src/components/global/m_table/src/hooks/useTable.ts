@@ -1,34 +1,41 @@
-import { reactive, toRefs } from "vue";
+import { reactive, ref, shallowRef, toRefs } from "vue";
 
 import request from "@/api/config";
 
-import type { UseTableHookConfigType, TableType } from "../type";
+import type { UseTableHookConfigType, TableType, PaginationType } from "../type";
 
-interface DefaultProps {
-  table_config: Pick<TableType, "handleLoadData" | "handleProcseeData">;
-}
+export const useTable = (config: TableType) => {
 
-export const useTable = <D = any>($props: DefaultProps) => {
-  const config = reactive<UseTableHookConfigType<D>>({
-    table_data: [],
-    loading: false,
-    pagination: {
-      currentPage: 0,
-      pageSize: 10,
-      pageSizes: [10, 20, 30, 50, 100],
-      total: 1000,
-      layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
-    },
-  });
+  const { handleLoadData, handleProcseeData, isDeepReactive } = config;
+  // const config = reactive<UseTableHookConfigType<D>>({
+  //   table_data: [],
+  //   loading: false,
+  //   pagination: {
+  //     currentPage: 0,
+  //     pageSize: 10,
+  //     pageSizes: [10, 20, 30, 50, 100],
+  //     total: 1000,
+  //     layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
+  //   },
+  // });
+
+  const table_data = isDeepReactive ? ref<any[]>([]) : shallowRef<any[]>([]);
+  const loading = ref(false);
+  const pagination = reactive<PaginationType>({
+        currentPage: 0,
+        pageSize: 10,
+        pageSizes: [10, 20, 30, 50, 100],
+        total: 1000,
+        layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
+      })
 
   const handleFetchData = async (param = {}) => {
-    const {
-      table_config: { handleLoadData, handleProcseeData },
-    } = $props;
-    if (!handleLoadData) return undefined;
+    if (!handleLoadData) return;
 
+    loading.value = true;
+    table_data.value = [];
     try {
-      config.loading = true;
+
       const requestFn = getRequestFn(handleLoadData);
       if (!requestFn) return;
 
@@ -37,16 +44,16 @@ export const useTable = <D = any>($props: DefaultProps) => {
 
       data = handleProcseeData ? handleProcseeData(data) : data;
 
-      config.table_data = data;
+      table_data.value = data;
     } catch (error: any) {
       // do something
     } finally {
-      config.loading = false;
+      loading.value = false;
     }
   };
 
   const getRequestFn = (
-    payload: DefaultProps["table_config"]["handleLoadData"]
+    payload: TableType['handleLoadData']
   ) => {
     if (!payload) return;
     if (typeof payload == "function") return payload;
@@ -54,21 +61,23 @@ export const useTable = <D = any>($props: DefaultProps) => {
   };
 
   const handleSetPagenation = <
-    K extends keyof UseTableHookConfigType["pagination"]
+    K extends keyof PaginationType
   >(
-    payload: Partial<UseTableHookConfigType["pagination"]>
+    payload: Partial<PaginationType>
   ) => {
     for (let [key, val] of Object.entries(payload)) {
-      if (!config.pagination.hasOwnProperty(key)) continue;
-      config.pagination[key as K] =
-        val as UseTableHookConfigType["pagination"][K];
+      if (!pagination.hasOwnProperty(key)) continue;
+      pagination[key as K] =
+        val as PaginationType[K];
     }
   };
 
   handleFetchData();
 
   return {
-    ...toRefs(config),
+    table_data,
+    loading,
+    pagination,
     handleFetchData,
     handleSetPagenation,
   };

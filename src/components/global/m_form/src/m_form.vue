@@ -1,5 +1,5 @@
 <template>
-  <ElForm :model="params" v-bind="form_base_config">
+  <ElForm :model="params" v-bind="form_base_config" ref="form_ref">
     <template v-for="item in formItems" :key="item.prop">
       <ElFormItem :label="item.label" :prop="item.prop" :rules="item.rule">
         <template #label="{ label }">
@@ -29,11 +29,13 @@
 import { ElForm, ElFormItem, ElTooltip, ElSpace } from "element-plus";
 import MFormItem from "./m_form_item.vue";
 
+import type { FormInstance } from "element-plus";
 import type { FormConfigPropType, BaseType } from "./type";
 
-import { watch } from "vue";
+import { watch, ref, unref } from "vue";
 
 import { isFunction } from "@/utils/is";
+import { reject } from "lodash";
 
 const $props = withDefaults(defineProps<FormConfigPropType>(), {
   params: () => ({}),
@@ -48,12 +50,34 @@ const getTips = (tips: Required<BaseType>['tips']) => {
   return isFunction(tips) ? tips : (() => tips)
 }
 
-let reset_fields: Record<string, any> = $props.params;
-watch(() => $props.params, (v) => {
-  reset_fields = v;
-  console.log("set default", reset_fields);
+const form_ref = ref<FormInstance>()
+const handleResetFields = () => {
+  unref(form_ref)?.resetFields();
+}
+
+const handleValidate = () => {
+  return new Promise((resolve, reject) => {
+    unref(form_ref)?.validate(valid => valid ? resolve(true) : reject)
+  })
+
+}
+
+watch(() => $props.formItems, (v) => {
+  const { params } = $props;
+  v.forEach(({ defaultValue, prop }) => {
+    if (!defaultValue) return;
+    if (Object.prototype.hasOwnProperty.call(params, prop)) {
+      params[prop] = defaultValue;
+    };
+  })
+  console.log("set default", params);
 }, {
-  deep: false
+  immediate: true,
+})
+
+defineExpose({
+  handleResetFields,
+  handleValidate
 })
 </script>
 

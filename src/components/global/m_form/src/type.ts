@@ -1,11 +1,12 @@
 import type { FormRules } from "element-plus";
 import type { Component, VNode } from "vue";
 import type { SelectionPropType } from "../../m_select/src/type";
+import { withInstall } from "@/utils";
 
 interface BaseType {
   prop: string;
   label?: string;
-  default?: string;
+  defaultValue?: ArrayLike<string | number> | number;
   rule?: FormRules[keyof FormRules];
   disabled?: boolean;
   readonly?: boolean;

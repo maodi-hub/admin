@@ -9,8 +9,9 @@
           />
           <template #dropdown>
             <el-dropdown-menu>
-              <template v-for="item in size_options" :key="item.value">
-                <el-dropdown-item :command="item.value">
+              <el-dropdown-item disabled> 用户：adad </el-dropdown-item>
+              <template v-for="(item, index) in size_options" :key="item.value">
+                <el-dropdown-item :command="item.value" :divided="index == 0">
                   <m-icon :name="item.icon" />{{ item.label }}
                 </el-dropdown-item>
               </template>
@@ -37,6 +38,7 @@ import { useGlobalStore } from "@/store/modules/global";
 import { useMenuStore } from "@/store/modules/menu";
 
 import { AUTH } from "@/api";
+import { resetRouter } from "@/router/routes";
 
 const $router = useRouter();
 const $global = useGlobalStore();
@@ -50,16 +52,15 @@ const size_options = [
 const operation: Record<string, () => void> = {
   edit_password: () => {},
   quit: () => {
-    AUTH.logOut().then((res) => {
-      if (res.code) {
-        ElMessage.error("退出失败");
-        return;
-      }
-      $global.setToken("");
-      $menu.setMenu([]);
-      $menu.resetMenuTag();
-      $router.replace("/login");
-    });
+    // AUTH.logOut().then((res) => {
+    //   if (res.code) {
+    //     ElMessage.error("退出失败");
+    //     return;
+    //   }
+    $global.setToken("");
+    $menu.resetMenuTag();
+    $router.replace("/login");
+    // });
   },
 };
 

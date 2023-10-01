@@ -1,6 +1,6 @@
 import { ElMessage } from "element-plus";
 
-import { setDynamicRouter } from "@/utils/lib/router";
+import { flatRouter, setDynamicRouter } from "@/utils/lib/router";
 
 import { useMenuStore } from "@/store/modules/menu";
 
@@ -79,9 +79,11 @@ export async function initRouter($router: Router) {
 export function resetRouter($router: Router) {
   const $menu = useMenuStore();
   const menu_list = $menu.default_menu;
-  menu_list.forEach((route) => {
+  flatRouter(menu_list).forEach((route) => {
     const route_name = route.name;
-    if (route_name && $router.hasRoute(route_name))
+    if (route_name && $router.hasRoute(route_name)) {
       $router.removeRoute(route_name);
+    }
   });
+  $menu.setMenu([]);
 }

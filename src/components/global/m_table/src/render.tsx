@@ -9,12 +9,12 @@ import type {
 
 import { useSlots } from "vue";
 
-export function TableColumn(props: {
+export function MTableColumn(props: {
   column: TableColumnType;
-  base_config: TableType;
+  base_config?: TableType;
 }) {
   const $slots = useSlots();
-  const { column } = props;
+  const { column, base_config } = props;
   return (
     <ElTableColumn
       {...column}
@@ -30,20 +30,31 @@ export function TableColumn(props: {
           if (render_cell) return render_cell(scope);
           if ($slots[`${prop!}_column`])
             return $slots[`${prop!}_column`]!(scope);
-          return (
-            (formatter
-              ? formatter(row, scope.column, row[prop!], scope.$index)
-              : row[prop!]) ?? "--"
-          );
+
+          const cellValue = formatter
+            ? formatter(row, scope.column, row[prop!], scope.$index)
+            : row[prop!];
+
+          if (!cellValue && cellValue !== 0) {
+            return getDefaultValue(column, base_config);
+          }
+
+          return cellValue;
         },
         header: (scope: HeaderRenderScopeType<any>) => {
           const { render_header, prop } = column;
           if (render_header) return render_header(scope);
           if ($slots[`${prop!}_header`])
             return $slots[`${prop!}_header`]!(scope);
-          return column.label || "--";
+          return column.label;
         },
       }}
     </ElTableColumn>
   );
+}
+
+function getDefaultValue(column: TableColumnType, base_config?: TableType) {
+  const column_default = column.defaultValue;
+  const base_default = base_config?.defaultValue;
+  return column_default ?? base_default;
 }
