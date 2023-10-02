@@ -1,5 +1,3 @@
-type MetaGlobTypeWithDefault<T> = Record<string, { default: T }>;
-
 /* Menu */
 declare namespace Menu {
   interface MenuOptions {

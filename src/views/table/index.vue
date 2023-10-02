@@ -36,6 +36,7 @@ const form_config = reactive<FormConfigPropType>({
       type: "text",
       el_type: "input",
       prop: "a",
+      unique_key: "a",
       label: "asdasd",
       placeholder: "请输入",
     },
@@ -43,12 +44,13 @@ const form_config = reactive<FormConfigPropType>({
       type: "selection",
       el_type: "select",
       prop: "c",
+      unique_key: "c",
       placeholder: "请选择",
       label: "下拉选框",
       multiple: true,
       filterable: true,
       defaultValue: ["2"],
-      async optionEnumFn() {
+      optionEnumFn() {
         return [
           { value: "1", label: "asdads" },
           { value: "2", label: "你好m" },
@@ -61,20 +63,15 @@ const form_config = reactive<FormConfigPropType>({
 });
 
 const table_config: TableType = {
-  rowKey: "1",
-  handleLoadData: async () => ({
-    code: 0,
-    data,
-  }),
+  handleLoadData: () => data,
   defaultValue: "--",
+  rowKey: "1",
 };
 
 const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
   {
-    type: "selection",
-  },
-  {
     label: "asdasd1",
+    uniqueKey: "a",
     prop: "1",
     render_header(data) {
       return <>"asd"{data.column.label}</>;
@@ -84,24 +81,43 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
     label: "asdasd2",
     prop: "2",
     defaultValue: "默认值",
+    renderType: "tag",
+    uniqueKey: "g",
+    optionEnumFn() {
+      return [
+        {
+          value: "0",
+          label: "禁用",
+          type: "danger",
+        },
+        {
+          value: "1",
+          label: "启用",
+          type: "success",
+        },
+      ];
+    },
   },
   {
     label: "asdasd3",
     prop: "3",
+    uniqueKey: "d",
   },
   {
     label: "asdasd4",
     prop: "4",
+    uniqueKey: "e",
   },
   {
     label: "asdasd5",
+    uniqueKey: "f",
   },
 ];
 
 const data = [
   {
     1: "gdgf12423",
-    2: "",
+    2: "1",
     3: "ass",
     4: "asd62626",
   },
@@ -117,7 +133,7 @@ const data = [
   },
   {
     1: "sdfsdf",
-    2: "sdfsd",
+    2: "",
     3: "ass",
   },
   {

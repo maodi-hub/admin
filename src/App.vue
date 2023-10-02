@@ -17,11 +17,10 @@ const $menu = useMenuStore();
 const locale = computed(() => {
   const langs: Record<string, any> = {
     zh,
-    en
-  }
-  return langs[$global.language] || langs['zh'];
-})
-
+    en,
+  };
+  return langs[$global.language] || langs["zh"];
+});
 
 useEventListener(
   "resize",
@@ -29,7 +28,7 @@ useEventListener(
     const w = document.documentElement.offsetWidth;
     if (w > 768) return;
     $menu.setCollapse(true);
-  })
+  }, 300)
 );
 </script>
 

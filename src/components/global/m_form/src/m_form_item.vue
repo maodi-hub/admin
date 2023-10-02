@@ -1,7 +1,10 @@
 <template>
-
-  <component v-model="params[config.prop]" :is="config.type == 'selection' ? 'm-selection': `el-${config.el_type}`" v-bind="searchProps">
-      <!-- <template #prefix>
+  <component
+    v-model="params[config.prop]"
+    :is="config.type == 'selection' ? 'm-selection' : `el-${config.el_type}`"
+    v-bind="searchProps"
+  >
+    <!-- <template #prefix>
         <template v-if="['text', 'selection'].includes(config.type)">
           <component v-if="config.prefix" :is='config.prefix'></component>
           <slot v-else :name="`${config.prop}_prefix`"></slot>
@@ -30,19 +33,31 @@
 <script setup lang="ts">
 import type { FormItemPropType } from "./type";
 
-import { computed } from "vue";
+import { computed, toRaw } from "vue";
 import { omit } from "lodash";
 
 const $props = withDefaults(defineProps<FormItemPropType>(), {
-  params: () => ({})
-})
+  params: () => ({}),
+});
 
 const searchProps = computed(() => {
   const { config } = $props;
-  const exclude_prop = ['prefix', 'suffix', "append", "prepend", "tips", "rule", "modifer", "default", "label"];
-  return omit(config, ...exclude_prop)
-})
-
+  const exclude_prop = [
+    "prefix",
+    "suffix",
+    "append",
+    "prepend",
+    "tips",
+    "rule",
+    "modifer",
+    "default",
+    "label",
+    "prop",
+    "unique_key",
+    "el_type",
+  ];
+  return omit(toRaw(config), ...exclude_prop);
+});
 </script>
 
 <style scoped></style>

@@ -39,6 +39,8 @@ export default defineConfig({
         manualChunks: {
           vue: ['vue', 'pinia', 'vue-router'],
           'element-plus': ['element-plus', "@element-plus/icons-vue"],
+          xlsx: ['xlsx'],
+          'file-saver': ['file-saver']
         },
         // Static resource classification and packaging
         chunkFileNames: "assets/js/[name]-[hash].js",

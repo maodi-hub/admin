@@ -8,12 +8,12 @@ export function useSelection($props: Pick<SelectionPropType, 'filterMethod' | 'r
   const loading = ref(false);
   const option = ref<any[]>([]);
 
-  const handleFetchData = async () => {
+  const handleFetchData = async (...arg: any[]) => {
     loading.value = true;
     option.value = [];
     try {
       if (!optionEnumFn) return;
-      const data = await optionEnumFn();
+      const data = await optionEnumFn(arg);
       option.value = data;
     } finally{
       loading.value = false

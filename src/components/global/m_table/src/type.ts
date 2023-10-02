@@ -2,7 +2,6 @@ import { ElTable } from "element-plus";
 
 import type { VNode } from "vue";
 import type { TableColumnCtx } from "element-plus";
-import type { AxiosRequestConfig } from "axios";
 import type { FormConfigPropType } from "../../m_form";
 import type { PaginationType } from "../../m_pagination";
 
@@ -51,22 +50,30 @@ interface TableType<D = any>
   > {
   isDeepReactive?: boolean;
   onLoadMore?: () => void;
-  handleLoadData?: (...arg: any[]) => Promise<any>;
-  handleProcseeData?: (...arg: any) => D[];
+  handleLoadData?: (...arg: any[]) => Promise<any> | any;
+  handleProcseeData?: <T>(data: T, set_pagination: (payload: Partial<PaginationType>) => void) => D[];
   handleProcessParam?: (params?: Record<string, any>, pagination?: PaginationType) => Record<string, any>
   defaultValue?: string | number; // cell 无参时默认显示的文案
   rowKey?: string
 }
 
+type TagType = { value: string, label: string, type: "success"| "info"| "warning"| "danger"| ""}
+type EnumFnType = (...arg: any[]) => Promise<TagType[]> | TagType[]
 interface TableColumnType<D = any>
-  extends Omit<Partial<TableColumnCtx<D>>, "renderHeader">, Pick<TableType, "defaultValue"> {
+  extends Omit<Partial<TableColumnCtx<D>>, "renderHeader" | 'children'>, Pick<TableType, "defaultValue"> {
   render_header?: (data: HeaderRenderScopeType<D>) => VNode;
   render_cell?: (data: RenderScopeType<D>) => VNode;
+  optionEnumFn?: EnumFnType;
+  renderType?: "tag";
+  _children?: TableColumnType<D>[];
+  uniqueKey: string;
+  headerTextWrap?: boolean;
 }
 
 interface TableConfigPropType<D> extends FormConfigPropType {
   title?: string; // 导出表格时的名字
   table_config?: TableType<D>;
+  immediate?: boolean;
   other_ope?: string[];
   columns?: TableColumnType<D>[];
   max_height?: number | string;
@@ -82,5 +89,6 @@ export type {
   TableType,
   RenderScopeType,
   HeaderRenderScopeType,
-  TableConfigPropType
+  TableConfigPropType,
+  TagType
 };

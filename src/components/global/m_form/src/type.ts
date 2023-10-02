@@ -12,7 +12,7 @@ interface BaseType {
   size?: "default" | "large" | "size";
   tips?: string | (() => VNode);
   clearable?: boolean;
-  // custom_render_item?: (props: { param: Record<string, any> }) => VNode;
+  unique_key: string;
   [x: string]: any;
 }
 
@@ -31,10 +31,10 @@ interface InputType extends BaseInputType {
   type: "text";
   prefixIcon?: string | Component;
   suffixIcon?: string | Component;
-  prefix?: RenderSlotType;
-  suffix?: RenderSlotType;
-  prepend?: RenderSlotType;
-  append?: RenderSlotType;
+  // prefix?: RenderSlotType;
+  // suffix?: RenderSlotType;
+  // prepend?: RenderSlotType;
+  // append?: RenderSlotType;
 }
 
 interface TextAreaType extends Omit<BaseInputType, "size"> {

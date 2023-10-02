@@ -49,13 +49,21 @@ const fileds_Props = computed(() => {
 });
 
 const bindProps = computed(() =>
-  omit($props, "optionEnumFn", "modelValue", "prefix", "remoteMethod", "props")
+  omit(
+    $props,
+    "optionEnumFn",
+    "modelValue",
+    "prefix",
+    "remoteMethod",
+    "props",
+    "unique_key"
+  )
 );
 
 const onRemoteMethod = (val: string) => {
-  const { remoteMethod, optionEnumFn } = $props;
+  const { remoteMethod } = $props;
   if (!remoteMethod) return;
-  remoteMethod(val, loading, optionEnumFn);
+  remoteMethod(val, loading, handleFetchData);
 };
 
 onMounted(handleFetchData);

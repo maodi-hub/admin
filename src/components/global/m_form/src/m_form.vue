@@ -1,10 +1,10 @@
 <template>
   <ElForm :model="params" v-bind="form_base_config" ref="form_ref">
-    <template v-for="item in formItems" :key="item.prop">
+    <template v-for="item in formItems" :key="item.unique_key">
       <ElFormItem :label="item.label" :prop="item.prop" :rules="item.rule">
         <template #label="{ label }">
           <el-space :size="2">
-            <slot :name="`${item.prop}_label`">{{ label }}</slot>
+            <slot :name="`${item.unique_key}_label`">{{ label }}</slot>
             <el-tooltip v-if="item.tips" placement="top">
               <template #content>
                 <component :is="getTips(item.tips)" />
@@ -13,16 +13,8 @@
             </el-tooltip>
           </el-space>
         </template>
-        <slot :name="`${item.prop}_item`" :param="params">
-          <MFormItem :config="item" :params="params">
-            <template
-              v-for="slotKey in ['prefix', 'suffix']"
-              :key="slotKey"
-              #[`${item.prop}_${slotKey}`]
-            >
-              <slot :name="`${item.prop}_${slotKey}`"></slot>
-            </template>
-          </MFormItem>
+        <slot :name="`${item.unique_key}_form_item`" :param="params">
+          <MFormItem :config="item" :params="params" />
         </slot>
       </ElFormItem>
     </template>

@@ -1,7 +1,9 @@
-import i18n from "@/config/i18n";
 import type { I18n, TranslateOptions } from "vue-i18n";
 import type { MessageType } from "./interface";
+
 import { isArray } from "lodash";
+
+import i18n from "@/config/i18n";
 
 function getLangs() {
   const langs = import.meta.glob("./modules/*.json", {

@@ -45,7 +45,7 @@
           </div>
         </div>
         <div
-          class="m-table__main flex-1 min-h-0 min-w-0 p-5 mb-5"
+          class="m-table__main flex-1 min-h-0 min-w-0 p-5"
           :class="{ unset_height: !max_height && table_height != '100%' }"
         >
           <ElTable
@@ -148,6 +148,7 @@ const $props = withDefaults(defineProps<TableConfigPropType<D>>(), {
     labelWidth: "80px",
   }),
   table_config: () => ({}),
+  immediate: true,
   other_ope: () => ["refresh", "download"],
   columns: () => [],
   pagination_position: "left",
@@ -175,15 +176,17 @@ const { componentRefs } = useRefs<{
 
 const DEFAULT_TABLE_CONFIG = {
   border: true,
-  stripe: true,
+  stripe: false,
   headerCellStyle: { backgroundColor: "#F2F3F5" },
 };
 const merge_table_config = computed(() => {
   const { table_config } = $props;
-  return Object.assign(
-    {},
-    DEFAULT_TABLE_CONFIG,
-    omit(table_config, "onLoadMore", "handleLoadData", "handleProcseeData", "default")
+  return omit(
+    Object.assign({}, DEFAULT_TABLE_CONFIG, table_config),
+    "onLoadMore",
+    "handleLoadData",
+    "handleProcseeData",
+    "defaultValue"
   );
 });
 
@@ -245,9 +248,13 @@ const handleExportToExcel = () => {
 
 const handleResetFields = () => {
   unref(componentRefs)("form_ref")?.handleResetFields();
+  handleSetPagenation({ currentPage: 1 });
+  handleGetTableData();
 };
 
 const getInstance = () => unref(componentRefs);
+
+if ($props.immediate) handleGetTableData();
 
 defineExpose({
   getInstance,
@@ -308,4 +315,3 @@ defineExpose({
   height: unset;
 }
 </style>
-./hooks
