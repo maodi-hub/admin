@@ -33,8 +33,14 @@
 
           <div class="other__ope">
             <slot name="other_ope">
-              <el-button icon="Refresh" circle @click="handleGetTableData"></el-button>
-              <el-button icon="Download" circle></el-button>
+              <template v-for="[key, config] in other_ope_list" :key="key">
+                <el-button
+                  :icon="config.icon"
+                  circle
+                  @click="config.fn"
+                  :loading="key == 'download' ? export_loading : false"
+                ></el-button>
+              </template>
             </slot>
           </div>
         </div>
@@ -114,21 +120,23 @@
 </template>
 
 <script setup lang="ts" generic="D">
-import { ElTable, ElEmpty, ElTableColumn } from "element-plus";
+import { ElTable, ElEmpty, ElTableColumn, ElMessage } from "element-plus";
 import { MForm } from "../../m_form";
+import { MTableColumn } from "./render";
 
 import type { TableConfigPropType } from "./type";
 
 import { computed, ref, toRaw, unref } from "vue";
+import { useRoute } from "vue-router";
 import { omit, pick } from "lodash";
-
-import { MTableColumn } from "./render";
 
 import { vLoading } from "element-plus";
 import { vBottomLoading } from "./directives";
 
 import { useTable } from "./hooks";
 import { useRefs } from "@/hooks/useRefs";
+
+import { handleExport } from "@/utils/lib/excel";
 
 defineOptions({
   name: "MTable",
@@ -140,6 +148,7 @@ const $props = withDefaults(defineProps<TableConfigPropType<D>>(), {
     labelWidth: "80px",
   }),
   table_config: () => ({}),
+  other_ope: () => ["refresh", "download"],
   columns: () => [],
   pagination_position: "left",
   show_form: true,
@@ -150,6 +159,7 @@ const columnType = ["index", "selection", "expand", "radio"];
 
 const radio = ref("");
 
+const $route = useRoute();
 const {
   handleFetchData,
   handleSetPagenation,
@@ -175,6 +185,15 @@ const merge_table_config = computed(() => {
     DEFAULT_TABLE_CONFIG,
     omit(table_config, "onLoadMore", "handleLoadData", "handleProcseeData", "default")
   );
+});
+
+const other_ope_config: Record<string, { icon: string; fn(...arg: any[]): void }> = {
+  refresh: { icon: "Refresh", fn: () => handleGetTableData() },
+  download: { icon: "Download", fn: () => handleExportToExcel() },
+};
+const other_ope_list = computed(() => {
+  const { other_ope } = $props;
+  return Object.entries(other_ope_config).filter(([key, _]) => other_ope.includes(key));
 });
 
 const unset_height = computed(() => {
@@ -207,6 +226,21 @@ const handleGetTableData = () => {
     ? handleProcessParam(toRaw(params), toRaw(pagination))
     : { ...params, ...pick(pagination, "currentPage", "pageSize") };
   handleFetchData(param);
+};
+
+const export_loading = ref(false);
+const handleExportToExcel = () => {
+  const { title, columns } = $props;
+  const data = toRaw(unref(table_data));
+  const sheet_name = title ?? $route.meta.title;
+  export_loading.value = true;
+  handleExport(columns, data, sheet_name)
+    .then((res) => {
+      const message = res ? "导出成功" : "导出失败";
+      const type = res ? "success" : "error";
+      ElMessage({ type, message });
+    })
+    .finally(() => (export_loading.value = false));
 };
 
 const handleResetFields = () => {

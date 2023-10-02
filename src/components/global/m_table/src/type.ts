@@ -65,7 +65,9 @@ interface TableColumnType<D = any>
 }
 
 interface TableConfigPropType<D> extends FormConfigPropType {
+  title?: string; // 导出表格时的名字
   table_config?: TableType<D>;
+  other_ope?: string[];
   columns?: TableColumnType<D>[];
   max_height?: number | string;
   table_height?: string | number;
