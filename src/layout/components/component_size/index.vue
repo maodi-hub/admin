@@ -7,7 +7,10 @@
           <template #dropdown>
             <el-dropdown-menu>
               <template v-for="item in size_options" :key="item.value">
-                <el-dropdown-item :command="item.value">
+                <el-dropdown-item
+                  :command="item.value"
+                  :disabled="$global.size == item.value"
+                >
                   {{ item.label }}
                 </el-dropdown-item>
               </template>

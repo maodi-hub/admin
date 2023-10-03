@@ -1,4 +1,5 @@
 import { ElTableColumn } from "element-plus";
+import EditRowInput from "./component/edit_row_input.vue";
 
 import type {
   TableColumnType,
@@ -14,7 +15,7 @@ import { omit } from "lodash";
 export function MTableColumn(props: {
   column: TableColumnType;
   base_config?: TableType;
-  enumMap?: Map<string, TagType[]>
+  enumMap?: Map<string, TagType[]>;
 }) {
   const $slots = useSlots();
   const { column, base_config, enumMap } = props;
@@ -35,7 +36,11 @@ export function MTableColumn(props: {
           // 多级表头
           if (_children && _children.length)
             return _children.map((item) => (
-              <MTableColumn column={item} base_config={base_config} enumMap={enumMap}/>
+              <MTableColumn
+                column={item}
+                base_config={base_config}
+                enumMap={enumMap}
+              />
             ));
           // 存在自定义渲染
           if (render_cell) return render_cell(scope);
@@ -49,9 +54,11 @@ export function MTableColumn(props: {
 
           if (column.renderType && column.renderType == "tag") {
             const tags = enumMap?.get(uniqueKey) || [];
-            const tag = unref(tags).find(
-              ({ value }) => value == cellValue
-            ) || { value: "", label: cellValue, type: "info" };
+            const tag = unref(tags).find(({ value }) => value == cellValue) || {
+              value: "",
+              label: cellValue,
+              type: "info",
+            };
             return <el-tag type={tag.type}>{tag.label || cellValue}</el-tag>;
           }
 
@@ -92,9 +99,4 @@ function getCellValue(
   }
 
   return cellValue;
-}
-
-async function getTagEnum(cb?: TableColumnType["optionEnumFn"]) {
-  if (!cb) return [];
-  return cb();
 }

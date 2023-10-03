@@ -12,7 +12,10 @@
           <template #dropdown>
             <el-dropdown-menu>
               <template v-for="item in language_options" :key="item.value">
-                <el-dropdown-item :command="item.value">
+                <el-dropdown-item
+                  :command="item.value"
+                  :disabled="$global.language == item.value"
+                >
                   {{ item.label }}
                 </el-dropdown-item>
               </template>

@@ -40,10 +40,9 @@ const value = computed({
   },
 });
 
-const DEFAULT_FIELDS = { value: "value", label: "label" };
 const fileds_Props = computed(() => {
+  const DEFAULT_FIELDS = { value: "value", label: "label" };
   const { props } = $props;
-
   if (!props) return DEFAULT_FIELDS;
   return Object.assign({}, DEFAULT_FIELDS, props);
 });
@@ -63,7 +62,7 @@ const bindProps = computed(() =>
 const onRemoteMethod = (val: string) => {
   const { remoteMethod } = $props;
   if (!remoteMethod) return;
-  remoteMethod(val, loading, handleFetchData);
+  remoteMethod(val, option, loading, handleFetchData);
 };
 
 onMounted(handleFetchData);

@@ -1,5 +1,6 @@
 <template>
   <ElForm :model="params" v-bind="form_base_config" ref="form_ref">
+    <slot> </slot>
     <template v-for="item in formItems" :key="item.unique_key">
       <ElFormItem :label="item.label" :prop="item.prop" :rules="item.rule">
         <template #label="{ label }">

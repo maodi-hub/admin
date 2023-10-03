@@ -34,12 +34,14 @@
           <div class="other__ope">
             <slot name="other_ope">
               <template v-for="[key, config] in other_ope_list" :key="key">
-                <el-button
-                  :icon="config.icon"
-                  circle
-                  @click="config.fn"
-                  :loading="key == 'download' ? export_loading : false"
-                ></el-button>
+                <el-tooltip :content="key">
+                  <el-button
+                    :icon="config.icon"
+                    circle
+                    @click="config.fn"
+                    :loading="key == 'download' ? export_loading : false"
+                  ></el-button>
+                </el-tooltip>
               </template>
             </slot>
           </div>
@@ -48,68 +50,70 @@
           class="m-table__main flex-1 min-h-0 min-w-0 p-5"
           :class="{ unset_height: !max_height && table_height != '100%' }"
         >
-          <ElTable
-            v-bind="merge_table_config"
-            :height="getHeight.height"
-            :max-height="getHeight.maxHeight"
-            :data="table_data"
-            v-loading="loading"
-            v-bottom-loading="table_config.onLoadMore"
-            ref="table_ref"
+          <MForm
+            :params="{ table_data }"
+            :class="{ unset_height: !max_height && table_height != '100%' }"
           >
-            <!-- 默认插槽 -->
-            <slot />
-
-            <template
-              v-for="(col, col_index) in columns"
-              :key="col['column-key'] || col_index"
+            <ElTable
+              v-bind="merge_table_config"
+              :height="getHeight.height"
+              :max-height="getHeight.maxHeight"
+              :data="table_data"
+              v-loading="loading"
+              v-bottom-loading="table_config.onLoadMore"
+              ref="table_ref"
             >
-              <el-table-column
-                v-if="col.type && columnType.includes(col.type)"
-                v-bind="bindColumnProp(col)"
-                :align="col.align ?? 'center'"
-                :reserve-selection="col.type == 'selection'"
-              >
-                <template #default="scope">
-                  <!-- expand -->
-                  <template v-if="col.type == 'expand'">
-                    <slot :name="col.type" v-bind="scope" />
+              <!-- 默认插槽 -->
+              <slot />
+
+              <template v-for="(col, col_index) in columns" :key="col">
+                <el-table-column
+                  v-if="col.type && columnType.includes(col.type)"
+                  v-bind="bindColumnProp(col)"
+                  :align="col.align ?? 'center'"
+                  :reserve-selection="col.type == 'selection'"
+                >
+                  <template #default="scope">
+                    <!-- expand -->
+                    <template v-if="col.type == 'expand'">
+                      <slot :name="col.type" v-bind="scope" />
+                    </template>
+                    <!-- radio -->
+                    <el-radio
+                      v-if="col.type == 'radio'"
+                      v-model="radio"
+                      :label="scope.row[table_config?.rowKey || 'id']"
+                    >
+                      <i></i>
+                    </el-radio>
                   </template>
-                  <!-- radio -->
-                  <el-radio
-                    v-if="col.type == 'radio'"
-                    v-model="radio"
-                    :label="scope.row[table_config?.rowKey || 'id']"
-                  >
-                    <i></i>
-                  </el-radio>
-                </template>
-              </el-table-column>
+                </el-table-column>
 
-              <MTableColumn
-                v-else
-                :column="col"
-                :base_config="table_config"
-                :enumMap="enumMap"
-              >
-                <template v-for="slot in Object.keys($slots)" #[slot]="scope">
-                  <slot :name="slot" v-bind="scope" />
-                </template>
-              </MTableColumn>
-            </template>
+                <MTableColumn
+                  v-else
+                  :column="col"
+                  :base_config="table_config"
+                  :enumMap="enumMap"
+                >
+                  <template v-for="slot in Object.keys($slots)" #[slot]="scope">
+                    <slot :name="slot" v-bind="scope" />
+                  </template>
+                </MTableColumn>
+              </template>
 
-            <!-- 末尾添加行 -->
-            <template #append>
-              <slot name="append"></slot>
-            </template>
+              <!-- 末尾添加行 -->
+              <template #append>
+                <slot name="append"></slot>
+              </template>
 
-            <!-- 空数据显示 -->
-            <template #empty>
-              <slot name="empty">
-                <el-empty description="无数据" />
-              </slot>
-            </template>
-          </ElTable>
+              <!-- 空数据显示 -->
+              <template #empty>
+                <slot name="empty">
+                  <el-empty description="无数据" />
+                </slot>
+              </template>
+            </ElTable>
+          </MForm>
         </div>
         <div class="m-table__footer" v-if="show_pagination">
           <MPagination
@@ -125,7 +129,7 @@
 </template>
 
 <script setup lang="ts" generic="D">
-import { ElTable, ElEmpty, ElTableColumn, ElMessage } from "element-plus";
+import { ElTable, ElEmpty, ElTableColumn, ElMessage, ElTooltip } from "element-plus";
 import { MForm } from "../../m_form";
 import { MTableColumn } from "./render";
 
@@ -161,9 +165,10 @@ const $props = withDefaults(defineProps<TableConfigPropType<D>>(), {
   show_pagination: true,
 });
 
+const $route = useRoute();
+
 const radio = ref("");
 
-const $route = useRoute();
 const {
   handleFetchData,
   handleSetPagenation,
@@ -324,6 +329,15 @@ defineExpose({
 
     .m-table__main {
       background-color: #fff;
+      .el-form {
+        height: 100%;
+        .el-form__item {
+          margin-bottom: 0;
+        }
+        :deep(.el-input .el-input__wrapper) {
+          min-width: 0;
+        }
+      }
 
       .el-table {
         :deep(.el-table__header) {

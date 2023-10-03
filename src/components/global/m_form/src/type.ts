@@ -43,7 +43,7 @@ interface TextAreaType extends Omit<BaseInputType, "size"> {
   autosize?: boolean | { minRows: number; maxRows: number };
 }
 
-interface SelectionType extends SelectionPropType {
+interface SelectionType extends SelectionPropType, Pick<BaseType, "unique_key"> {
   el_type: "select";
   type: "selection";
 }

@@ -58,14 +58,13 @@ interface TableType<D = any>
 }
 
 type TagType = { value: string, label: string, type: "success"| "info"| "warning"| "danger"| ""}
-type EnumFnType = (...arg: any[]) => Promise<TagType[]> | TagType[]
 interface TableColumnType<D = any>
   extends Omit<Partial<TableColumnCtx<D>>, "renderHeader" | 'children' | 'formatter'>, Pick<TableType, "defaultValue"> {
   render_header?: (data: HeaderRenderScopeType<D>) => VNode;
   render_cell?: (data: RenderScopeType<D>) => VNode;
-  optionEnumFn?: EnumFnType;
+  optionEnumFn?: EnumFnType<TagType>;
   formatter?: (row: Record<string, any>, column: TableColumnType<D>, cellValue: any, $index: number) => any;
-  renderType?: "tag";
+  renderType?: "tag" | "input";
   _children?: TableColumnType<D>[];
   uniqueKey: string;
   headerTextWrap?: boolean;

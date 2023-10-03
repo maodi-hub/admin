@@ -7,12 +7,40 @@
       :table_config="table_config"
       table_height="100%"
     >
+      <template #e_column="{ row, $index }">
+        <EditRowInput
+          v-model="row.d"
+          :editing="editingRows[$index]?.d"
+          @editingChange="(can_edit) => setEditingRows($index, 'd', can_edit)"
+          @change="(state) => setChangedRows($index, state)"
+        />
+      </template>
+      <template #f_column="{ row, $index }">
+        <EditRowInput
+          v-model="row.f"
+          :editing="editingRows[$index]?.f"
+          @editingChange="(can_edit) => setEditingRows($index, 'f', can_edit)"
+          @change="(state) => setChangedRows($index, state)"
+        />
+      </template>
+      <template #operation_column="{ row, $index }">
+        <el-button type="primary" v-show="getCurrentRowChangeState($index)"
+          >保存</el-button
+        >
+        <el-button
+          plain
+          v-show="getCurrentRowEditState($index)"
+          @click="cancelEditing($index)"
+          >撤销</el-button
+        >
+      </template>
     </MTable>
   </div>
 </template>
 
 <script setup lang="tsx">
-import { MTable } from "@/components/global/m_table";
+import { MTable, useRowEditing } from "@/components/global/m_table";
+import EditRowInput from "@/components/global/m_table/src/component/edit_row_input.vue";
 
 import type { FormConfigPropType } from "@/components/global/m_form";
 import type { TableColumnType, TableType } from "@/components/global/m_table";
@@ -25,6 +53,18 @@ defineOptions({
 });
 
 const $route = useRoute();
+const {
+  editingRows,
+  iniEditingRows,
+  getCurrentRowChangeState,
+  getCurrentRowEditState,
+  setChangedRows,
+  setEditingRows,
+  clearEditingRows,
+  cancelEditing,
+} = useRowEditing({
+  model: "cell",
+});
 
 const form_config = reactive<FormConfigPropType>({
   params: {
@@ -63,20 +103,26 @@ const form_config = reactive<FormConfigPropType>({
 });
 
 const table_config: TableType = {
-  handleLoadData: () => data,
+  isDeepReactive: true,
+  handleLoadData: () => {
+    clearEditingRows();
+    iniEditingRows(columns, data);
+    return data;
+  },
   defaultValue: "--",
   rowKey: "1",
 };
 
 const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
+  { type: "selection", uniqueKey: "selection" },
   {
     label: "asdasd1",
     uniqueKey: "a",
-    prop: "1",
+    prop: "a",
   },
   {
     label: "asdasd2",
-    prop: "2",
+    prop: "b",
     defaultValue: "默认值",
     renderType: "tag",
     uniqueKey: "g",
@@ -97,9 +143,10 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
   },
   {
     label: "asdasd3",
-    prop: "3",
+    prop: "c",
     uniqueKey: "d",
     renderType: "tag",
+    width: 300,
     optionEnumFn() {
       return [
         {
@@ -117,267 +164,101 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
   },
   {
     label: "asdasd4",
-    prop: "4",
+    prop: "d",
     uniqueKey: "e",
+    width: "300",
+    renderType: "input",
   },
   {
     label: "asdasd5",
+    prop: "f",
     uniqueKey: "f",
+  },
+  {
+    uniqueKey: "operation",
+    width: 300,
+    render_header(data) {
+      return <el-button>保存全部</el-button>;
+    },
   },
 ];
 
 const data = [
   {
-    1: "gdgf12423",
-    2: "1",
-    3: "ass",
-    4: "asd62626",
+    a: "gdgf12423",
+    b: "1",
+    c: "ass",
+    d: "asd62626",
   },
   {
-    1: "sdfsdf",
-    2: "0",
-    3: "ss",
+    a: "sdfsdf",
+    b: "0",
+    c: "ss",
   },
   {
-    1: "sdfsdf",
-    2: 0,
-    3: "ass",
+    a: "sdfsdf",
+    b: 0,
+    c: "ass",
   },
   {
-    1: "sdfsdf",
-    2: "1",
-    3: "ass",
+    a: "sdfsdf",
+    b: "1",
+    c: "ass",
+    d: "123dfsdf",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-    4: 0,
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: 0,
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
   {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
-  },
-  {
-    1: "sdfsdf",
-    2: "sdfsd",
-    3: "ass",
+    a: "sdfsdf",
+    b: "sdfsd",
+    c: "ass",
+    d: "616516",
   },
 ];
 
