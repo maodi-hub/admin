@@ -73,9 +73,6 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
     label: "asdasd1",
     uniqueKey: "a",
     prop: "1",
-    render_header(data) {
-      return <>"asd"{data.column.label}</>;
-    },
   },
   {
     label: "asdasd2",
@@ -102,6 +99,21 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
     label: "asdasd3",
     prop: "3",
     uniqueKey: "d",
+    renderType: "tag",
+    optionEnumFn() {
+      return [
+        {
+          value: "ass",
+          label: "禁用",
+          type: "danger",
+        },
+        {
+          value: "ss",
+          label: "启用",
+          type: "success",
+        },
+      ];
+    },
   },
   {
     label: "asdasd4",
@@ -133,7 +145,7 @@ const data = [
   },
   {
     1: "sdfsdf",
-    2: "",
+    2: "1",
     3: "ass",
   },
   {

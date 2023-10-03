@@ -66,7 +66,7 @@
             >
               <el-table-column
                 v-if="col.type && columnType.includes(col.type)"
-                v-bind="col"
+                v-bind="bindColumnProp(col)"
                 :align="col.align ?? 'center'"
                 :reserve-selection="col.type == 'selection'"
               >
@@ -86,7 +86,12 @@
                 </template>
               </el-table-column>
 
-              <MTableColumn v-else :column="col" :base_config="table_config">
+              <MTableColumn
+                v-else
+                :column="col"
+                :base_config="table_config"
+                :enumMap="enumMap"
+              >
                 <template v-for="slot in Object.keys($slots)" #[slot]="scope">
                   <slot :name="slot" v-bind="scope" />
                 </template>
@@ -124,9 +129,9 @@ import { ElTable, ElEmpty, ElTableColumn, ElMessage } from "element-plus";
 import { MForm } from "../../m_form";
 import { MTableColumn } from "./render";
 
-import type { TableConfigPropType } from "./type";
+import type { TableColumnType, TableConfigPropType, TagType } from "./type";
 
-import { computed, ref, toRaw, unref } from "vue";
+import { computed, ref, toRaw, unref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { omit, pick } from "lodash";
 
@@ -156,8 +161,6 @@ const $props = withDefaults(defineProps<TableConfigPropType<D>>(), {
   show_pagination: true,
 });
 
-const columnType = ["index", "selection", "expand", "radio"];
-
 const radio = ref("");
 
 const $route = useRoute();
@@ -168,6 +171,9 @@ const {
   pagination,
   loading,
 } = useTable($props.table_config, $props.pagination_config);
+
+const columnType = ["index", "selection", "expand", "radio"];
+const bindColumnProp = (column: TableColumnType) => omit(column, "formatter");
 
 const { componentRefs } = useRefs<{
   table_ref: InstanceType<typeof ElTable>;
@@ -199,9 +205,29 @@ const other_ope_list = computed(() => {
   return Object.entries(other_ope_config).filter(([key, _]) => other_ope.includes(key));
 });
 
+// 取得指定类型的枚举值;
+const enumMap = ref<Map<string, TagType[]>>(new Map());
+watch(
+  () => $props.columns,
+  (columns) => {
+    columns.forEach(async ({ uniqueKey, renderType, optionEnumFn }) => {
+      if (renderType && ["selection", "tag"].includes(renderType) && optionEnumFn) {
+        try {
+          const res = await optionEnumFn();
+          enumMap.value.set(uniqueKey, res);
+        } catch {
+          enumMap.value.set(uniqueKey, []);
+        }
+      }
+    });
+  },
+  {
+    immediate: true,
+  }
+);
+
 const unset_height = computed(() => {
   const { max_height, table_height } = $props;
-
   return !!max_height || !!(table_height !== "100%");
 });
 

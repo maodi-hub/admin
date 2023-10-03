@@ -5,25 +5,23 @@ import type {
   HeaderRenderScopeType,
   RenderScopeType,
   TableType,
-  TagType
+  TagType,
 } from "./type";
 
-import { useSlots, shallowRef, unref } from "vue";
+import { useSlots, unref } from "vue";
+import { omit } from "lodash";
 
 export function MTableColumn(props: {
   column: TableColumnType;
   base_config?: TableType;
+  enumMap?: Map<string, TagType[]>
 }) {
   const $slots = useSlots();
-  const { column, base_config } = props;
-  const tags_enum = shallowRef<TagType[]>([]);
-  if (column.renderType == 'tag') {
-    console.log('exit');
-    getTagEnum(column.optionEnumFn).then((res) => tags_enum.value = res);
-  }
+  const { column, base_config, enumMap } = props;
+  const bindProp = omit(column, "formatter");
   return (
     <ElTableColumn
-      {...column}
+      {...bindProp}
       align={column.align ?? "center"}
       showOverflowTooltip={
         column.showOverflowTooltip ?? column.uniqueKey !== "operation"
@@ -31,31 +29,35 @@ export function MTableColumn(props: {
     >
       {{
         default: (scope: RenderScopeType<any>) => {
-          const { render_cell, prop, uniqueKey, formatter, _children } = column;
+          const { render_cell, uniqueKey, _children } = column;
           const row = scope.row || {};
 
           // 多级表头
-          if (_children && _children.length) return _children.map((item) => <MTableColumn column={item} base_config={base_config}/>)
+          if (_children && _children.length)
+            return _children.map((item) => (
+              <MTableColumn column={item} base_config={base_config} enumMap={enumMap}/>
+            ));
           // 存在自定义渲染
           if (render_cell) return render_cell(scope);
 
-          if (column.renderType && column.renderType == 'tag') {
-            const tag = unref(tags_enum).find(({ value }) => value == row[prop!]) || { value: "0", label: row[prop!], type: "info" }
-            return <el-tag type={tag.type}>{ tag.label }</el-tag>
+          const cellValue = getCellValue(
+            row,
+            column,
+            scope.$index,
+            base_config
+          );
+
+          if (column.renderType && column.renderType == "tag") {
+            const tags = enumMap?.get(uniqueKey) || [];
+            const tag = unref(tags).find(
+              ({ value }) => value == cellValue
+            ) || { value: "", label: cellValue, type: "info" };
+            return <el-tag type={tag.type}>{tag.label || cellValue}</el-tag>;
           }
 
           // 列属性插槽
           if ($slots[`${uniqueKey!}_column`])
             return $slots[`${uniqueKey!}_column`]!(scope);
-
-          // 处理数据并格式化
-          const cellValue = formatter
-            ? formatter(row, scope.column, row[prop!], scope.$index)
-            : row[prop!];
-          // 无数据，输出默认值
-          if (!cellValue && cellValue !== 0) {
-            return getDefaultValue(column, base_config);
-          }
 
           return cellValue;
         },
@@ -71,13 +73,28 @@ export function MTableColumn(props: {
   );
 }
 
-function getDefaultValue(column: TableColumnType, base_config?: TableType) {
-  const column_default = column.defaultValue;
-  const base_default = base_config?.defaultValue;
-  return column_default ?? base_default;
+function getCellValue(
+  row: Record<string, any>,
+  column: TableColumnType,
+  $index: number,
+  base_config?: TableType
+) {
+  const { formatter, prop } = column;
+  const cellValue = formatter
+    ? formatter(row, column, row[prop!], $index)
+    : row[prop!];
+
+  // 无数据，输出默认值
+  if (!cellValue && cellValue !== 0) {
+    const column_default = column.defaultValue;
+    const base_default = base_config?.defaultValue;
+    return column_default ?? base_default;
+  }
+
+  return cellValue;
 }
 
-async function getTagEnum(cb?: TableColumnType['optionEnumFn']) {
-  if (!cb) return []
-  return cb()
+async function getTagEnum(cb?: TableColumnType["optionEnumFn"]) {
+  if (!cb) return [];
+  return cb();
 }
