@@ -51,20 +51,39 @@ interface TableType<D = any>
   isDeepReactive?: boolean;
   onLoadMore?: () => void;
   handleLoadData?: (...arg: any[]) => Promise<any> | any;
-  handleProcseeData?: <T>(data: T, set_pagination: (payload: Partial<PaginationType>) => void) => D[];
-  handleProcessParam?: (params?: Record<string, any>, pagination?: PaginationType) => Record<string, any>
+  handleProcseeData?: <T>(
+    data: T,
+    set_pagination: (payload: Partial<PaginationType>) => void
+  ) => D[];
+  handleProcessParam?: (
+    params?: Record<string, any>,
+    pagination?: PaginationType
+  ) => Record<string, any>;
   defaultValue?: string | number; // cell 无参时默认显示的文案
-  rowKey?: string
+  rowKey?: string;
 }
 
-type TagType = { value: string, label: string, type: "success"| "info"| "warning"| "danger"| ""}
+type TagType = {
+  value: string;
+  label: string;
+  type: "success" | "info" | "warning" | "danger" | "";
+};
 interface TableColumnType<D = any>
-  extends Omit<Partial<TableColumnCtx<D>>, "renderHeader" | 'children' | 'formatter'>, Pick<TableType, "defaultValue"> {
+  extends Omit<
+      Partial<TableColumnCtx<D>>,
+      "renderHeader" | "children" | "formatter"
+    >,
+    Pick<TableType, "defaultValue"> {
   render_header?: (data: HeaderRenderScopeType<D>) => VNode;
   render_cell?: (data: RenderScopeType<D>) => VNode;
   optionEnumFn?: EnumFnType<TagType>;
-  formatter?: (row: Record<string, any>, column: TableColumnType<D>, cellValue: any, $index: number) => any;
-  renderType?: "tag" | "input";
+  _formatter?: (
+    row: Record<string, any>,
+    column: TableColumnType<D>,
+    cellValue: any,
+    $index: number
+  ) => any;
+  renderType?: "tag" | "edit";
   _children?: TableColumnType<D>[];
   uniqueKey: string;
   headerTextWrap?: boolean;
@@ -79,7 +98,7 @@ interface TableConfigPropType<D> extends FormConfigPropType {
   max_height?: number | string;
   table_height?: string | number;
   pagination_config?: Partial<PaginationType>;
-  pagination_position?: 'left' | 'center' | 'right';
+  pagination_position?: "left" | "center" | "right";
   show_pagination?: boolean;
   show_form?: boolean;
 }
@@ -90,5 +109,5 @@ export type {
   RenderScopeType,
   HeaderRenderScopeType,
   TableConfigPropType,
-  TagType
+  TagType,
 };

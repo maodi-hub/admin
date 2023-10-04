@@ -8,31 +8,25 @@
       table_height="100%"
     >
       <template #e_column="{ row, $index }">
-        <EditRowInput
-          v-model="row.d"
-          :editing="editingRows[$index]?.d"
-          @editingChange="(can_edit) => setEditingRows($index, 'd', can_edit)"
-          @change="(state) => setChangedRows($index, state)"
-        />
+        <EditRowInput v-model="row.d" v-model:editing="editingRows[$index]" />
       </template>
       <template #f_column="{ row, $index }">
-        <EditRowInput
-          v-model="row.f"
-          :editing="editingRows[$index]?.f"
-          @editingChange="(can_edit) => setEditingRows($index, 'f', can_edit)"
-          @change="(state) => setChangedRows($index, state)"
-        />
+        <EditRowInput v-model="row.f" v-model:editing="editingRows[$index]" />
       </template>
       <template #operation_column="{ row, $index }">
-        <el-button type="primary" v-show="getCurrentRowChangeState($index)"
-          >保存</el-button
+        <el-button
+          type="primary"
+          @click="setRowsState($index, true)"
+          v-show="!getRowState($index)"
+          >编辑</el-button
         >
         <el-button
-          plain
-          v-show="getCurrentRowEditState($index)"
-          @click="cancelEditing($index)"
-          >撤销</el-button
+          type="primary"
+          @click="setRowsState($index, true)"
+          v-show="getRowState($index)"
+          >保存</el-button
         >
+        <el-button plain @click="setRowsState($index, false)">取消</el-button>
       </template>
     </MTable>
   </div>
@@ -53,18 +47,7 @@ defineOptions({
 });
 
 const $route = useRoute();
-const {
-  editingRows,
-  iniEditingRows,
-  getCurrentRowChangeState,
-  getCurrentRowEditState,
-  setChangedRows,
-  setEditingRows,
-  clearEditingRows,
-  cancelEditing,
-} = useRowEditing({
-  model: "cell",
-});
+const { editingRows, getRowState, setRowsState, clearRowsState } = useRowEditing();
 
 const form_config = reactive<FormConfigPropType>({
   params: {
@@ -105,8 +88,7 @@ const form_config = reactive<FormConfigPropType>({
 const table_config: TableType = {
   isDeepReactive: true,
   handleLoadData: () => {
-    clearEditingRows();
-    iniEditingRows(columns, data);
+    clearRowsState();
     return data;
   },
   defaultValue: "--",
@@ -151,12 +133,12 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
       return [
         {
           value: "ass",
-          label: "禁用",
+          label: "你好",
           type: "danger",
         },
         {
           value: "ss",
-          label: "启用",
+          label: "我不好",
           type: "success",
         },
       ];
@@ -167,7 +149,6 @@ const columns: TableColumnType<{ 1: string; 2: string; 3: string }>[] = [
     prop: "d",
     uniqueKey: "e",
     width: "300",
-    renderType: "input",
   },
   {
     label: "asdasd5",

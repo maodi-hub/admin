@@ -69,7 +69,7 @@
               <template v-for="(col, col_index) in columns" :key="col">
                 <el-table-column
                   v-if="col.type && columnType.includes(col.type)"
-                  v-bind="bindColumnProp(col)"
+                  v-bind="col"
                   :align="col.align ?? 'center'"
                   :reserve-selection="col.type == 'selection'"
                 >
@@ -133,7 +133,7 @@ import { ElTable, ElEmpty, ElTableColumn, ElMessage, ElTooltip } from "element-p
 import { MForm } from "../../m_form";
 import { MTableColumn } from "./render";
 
-import type { TableColumnType, TableConfigPropType, TagType } from "./type";
+import type { TableConfigPropType, TagType } from "./type";
 
 import { computed, ref, toRaw, unref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -178,7 +178,6 @@ const {
 } = useTable($props.table_config, $props.pagination_config);
 
 const columnType = ["index", "selection", "expand", "radio"];
-const bindColumnProp = (column: TableColumnType) => omit(column, "formatter");
 
 const { componentRefs } = useRefs<{
   table_ref: InstanceType<typeof ElTable>;

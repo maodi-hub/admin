@@ -10,7 +10,6 @@ import type {
 } from "./type";
 
 import { useSlots, unref } from "vue";
-import { omit } from "lodash";
 
 export function MTableColumn(props: {
   column: TableColumnType;
@@ -19,10 +18,9 @@ export function MTableColumn(props: {
 }) {
   const $slots = useSlots();
   const { column, base_config, enumMap } = props;
-  const bindProp = omit(column, "formatter");
   return (
     <ElTableColumn
-      {...bindProp}
+      {...column}
       align={column.align ?? "center"}
       showOverflowTooltip={
         column.showOverflowTooltip ?? column.uniqueKey !== "operation"
@@ -86,9 +84,9 @@ function getCellValue(
   $index: number,
   base_config?: TableType
 ) {
-  const { formatter, prop } = column;
-  const cellValue = formatter
-    ? formatter(row, column, row[prop!], $index)
+  const { _formatter, prop } = column;
+  const cellValue = _formatter
+    ? _formatter(row, column, row[prop!], $index)
     : row[prop!];
 
   // 无数据，输出默认值
