@@ -85,7 +85,7 @@ const form_config = reactive<FormConfigPropType>({
   ],
 });
 
-const table_config: TableType = {
+const table_config: TableType<{ 1: string; 2: string; 3: string }[]> = {
   isDeepReactive: true,
   handleLoadData: () => {
     clearRowsState();

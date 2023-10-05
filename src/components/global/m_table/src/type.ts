@@ -56,8 +56,8 @@ interface TableType<D = any>
     set_pagination: (payload: Partial<PaginationType>) => void
   ) => D[];
   handleProcessParam?: (
-    params?: Record<string, any>,
-    pagination?: PaginationType
+    params: Record<string, any>,
+    pagination: PaginationType
   ) => Record<string, any>;
   defaultValue?: string | number; // cell 无参时默认显示的文案
   rowKey?: string;
@@ -78,7 +78,7 @@ interface TableColumnType<D = any>
   render_cell?: (data: RenderScopeType<D>) => VNode;
   optionEnumFn?: EnumFnType<TagType>;
   _formatter?: (
-    row: Record<string, any>,
+    row: D,
     column: TableColumnType<D>,
     cellValue: any,
     $index: number
@@ -91,7 +91,7 @@ interface TableColumnType<D = any>
 
 interface TableConfigPropType<D> extends FormConfigPropType {
   title?: string; // 导出表格时的名字
-  table_config?: TableType<D>;
+  table_config?: TableType<D[]>;
   immediate?: boolean;
   other_ope?: string[];
   columns?: TableColumnType<D>[];
