@@ -256,7 +256,7 @@ const handleGetTableData = () => {
   const { params } = $props;
   const { handleProcessParam } = $props.table_config;
   const param = handleProcessParam
-    ? handleProcessParam(toRaw(params), toRaw(pagination))
+    ? handleProcessParam(toRaw(params || {}), toRaw(pagination))
     : { ...params, ...pick(pagination, "currentPage", "pageSize") };
   handleFetchData(param);
 };
