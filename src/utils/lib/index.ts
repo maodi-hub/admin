@@ -1,7 +1,7 @@
 import { ElMessageBox } from "element-plus";
 
-import { isArray } from "../is";
 import package_json from "../../../package.json";
+import { isArray } from "lodash";
 
 /**
  * @description 获取localStorage

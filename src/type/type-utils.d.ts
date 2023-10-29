@@ -4,4 +4,4 @@ type RemoveReadonly<T> = {
 
 type MetaGlobTypeWithDefault<T> = Record<string, { default: T }>;
 
-type EnumFnType<T> = (...arg: any[]) => Promise<T[]> | T[]
+type enumFnType = () => Promise<any[]> | any[]

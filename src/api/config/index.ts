@@ -9,7 +9,7 @@ import { AxiosCanceler } from "../helper/axiosCancel";
 import { checkCode } from "../helper/checkCode";
 
 import { useGlobalStore } from "@/store/modules/global";
-import { isFunction } from "@/utils/is";
+import { isFunction } from "lodash";
 
 const axiosCancel = new AxiosCanceler();
 

@@ -1,6 +1,8 @@
-import { isArray, isFunction, isString } from "../is";
-import $router from "@/config/router";
 import { ElMessage } from "element-plus";
+
+import $router from "@/config/router";
+
+import { isArray, isFunction, isString } from "lodash";
 
 import type { RouteRecordRaw } from "vue-router";
 
