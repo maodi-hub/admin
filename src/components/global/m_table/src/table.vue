@@ -34,7 +34,7 @@
 import { ElTable, ElEmpty } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
-import { provide, reactive, watch } from "vue";
+import { provide } from "vue";
 
 import { useTableData, useTableLayout } from "./hooks";
 

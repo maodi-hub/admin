@@ -44,6 +44,7 @@ type CellAlignType =  "right" | "left" | "center" | (string & {});
 type ColumnFixedPositionType = "right" | "left" | boolean
 
 interface MTableColumnPropType<CP = any> extends Pick<MTablePropType, "defaultValue"> {
+  type?: "index" | "selection" | "expand" | "tag" | "text"
   label?: string;
   prop?: string;
   width?: string | number;
@@ -58,6 +59,7 @@ interface MTableColumnPropType<CP = any> extends Pick<MTablePropType, "defaultVa
   _renderHeader?: () => VNode;
   _formatter?: CustomerRenderType<CP, "formatter">;
   _children?: (MTableColumnPropType<CP> | MTableColumnEditPropType<CP>)[];
+  enumOptionFn?: enumFnType
 }
 
 interface MTableColumnEditPropType<CP = any> extends MTableColumnPropType<CP> {

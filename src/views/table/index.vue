@@ -12,11 +12,18 @@ const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => 
   label: "asd" + idx,
   uniqueKey: "asd" + idx,
   prop: "asdasd" + (idx % 2),
+  type: idx % 2 ? "text" : "tag",
+  enumOptionFn() {
+    return [
+      { label: "test", value: "asd" + idx, type: "success" },
+      { label: "test2", value: "", type: "danger" },
+    ];
+  },
 }));
 
 const requestFn = () => {
   const data = new Array(20).fill(0).map((val, idx) => ({
-    asdasd0: idx % 2 ? "asd" + idx : "",
+    asdasd0: "asd" + idx,
     asdasd1: "",
     asdasd2: idx % 2 ? "asd" + idx : "",
   }));

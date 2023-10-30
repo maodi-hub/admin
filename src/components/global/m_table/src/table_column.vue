@@ -3,16 +3,16 @@
 </template>
 
 <script setup lang="tsx">
-import { ElTableColumn } from "element-plus";
+import { ElTableColumn, ElTag } from "element-plus";
 
 import type { HeaderRenderScope, MTableColumnPropType, RenderScope } from "./type";
 
-import { inject, useSlots } from "vue";
+import { inject, useSlots, unref } from "vue";
 import { isArray, isFunction } from "lodash";
 
-import { getCellValue, getSlotName } from "./utils";
+import { getCellValue, getSlotName, formatterValueWithEnum } from "./utils";
 
-import { DEFAULT_VALUE_KEY, CLOUMN_SUFFIX, HEADER_SUFFIX } from "./enum";
+import { DEFAULT_VALUE_KEY, ENUM_MAP_KEY, CLOUMN_SUFFIX, HEADER_SUFFIX } from "./enum";
 
 defineOptions({
   name: "MTableColumn",
@@ -22,10 +22,12 @@ const $props = defineProps<MTableColumnPropType>();
 
 const $slot = useSlots();
 
+const enumMap = inject(ENUM_MAP_KEY, void 0);
 const global_default_value = inject(DEFAULT_VALUE_KEY, void 0);
 
 const TableCell = (column: MTableColumnPropType) => {
   const {
+    type,
     isShow,
     label,
     prop,
@@ -42,6 +44,8 @@ const TableCell = (column: MTableColumnPropType) => {
     _renderHeader,
     _renderCell,
   } = column;
+
+  const enums = unref(enumMap)?.get(uniqueKey) ?? [];
 
   if (!isShow) return;
   return (
@@ -73,6 +77,19 @@ const TableCell = (column: MTableColumnPropType) => {
           }
 
           let cellValue = getCellValue(row, prop, global_default_value, defaultValue);
+
+          if (type && enums) {
+            const enumOption = formatterValueWithEnum(
+              row,
+              enums,
+              prop,
+              global_default_value,
+              defaultValue
+            );
+            if (type == "text") return enumOption.label;
+            if (type == "tag")
+              return <ElTag type={enumOption.type}>{enumOption.label}</ElTag>;
+          }
 
           if (isFunction(_formatter)) {
             cellValue = _formatter(row, cellValue, $index, column);
