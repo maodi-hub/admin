@@ -1,7 +1,7 @@
 <template>
   <ElTable
     v-bind="$attrs"
-    :data="data"
+    :data="table_data"
     :height="height"
     :max-height="maxHeight"
     :border="border"
@@ -11,19 +11,32 @@
   >
     <template v-for="column in table_columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
-        <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]="scope">
+        <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
           <slot :name="slot" v-bind="scope"></slot>
         </template>
       </MTableColumn>
     </template>
+    <!-- 末尾添加行 -->
+    <template #append>
+      <slot name="append"></slot>
+    </template>
+
+    <!-- 空数据显示 -->
+    <template #empty>
+      <slot name="empty">
+        <el-empty description="无数据" />
+      </slot>
+    </template>
   </ElTable>
 </template>
 
-<script setup lang="ts" generic="P, CP">
-import { ElTable } from "element-plus";
+<script setup lang="ts" generic="P, CP, BR">
+import { ElTable, ElEmpty } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
 import { provide, reactive, watch } from "vue";
+
+import { useTableData, useTableLayout } from "./hooks";
 
 import { DEFAULT_VALUE_KEY } from "./enum";
 
@@ -33,38 +46,48 @@ import type {
   MTablePropType,
 } from "./type";
 
+import { omit, pick } from "lodash";
+
 defineOptions({
   name: "MTable",
 });
 
-const $props = withDefaults(defineProps<MTablePropType<P, CP>>(), {
+const $props = withDefaults(defineProps<MTablePropType<P, CP, BR>>(), {
   border: true,
   stripe: true,
   immediate: true,
+  isDeepReactive: true,
   defaultValue: "--",
   columns: () => [] as (MTableColumnPropType<CP> | MTableColumnEditPropType<CP>)[],
-  data: () => [],
 });
 
 provide(DEFAULT_VALUE_KEY, $props.defaultValue);
 
-const table_columns = reactive($props.columns);
+const { table_columns } = useTableLayout($props.columns);
 
-watch(
-  () => $props.columns,
-  (v) => {
-    const columns = v.map((column) => {
-      const { isShow } = column;
-      column.isShow = isShow ?? true;
-      return column;
-    });
-
-    table_columns.push(...columns);
-  },
-  {
-    immediate: true,
-  }
+const requestOptions = pick(
+  $props,
+  "afterResponse",
+  "beforeRequest",
+  "requestFn",
+  "immediate",
+  "requestDebounce"
 );
+
+const {
+  table_data,
+  handleGetData,
+  handleResetPagination,
+  handleSetPagenation,
+} = useTableData(requestOptions, $props.isDeepReactive, $props.searchParam);
+
+defineExpose({
+  table_data,
+  table_columns,
+  handleGetData,
+  handleSetPagenation,
+  handleResetPagination,
+});
 </script>
 
 <style scoped lang="less"></style>

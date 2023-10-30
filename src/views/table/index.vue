@@ -1,29 +1,37 @@
 <template>
   <div class="table-page">
-    <MTable :columns="columns" :data="data"> </MTable>
+    <MTable :columns="columns" :request-fn="requestFn" :after-response="afterResponse">
+    </MTable>
   </div>
 </template>
 
 <script setup lang="ts">
-import type {
-  MTableColumnEditPropType,
-  MTableColumnPropType,
-} from "@/components/global/m_table";
+import type { MTablePropType, MTableColumnPropType } from "@/components/global/m_table";
 
-const columns: (MTableColumnPropType | MTableColumnEditPropType)[] = new Array(10)
-  .fill(0)
-  .map((val, idx) => ({
-    label: "asd" + idx,
-    uniqueKey: "asd" + idx,
-    prop: "asdasd" + (idx % 2),
-    rule: [{ required: true }],
-  }));
-
-const data = new Array(20).fill(0).map((val, idx) => ({
-  asdasd0: idx % 2 ? "asd" + idx : "",
-  asdasd1: "",
-  asdasd2: idx % 2 ? "asd" + idx : "",
+const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => ({
+  label: "asd" + idx,
+  uniqueKey: "asd" + idx,
+  prop: "asdasd" + (idx % 2),
 }));
+
+const requestFn = () => {
+  const data = new Array(20).fill(0).map((val, idx) => ({
+    asdasd0: idx % 2 ? "asd" + idx : "",
+    asdasd1: "",
+    asdasd2: idx % 2 ? "asd" + idx : "",
+  }));
+  return data;
+};
+
+const afterResponse = (res: { asdasd0: string; asdasd1: string; asdasd2: string }[]) => {
+  return res;
+};
+
+// const data = new Array(20).fill(0).map((val, idx) => ({
+//   asdasd0: idx % 2 ? "asd" + idx : "",
+//   asdasd1: "",
+//   asdasd2: idx % 2 ? "asd" + idx : "",
+// }));
 </script>
 
 <style scoped></style>

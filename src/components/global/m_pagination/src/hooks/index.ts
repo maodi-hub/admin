@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 
 import type { PaginationType } from "../type";
-import { isNumber } from "lodash";
+import { isNil } from "lodash";
 
 export const usePagination = (config?: Partial<PaginationType>) => {
   const DEFAULT_PAGINATION = {
@@ -17,13 +17,18 @@ export const usePagination = (config?: Partial<PaginationType>) => {
     payload: Partial<PaginationType>
   ) => {
     for (let [key, val] of Object.entries(payload)) {
-      if (!pagination.hasOwnProperty(key) || !isNumber(val)) continue;
+      if (!pagination.hasOwnProperty(key) || isNil(val)) continue;
       pagination[key as K] = val as PaginationType[K];
     }
   };
 
+  const handleResetPagination = () => {
+    handleSetPagenation(DEFAULT_PAGINATION);
+  }
+
   return {
     pagination,
-    handleSetPagenation
+    handleSetPagenation,
+    handleResetPagination
   }
 }

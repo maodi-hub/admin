@@ -1,6 +1,7 @@
 import type { FormItemRule, TableColumnCtx } from "element-plus";
 import type { Arrayable } from "@vueuse/core";
 import type { VNode } from "vue";
+import type { PaginationType } from "../../m_pagination";
 
 interface RenderScope<T> {
   row: T;
@@ -15,7 +16,8 @@ interface HeaderRenderScope<T>  {
   [key: string]: any;
 };
 
-interface MTablePropType<P = any, CP = any> {
+interface MTablePropType<P = any, CP = any, BR = any> {
+  searchParam?: Record<string, any>;
   border?: boolean;
   stripe?: boolean;
   rowKey?: string;
@@ -23,9 +25,12 @@ interface MTablePropType<P = any, CP = any> {
   defaultValue?: string | number;
   height?: string;
   maxHeight?: string;
+  requestDebounce?: number;
   beforeRequest?: (...arg: any[]) => P;
+  requestFn?: (arg: P) => BR;
+  afterResponse?: (res: BR, set_pagination: (payload: Partial<PaginationType>) => void) => CP[];
   columns?: (MTableColumnPropType<CP> | MTableColumnEditPropType<CP>)[];
-  data?:CP[];
+  isDeepReactive?: boolean;
 }
 
 type CustomerRenderType<CP, T extends "formatter" | "render"> = (

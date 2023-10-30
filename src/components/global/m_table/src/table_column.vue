@@ -8,11 +8,11 @@ import { ElTableColumn } from "element-plus";
 import type { HeaderRenderScope, MTableColumnPropType, RenderScope } from "./type";
 
 import { inject, useSlots } from "vue";
+import { isArray, isFunction } from "lodash";
 
 import { getCellValue, getSlotName } from "./utils";
 
 import { DEFAULT_VALUE_KEY, CLOUMN_SUFFIX, HEADER_SUFFIX } from "./enum";
-import { isArray, isFunction } from "lodash";
 
 defineOptions({
   name: "MTableColumn",
@@ -22,7 +22,7 @@ const $props = defineProps<MTableColumnPropType>();
 
 const $slot = useSlots();
 
-const global_default_value = inject(DEFAULT_VALUE_KEY, undefined);
+const global_default_value = inject(DEFAULT_VALUE_KEY, void 0);
 
 const TableCell = (column: MTableColumnPropType) => {
   const {
@@ -63,7 +63,7 @@ const TableCell = (column: MTableColumnPropType) => {
 
           const { row, $index } = scope;
 
-          if (_renderCell) {
+          if (isFunction(_renderCell)) {
             return _renderCell(row, row[prop!], $index, column);
           }
 
@@ -84,6 +84,7 @@ const TableCell = (column: MTableColumnPropType) => {
           if (_renderHeader) return _renderHeader();
 
           const { $index } = scope;
+
           const column_slot = $slot[getSlotName(uniqueKey, HEADER_SUFFIX)];
           if (column_slot) {
             return column_slot({ column, $index });
