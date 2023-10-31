@@ -86,9 +86,8 @@ const TableCell = (column: MTableColumnPropType) => {
               global_default_value,
               defaultValue
             );
-            if (type == "text") return enumOption.label;
-            if (type == "tag")
-              return <ElTag type={enumOption.type}>{enumOption.label}</ElTag>;
+
+            return RenderWithEnum(type, enumOption);
           }
 
           if (isFunction(_formatter)) {
@@ -111,6 +110,15 @@ const TableCell = (column: MTableColumnPropType) => {
       }}
     </ElTableColumn>
   );
+};
+
+const RenderWithEnum = (type: string, enumOption: enumTagType) => {
+  const renderFn = {
+    text: (opt: enumTagType) => opt.label,
+    tag: (opt: enumTagType) => <ElTag type={opt.type}>{opt.label}</ElTag>,
+  }[type];
+
+  return renderFn && renderFn(enumOption);
 };
 </script>
 

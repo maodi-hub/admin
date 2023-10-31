@@ -31,6 +31,8 @@ interface MTablePropType<P = any, CP = any, BR = any> {
   afterResponse?: (res: BR, set_pagination: (payload: Partial<PaginationType>) => void) => CP[];
   columns?: (MTableColumnPropType<CP> | MTableColumnEditPropType<CP>)[];
   isDeepReactive?: boolean;
+  showPagination?: boolean;
+  showTool?: boolean;
 }
 
 type CustomerRenderType<CP, T extends "formatter" | "render"> = (

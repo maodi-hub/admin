@@ -21,12 +21,16 @@ defineOptions({
 });
 
 const echarts_ref = ref<HTMLDivElement>();
-const { init, options } = useEcharts(echarts_ref, $props.options);
+const { init, handleSetOption } = useEcharts(echarts_ref);
 
 watch(
   () => $props.options,
   (v) => {
-    v && (options.value = v);
+    v && handleSetOption(v);
+  },
+  {
+    immediate: true,
+    deep: true,
   }
 );
 

@@ -5,11 +5,11 @@
         <ElScrollbar>
           <ElPagination
             :class="[align]"
-            :current-page="config.currentPage"
-            :page-size="config.pageSize"
-            :total="config.total"
-            :page-sizes="config.pageSizes"
-            :layout="handleParsePaginationLayout(config.layout)"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="total"
+            :page-sizes="pageSizes"
+            :layout="handleParsePaginationLayout(layout)"
             @size-change="onSizeChange"
             @current-change="onCurrentChange"
           ></ElPagination>
@@ -24,25 +24,27 @@ import { ElPagination, ElScrollbar } from "element-plus";
 
 import type { PaginationEmitType, PaginationPropType } from "./type";
 
+import { isArray } from "lodash";
+
 defineOptions({
   name: "MPagination",
 });
 
 withDefaults(defineProps<PaginationPropType>(), {
-  config: () => ({
-    currentPage: 1,
-    pageSize: 10,
-    pageSizes: [10, 20, 30, 50, 100],
-    total: 1000,
-    layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
-  }),
-  align: "center",
+  currentPage: 1,
+  pageSize: 10,
+  pageSizes: () => [10, 20, 30, 50, 100],
+  total: 0,
+  layout: () => ["sizes", "prev", "pager", "next", "jumper", "total"],
+  align: "right",
 });
 
 const $emit = defineEmits<PaginationEmitType>();
 
-const handleParsePaginationLayout = (layout: any[]) => {
-  return layout ? layout.join(",") : "";
+const handleParsePaginationLayout = (layout: string[]) => {
+  if (!isArray(layout)) return "";
+
+  return layout.join(",");
 };
 
 const onSizeChange = (v: number) => {

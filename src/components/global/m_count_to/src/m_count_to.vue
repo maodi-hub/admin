@@ -4,30 +4,17 @@
   </span>
 </template>
 <script lang="ts" setup>
+import type { MCountToPropType } from "./type";
+
 import { ref, computed, watchEffect, unref, onMounted, watch } from "vue";
 import { useTransition, TransitionPresets } from "@vueuse/core";
 import { isNumber } from "lodash";
-
-interface Props {
-  startVal: number;
-  endVal: number;
-  duration: number;
-  autoPlay: boolean;
-  decimals: number;
-  decimal: string;
-  prefix: string;
-  suffix: string;
-  separator: string;
-  color: string;
-  useEasing: boolean;
-  transition: keyof typeof TransitionPresets;
-}
 
 interface Emits {
   (e: "onStarted"): void;
   (e: "onFinished"): void;
 }
-const $props = withDefaults(defineProps<Partial<Props>>(), {
+const $props = withDefaults(defineProps<Partial<MCountToPropType>>(), {
   startVal: 0,
   endVal: 2023,
   duration: 1500,

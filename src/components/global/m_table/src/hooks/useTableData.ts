@@ -42,15 +42,17 @@ export function useTableData<P, CP, BR>(
       const param: P = beforeRequest
         ? beforeRequest(arg, toRaw(pagination))
         : arg;
-        
+
       const res = await requestFn(param);
 
       const data = (
         afterResponse ? afterResponse(res, handleSetPagenation) : res
       ) as CP[];
 
+      table_data.value = [];
       table_data.value = data;
     } catch (err) {
+      table_data.value = [];
     } finally {
       loading.value = false;
     }
@@ -64,5 +66,6 @@ export function useTableData<P, CP, BR>(
     handleGetData,
     handleSetPagenation,
     handleResetPagination,
+    pagination
   };
 }

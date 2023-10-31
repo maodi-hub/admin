@@ -6,8 +6,7 @@ interface PaginationType {
   layout: string[];
 }
 
-interface PaginationPropType {
-  config: PaginationType;
+interface PaginationPropType extends PaginationType {
   align?: 'left' | 'center' | 'right'
 }
 

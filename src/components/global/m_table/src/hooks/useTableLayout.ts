@@ -5,7 +5,6 @@ import { reactive, ref, watch, provide } from "vue";
 import { ENUM_MAP_KEY } from "../enum";
 import { getEnumMap } from "../utils";
 
-
 export function useTableLayout<CP>(columns: MTablePropType<any, CP, any>['columns'] = []) {
   const table_columns = reactive(columns);
   const enumMap = ref<Map<string | number, enumTagType[]>>(new Map());

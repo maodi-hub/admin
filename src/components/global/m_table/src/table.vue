@@ -1,12 +1,13 @@
 <template>
   <ElTable
-    v-bind="$attrs"
     :data="table_data"
     :height="height"
     :max-height="maxHeight"
     :border="border"
     :stripe="stripe"
     :row-key="rowKey"
+    v-bind="$attrs"
+    v-loading="loading"
     class="flex-1 min-w-0 min-h-0"
   >
     <template v-for="column in table_columns" :key="column.uniqueKey">
@@ -28,10 +29,11 @@
       </slot>
     </template>
   </ElTable>
+  <MPagination v-bind="pagination" v-if="showPagination" />
 </template>
 
 <script setup lang="ts" generic="P, CP, BR">
-import { ElTable, ElEmpty } from "element-plus";
+import { ElTable, ElEmpty, vLoading } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
 import { provide } from "vue";
@@ -59,6 +61,8 @@ const $props = withDefaults(defineProps<MTablePropType<P, CP, BR>>(), {
   isDeepReactive: true,
   defaultValue: "--",
   columns: () => [] as (MTableColumnPropType<CP> | MTableColumnEditPropType<CP>)[],
+  showPagination: true,
+  showTool: true,
 });
 
 provide(DEFAULT_VALUE_KEY, $props.defaultValue);
@@ -75,10 +79,12 @@ const requestOptions = pick(
 );
 
 const {
+  loading,
   table_data,
   handleGetData,
   handleResetPagination,
   handleSetPagenation,
+  pagination,
 } = useTableData(requestOptions, $props.isDeepReactive, $props.searchParam);
 
 defineExpose({
@@ -90,4 +96,8 @@ defineExpose({
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.el-table {
+  --el-table-header-bg-color: rgb(233, 236, 239, 0.7);
+}
+</style>

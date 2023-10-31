@@ -66,10 +66,8 @@ echarts.use([
 
 export function useEcharts(
   el: Ref<HTMLDivElement | undefined>,
-  baseOpt?: ECOption
 ) {
   let echartsInstance: echarts.ECharts | undefined;
-  let options = shallowRef<ECOption>();
 
   const resize_observe = useResizeObserver(el, () => onResize());
 
@@ -81,8 +79,6 @@ export function useEcharts(
       handleSetOption(opt);
       return;
     }
-
-    if (baseOpt) handleSetOption(baseOpt);
   };
 
   const handleSetOption = (opt: ECOption) => {
@@ -105,13 +101,8 @@ export function useEcharts(
     echartsInstance?.dispose();
   });
 
-  watch(options, (v) => {
-    v && handleSetOption(v);
-  });
-
   return {
     init,
     handleSetOption,
-    options,
   };
 }
