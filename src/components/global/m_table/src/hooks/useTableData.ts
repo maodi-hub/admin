@@ -1,7 +1,7 @@
 import type { MTablePropType } from "../type";
 
 import { shallowRef, ref, toRaw } from "vue";
-import { debounce } from "lodash";
+import { debounce, isArray } from "lodash";
 
 import { usePagination } from "@/components/global/m_pagination";
 
@@ -39,6 +39,7 @@ export function useTableData<P, CP, BR>(
 
     loading.value = true;
     try {
+      console.log("requesting...")
       const param: P = beforeRequest
         ? beforeRequest(arg, toRaw(pagination))
         : arg;
@@ -49,9 +50,14 @@ export function useTableData<P, CP, BR>(
         afterResponse ? afterResponse(res, handleSetPagenation) : res
       ) as CP[];
 
+      if (!isArray(data)) {
+        throw new Error("Table data is expected to be an array!")
+      }
+
       table_data.value = [];
       table_data.value = data;
     } catch (err) {
+      console.log("table request err ... ",err);
       table_data.value = [];
     } finally {
       loading.value = false;

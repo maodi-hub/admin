@@ -1,38 +1,26 @@
-import type { MTablePropType } from "../type";
+import type { MTableColumnType } from "../type";
 
-import { reactive, ref, watch, provide } from "vue";
+import { reactive, ref, provide } from "vue";
 
 import { ENUM_MAP_KEY } from "../enum";
-import { getEnumMap } from "../utils";
+import { getEnumMap, initColumns } from "../utils";
 
-export function useTableLayout<CP>(columns: MTablePropType<any, CP, any>['columns'] = []) {
-  const table_columns = reactive(columns);
+export function useTableLayout<CP>(columns: MTableColumnType<CP>[]) {
+  const table_columns = reactive<MTableColumnType<CP>[]>([]);
   const enumMap = ref<Map<string | number, enumTagType[]>>(new Map());
   provide(ENUM_MAP_KEY, enumMap);
 
-  watch(
-    () => columns,
-    (v) => {
-      const columns = v.map((col) => {
-        const column = { ...col };
-        column.isShow ??= true;
-
-        if (column.enumOptionFn) {
-          enumMap.value.set(column.uniqueKey, []);
-          getEnumMap(column.enumOptionFn).then((res) => {
-            enumMap.value.set(column.uniqueKey, res);
-          })
-        }
-
-        return column;
-      });
-      table_columns.length = 0;
-      table_columns.push(...columns);
-    },
-    {
-      immediate: true,
+  const initialed_cols = initColumns<CP>(columns, (column) => {
+    if (column.enumOptionFn) {
+      enumMap.value.set(column.uniqueKey, []);
+      getEnumMap(column.enumOptionFn).then((res) => {
+        enumMap.value.set(column.uniqueKey, res);
+      })
     }
-  );
+  })
+
+  table_columns.length = 0;
+  table_columns.push(...initialed_cols);
 
   return {
     table_columns

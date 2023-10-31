@@ -10,6 +10,9 @@
     v-loading="loading"
     class="flex-1 min-w-0 min-h-0"
   >
+    <!-- 默认插槽 -->
+    <slot />
+
     <template v-for="column in table_columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
         <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
