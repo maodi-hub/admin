@@ -39,7 +39,7 @@ export function useTableData<P, CP, BR>(
 
     loading.value = true;
     try {
-      console.log("requesting...")
+      console.log("requesting...");
       const param: P = beforeRequest
         ? beforeRequest(arg, toRaw(pagination))
         : arg;
@@ -51,13 +51,13 @@ export function useTableData<P, CP, BR>(
       ) as CP[];
 
       if (!isArray(data)) {
-        throw new Error("Table data is expected to be an array!")
+        throw new Error("Table data is expected to be an array!");
       }
 
       table_data.value = [];
       table_data.value = data;
     } catch (err) {
-      console.log("table request err ... ",err);
+      console.log("table request err ... ", err);
       table_data.value = [];
     } finally {
       loading.value = false;
@@ -72,6 +72,6 @@ export function useTableData<P, CP, BR>(
     handleGetData,
     handleSetPagenation,
     handleResetPagination,
-    pagination
+    pagination,
   };
 }
