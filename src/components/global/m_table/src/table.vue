@@ -49,11 +49,7 @@ import { useTableData, useTableLayout, useTableSelection } from "./hooks";
 
 import { DEFAULT_VALUE_KEY } from "./enum";
 
-import type {
-  MTableColumnEditPropType,
-  MTableColumnPropType,
-  MTablePropType,
-} from "./type";
+import type { MTableColumnType, MTablePropType } from "./type";
 
 import { omit, pick } from "lodash";
 
@@ -68,8 +64,7 @@ const $props = withDefaults(defineProps<MTablePropType<P, CP, BR>>(), {
   isDeepReactive: true,
   defaultValue: "--",
   rowKey: "id",
-  columns: () =>
-    [] as (MTableColumnPropType<CP> | MTableColumnEditPropType<CP>)[],
+  columns: () => [] as MTableColumnType<CP>[],
   showPagination: true,
   showTool: true,
 });
