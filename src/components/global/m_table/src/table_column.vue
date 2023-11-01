@@ -10,7 +10,8 @@ import type { HeaderRenderScope, MTableColumnPropType, RenderScope } from "./typ
 import { inject, useSlots, unref } from "vue";
 import { isArray, isFunction } from "lodash";
 
-import { getCellValue, getSlotName, formatterValueWithEnum } from "./utils";
+import { getSlotName } from "@/components/shared";
+import { getCellValue, formatterValueWithEnum } from "./utils";
 
 import { DEFAULT_VALUE_KEY, ENUM_MAP_KEY, CLOUMN_SUFFIX, HEADER_SUFFIX } from "./enum";
 

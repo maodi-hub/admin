@@ -15,11 +15,7 @@
 
     <template v-for="column in table_columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
-        <template
-          v-for="slot in Object.keys($slots)"
-          #[slot]="scope"
-          :key="slot"
-        >
+        <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
           <slot :name="slot" v-bind="scope"></slot>
         </template>
       </MTableColumn>
@@ -36,20 +32,25 @@
       </slot>
     </template>
   </ElTable>
-  <MPagination v-bind="pagination" v-if="showPagination" />
+  <MPagination
+    v-bind="pagination"
+    v-if="showPagination"
+    @size-change="onSizeChange"
+    @current-change="onCurrentChange"
+  />
 </template>
 
 <script setup lang="ts" generic="P, CP extends Record<string, any>, BR">
 import { ElTable, ElEmpty, vLoading } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
+import type { MTableColumnType, MTablePropType } from "./type";
+
 import { provide } from "vue";
 
 import { useTableData, useTableLayout, useTableSelection } from "./hooks";
 
 import { DEFAULT_VALUE_KEY } from "./enum";
-
-import type { MTableColumnType, MTablePropType } from "./type";
 
 import { omit, pick } from "lodash";
 
@@ -86,9 +87,12 @@ const {
   loading,
   table_data,
   handleGetData,
+  handleDebounceData,
   handleResetPagination,
   handleSetPagenation,
   pagination,
+  onSizeChange,
+  onCurrentChange,
 } = useTableData(requestOptions, $props.isDeepReactive, $props.searchParam);
 
 const { selected_data_list, selected_ids } = useTableSelection<CP>({
@@ -99,6 +103,7 @@ defineExpose({
   table_data,
   table_columns,
   handleGetData,
+  handleDebounceData,
   handleSetPagenation,
   handleResetPagination,
   selected_ids,

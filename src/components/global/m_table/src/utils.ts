@@ -16,10 +16,6 @@ export function getCellValue(
   return cellValue || (cell_defalut ?? global_defalut);
 }
 
-export function getSlotName(uniqueKey: string | number, suffix: string) {
-  return uniqueKey + suffix;
-}
-
 export async function getEnumMap(fn: MTableColumnPropType["enumOptionFn"]) {
   try {
     const list = await fn!();

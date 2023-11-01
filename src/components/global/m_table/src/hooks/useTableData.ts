@@ -20,8 +20,20 @@ export function useTableData<P, CP, BR>(
   isDeepReactive: MTablePropType["isDeepReactive"],
   searchParam: MTablePropType["searchParam"]
 ) {
-  const { pagination, handleSetPagenation, handleResetPagination } =
-    usePagination();
+  const {
+    pagination,
+    handleSetPagenation,
+    handleResetPagination,
+    onCurrentChange,
+    onSizeChange,
+  } = usePagination({
+    onSizeChangeAfter() {
+      handleDebounceData(searchParam);
+    },
+    onCurrentChangeAfter() {
+      handleDebounceData(searchParam);
+    },
+  });
 
   const loading = ref(false);
   const table_data = !isDeepReactive ? shallowRef<CP[]>([]) : ref<CP[]>([]);
@@ -34,7 +46,7 @@ export function useTableData<P, CP, BR>(
     requestDebounce,
   } = requestOptions;
 
-  const handleGetData = debounce(async (...arg: any) => {
+  const handleGetData = async (...arg: any) => {
     if (!requestFn) return;
 
     loading.value = true;
@@ -62,16 +74,21 @@ export function useTableData<P, CP, BR>(
     } finally {
       loading.value = false;
     }
-  }, requestDebounce);
+  };
+
+  const handleDebounceData = debounce(handleGetData, requestDebounce);
 
   if (immediate) handleGetData(searchParam);
 
   return {
-    table_data,
     loading,
+    table_data,
     handleGetData,
+    handleDebounceData,
     handleSetPagenation,
     handleResetPagination,
     pagination,
+    onCurrentChange,
+    onSizeChange,
   };
 }
