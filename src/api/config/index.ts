@@ -56,8 +56,15 @@ class HttpRequest {
       },
       async (error: AxiosError) => {
         console.log(error, "error");
-        const { code } = error;
-        ElMessage.error(checkCode(code!));
+        const { response } = error;
+        if (error.message.indexOf("timeout") !== -1)
+          ElMessage.error("请求超时！请您稍后重试");
+
+        if (error.message.indexOf("Network Error") !== -1)
+          ElMessage.error("网络错误！请您稍后重试");
+
+        if (response) ElMessage.error(checkCode(response.status));
+
         return Promise.reject(error);
       }
     );
