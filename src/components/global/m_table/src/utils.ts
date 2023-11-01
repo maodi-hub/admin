@@ -74,7 +74,6 @@ export function initColumns<CP>(
     }
 
     callBack && callBack(column);
-
     return column;
   });
 }
