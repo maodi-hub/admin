@@ -1,9 +1,9 @@
 interface PaginationType {
   currentPage: number;
   pageSize: number;
-  pageSizes: number[];
+  pageSizes?: number[];
   total: number;
-  layout: string[];
+  layout?: string[];
 }
 
 interface PaginationPropType extends PaginationType {

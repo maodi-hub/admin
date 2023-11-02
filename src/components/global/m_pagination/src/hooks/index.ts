@@ -1,18 +1,34 @@
 import { reactive } from "vue";
 
 import type { PaginationType } from "../type";
-import { isNil } from "lodash";
 
-export const usePagination = (config?: Partial<PaginationType>) => {
-  const DEFAULT_PAGINATION = {
-    currentPage: 1,
-    pageSize: 10,
-    pageSizes: [10, 20, 30, 50, 100],
-    total: 0,
-    layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
-  };
-  const pagination = reactive<PaginationType>(Object.assign({}, DEFAULT_PAGINATION, config));
-  
+import { isNil, omit } from "lodash";
+
+interface ChangeOptions {
+  onSizeChangeAfter?: () => void;
+  onCurrentChangeAfter?: () => void;
+}
+
+const DEFAULT_PAGINATION = () => ({
+  currentPage: 1,
+  pageSize: 10,
+  pageSizes: [10, 20, 30, 50, 100],
+  total: 100,
+  layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
+});
+
+export const usePagination = (afterFn: ChangeOptions,config: PaginationType = DEFAULT_PAGINATION()) => {
+
+  const { onSizeChangeAfter, onCurrentChangeAfter } = afterFn;
+
+  const initPagenation = omit(
+    config,
+    "onSizeChangeAfter",
+    "onCurrentChangeAfter"
+  );
+
+  const pagination = reactive<PaginationType>(initPagenation);
+
   const handleSetPagenation = <K extends keyof PaginationType>(
     payload: Partial<PaginationType>
   ) => {
@@ -23,12 +39,24 @@ export const usePagination = (config?: Partial<PaginationType>) => {
   };
 
   const handleResetPagination = () => {
-    handleSetPagenation(DEFAULT_PAGINATION);
-  }
+    handleSetPagenation(DEFAULT_PAGINATION());
+  };
+
+  const onSizeChange = (value: number) => {
+    handleSetPagenation({ pageSize: value });
+    onSizeChangeAfter && onSizeChangeAfter();
+  };
+
+  const onCurrentChange = (value: number) => {
+    handleSetPagenation({ currentPage: value });
+    onCurrentChangeAfter && onCurrentChangeAfter();
+  };
 
   return {
     pagination,
     handleSetPagenation,
-    handleResetPagination
-  }
-}
+    handleResetPagination,
+    onCurrentChange,
+    onSizeChange
+  };
+};

@@ -61,7 +61,7 @@ interface MTableColumnPropType<CP = any>
   minWidth?: string | number;
   headerAlign?: CellAlignType;
   cellAlign?: CellAlignType;
-  uniqueKey: string | number;
+  uniqueKey: string;
   fixed?: ColumnFixedPositionType;
   isShow?: boolean;
   showOverflowToolTip?: boolean;

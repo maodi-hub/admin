@@ -11,7 +11,7 @@ declare module "vue" {
     MIcon: typeof import("@/components/global/m_icon")["MIcon"];
     MEcharts: typeof import("@/components/global/m_echarts")["MEcharts"];
     MCountTo: typeof import("@/components/global/m_count_to")["MCountTo"];
-    // MForm: typeof import("@/components/global/m_form")["MForm"];
+    MForm: typeof import("@/components/global/m_form")["MForm"];
     // MFormItem: typeof import("@/components/global/m_form")["MFormItem"];
     // MSelection: typeof import("@/components/global/m_select")["MSelection"];
     MPagination: typeof import("@/components/global/m_pagination")["MPagiantion"];

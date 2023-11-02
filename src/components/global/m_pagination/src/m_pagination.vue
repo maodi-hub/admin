@@ -49,12 +49,10 @@ const handleParsePaginationLayout = (layout: string[]) => {
 
 const onSizeChange = (v: number) => {
   $emit("sizeChange", v);
-  console.log("size", v);
 };
 
 const onCurrentChange = (v: number) => {
   $emit("currentChange", v);
-  console.log("currentpage", v);
 };
 </script>
 

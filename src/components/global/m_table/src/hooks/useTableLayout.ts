@@ -7,7 +7,7 @@ import { getEnumMap, initColumns } from "../utils";
 
 export function useTableLayout<CP>(columns: MTableColumnType<CP>[]) {
   const table_columns = reactive<MTableColumnType<CP>[]>([]);
-  const enumMap = ref<Map<string | number, enumTagType[]>>(new Map());
+  const enumMap = ref<Map<string, enumTagType[]>>(new Map());
   provide(ENUM_MAP_KEY, enumMap);
 
   const initialed_cols = initColumns<CP>(columns, (column) => {
