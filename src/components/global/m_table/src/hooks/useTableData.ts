@@ -1,3 +1,4 @@
+import type { UnwrapRef } from "vue";
 import type { MTablePropType } from "../type";
 
 import { shallowRef, ref, toRaw } from "vue";
@@ -36,7 +37,9 @@ export function useTableData<P, CP, BR>(
   });
 
   const loading = ref(false);
-  const table_data = !isDeepReactive ? shallowRef<CP[]>([]) : ref<CP[]>([]);
+  // const table_data = !isDeepReactive ? shallowRef<CP[]>([]) : ref<CP[]>([]);
+  const table_data = ref<CP[]>([]);
+
 
   const {
     afterResponse,
@@ -67,7 +70,7 @@ export function useTableData<P, CP, BR>(
       }
 
       table_data.value = [];
-      table_data.value = data;
+      table_data.value = data as UnwrapRef<CP[]>;
     } catch (err) {
       console.log("table request err ... ", err);
       table_data.value = [];

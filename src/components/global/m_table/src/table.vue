@@ -1,5 +1,6 @@
 <template>
   <ElTable
+    ref="table_ref"
     :data="table_data"
     :height="height"
     :max-height="maxHeight"
@@ -13,7 +14,9 @@
   >
     <!-- 默认插槽 -->
     <slot />
-
+    <ElTableColumn>
+      <div class="sort">sort</div>
+    </ElTableColumn>
     <template v-for="column in table_columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
         <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
@@ -43,18 +46,21 @@
 </template>
 
 <script setup lang="ts" generic="P, CP extends Record<string, any>, BR">
-import { ElTable, ElEmpty, vLoading } from "element-plus";
+import { ElTable, ElEmpty, vLoading, ElTableColumn } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
+import type { TableInstance } from "element-plus";
 import type { MTableColumnType, MTablePropType } from "./type";
 
-import { provide } from "vue";
+import { provide, ref } from "vue";
+import { omit, pick } from "lodash";
+import Sortable from "sortablejs";
 
 import { useTableData, useTableLayout, useTableSelection } from "./hooks";
 
 import { DEFAULT_VALUE_KEY } from "./constant";
-
-import { omit, pick } from "lodash";
+import { unref } from "vue";
+import { onMounted } from "vue";
 
 defineOptions({
   name: "MTable",
@@ -105,6 +111,25 @@ const {
 } = useTableSelection<CP>({
   dataKey: $props.rowKey,
 });
+
+const table_ref = ref<TableInstance>();
+// 拖拽排序
+const dragSort = () => {
+  const tbody = unref(table_ref)!.$el.querySelector(
+    ".el-table__body-wrapper tbody"
+  ) as HTMLElement;
+  Sortable.create(tbody, {
+    handle: ".sort",
+    animation: 300,
+    onEnd({ newIndex, oldIndex }) {
+      const [removedItem] = table_data.value.splice(oldIndex!, 1);
+      table_data.value.splice(newIndex!, 0, removedItem);
+      // emit("dargSort", { newIndex, oldIndex });
+    },
+  });
+};
+
+onMounted(dragSort);
 
 defineExpose({
   table_data,
