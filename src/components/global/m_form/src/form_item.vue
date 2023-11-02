@@ -61,7 +61,6 @@
 
 <script setup lang="ts">
 import { ElFormItem, ElTooltip, ElSpace, ElInput } from "element-plus";
-import MFormItem from "./form_item.vue";
 
 import type { MFormItemPropType } from "./type";
 
@@ -71,6 +70,10 @@ import { isArray, omit, pick } from "lodash";
 import { getSlotName } from "@/components/shared";
 
 import { LABEL_SUFFIX, CONTENT_SUFFIX, PARAM_KEY } from "./enum";
+
+defineOptions({
+  name: "MFormItem",
+});
 
 const $props = defineProps<MFormItemPropType>();
 
