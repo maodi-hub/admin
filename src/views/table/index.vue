@@ -13,7 +13,7 @@ import type { MTableColumnPropType } from "@/components/global/m_table";
 
 import { reactive } from "vue";
 
-const searchParam = reactive({ a: "sd" });
+const searchParam = reactive({ a: "sd", c: "Asd" });
 
 const form_items: MFormItemPropType[] = [
   {
@@ -21,7 +21,28 @@ const form_items: MFormItemPropType[] = [
     label: "asasf",
     prop: "a",
     tips: () => <>asdasdasdasdasdasd</>,
-    defaultValue: "21423435345543",
+    _children: [
+      {
+        uniqueKey: "ab",
+        label: "asasf",
+        prop: "a",
+        tips: () => <>test</>,
+        _children: [
+          {
+            uniqueKey: "abc",
+            label: "asasf",
+            prop: "a",
+            tips: () => <>test123</>,
+          },
+          {
+            uniqueKey: "abd",
+            label: "asasf",
+            prop: "c",
+            tips: () => <>test123</>,
+          },
+        ],
+      },
+    ],
   },
 ];
 
@@ -29,7 +50,7 @@ const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => 
   label: "asd" + idx,
   uniqueKey: "asd" + idx,
   prop: "asdasd" + (idx % 2),
-  type: idx == 0 ? "expand" : undefined,
+  type: idx % 2 ? "text" : "tag",
   enumOptionFn() {
     return [
       { label: "test", value: "asd" + idx, type: "success" },

@@ -77,7 +77,9 @@ interface MTableColumnEditPropType<CP = any> extends MTableColumnPropType<CP> {
   rule?: Arrayable<FormItemRule>;
 }
 
-type MTableInstance = GenericComponentInstanceType<typeof import("./table.vue")["default"]>
+type MTableInstance = GenericComponentInstanceType<
+  typeof import("./table.vue")["default"]
+>;
 
 export type {
   MTableInstance,

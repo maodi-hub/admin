@@ -45,7 +45,7 @@ provide(LABEL_SUFFIX_KEY, $props.labelSuffix);
 
 const initParam = (searcParam: Record<string, any>, formItems: MFormItemPropType[]) => {
   formItems.forEach(({ defaultValue, prop }) => {
-    if (!defaultValue) return;
+    if (!defaultValue || !prop) return;
     searcParam[prop] = defaultValue;
   });
 };

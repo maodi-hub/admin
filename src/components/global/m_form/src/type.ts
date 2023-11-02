@@ -14,7 +14,7 @@ interface MFormPropType {
 
 interface MFormItemPropType {
   uniqueKey: string;
-  prop: string;
+  prop?: string;
   label?: string;
   labelWidth?: string;
   rules?: Arrayable<FormItemRule>;
@@ -24,6 +24,7 @@ interface MFormItemPropType {
   tips?: () => VNode;
   _renderLabel?: (prop: Pick<MFormItemPropType, "label" | "tips"> & { labelSuffix: string | undefined }) => VNode;
   _renderContent?: (prop: { item: MFormItemPropType }) => VNode;
+  _children?: MFormItemPropType[];
 }
 
 type MFormInstance = InstanceType<typeof import("./form.vue")["default"]>;
