@@ -1,6 +1,10 @@
 <template>
   <div class="table-page">
-    <MForm :search-param="searchParam" :form-items="form_items"> </MForm>
+    <MForm :search-param="searchParam" :form-items="form_items">
+      <template #abc_content="scope">
+        {{ scope }}
+      </template>
+    </MForm>
     <MTable
       :columns="columns"
       :request-fn="requestFn"

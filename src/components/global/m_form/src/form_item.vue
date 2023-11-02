@@ -30,7 +30,7 @@
     <!-- 默认内容 -->
     <template #default>
       <!-- 嵌套表单项 -->
-      <template v-if="hasChildren.length">
+      <template v-if="hasChildren">
         <template v-for="item in hasChildren" :key="item.uniqueKey">
           <MFormItem v-bind="item">
             <template
@@ -89,9 +89,11 @@ const slot_prop = computed(() => {
 
 const hasChildren = computed(() => {
   const { _children } = $props;
-  if (!isArray(_children)) return [];
+  if (!isArray(_children)) return;
   return _children;
 });
+
+defineSlots<Record<string, any>>();
 </script>
 
 <style scoped></style>
