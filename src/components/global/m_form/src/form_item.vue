@@ -1,12 +1,20 @@
 <template>
-  <ElFormItem :label="label" :label-width="labelWidth" :prop="prop" :rules="rules">
+  <ElFormItem
+    :label="label"
+    :label-width="labelWidth"
+    :prop="prop"
+    :rules="rules"
+  >
     <!-- label -->
     <template #label>
       <template v-if="_renderLabel">
         <component :is="_renderLabel" v-bind="slot_prop.label" />
       </template>
       <ElSpace :size="2" v-else>
-        <slot :name="getSlotName(uniqueKey, LABEL_SUFFIX)" v-bind="slot_prop.label">
+        <slot
+          :name="getSlotName(uniqueKey, LABEL_SUFFIX)"
+          v-bind="slot_prop.label"
+        >
           <span>{{ label }}</span>
           <template v-if="tips">
             <ElTooltip placement="top">
@@ -21,9 +29,25 @@
     </template>
     <!-- 默认内容 -->
     <template #default>
-      <template v-if="_renderContent">
+      <!-- 嵌套表单项 -->
+      <template v-if="hasChildren.length">
+        <template v-for="item in hasChildren" :key="item.uniqueKey">
+          <MFormItem v-bind="item">
+            <template
+              v-for="slot in Object.keys($slots)"
+              :key="slot"
+              #[slot]="scope"
+            >
+              <slot :name="slot" v-bind="scope" />
+            </template>
+          </MFormItem>
+        </template>
+      </template>
+      <!-- 自定义渲染 -->
+      <template v-else-if="_renderContent">
         <component :is="_renderContent" :item="$props" />
       </template>
+      <!-- 默认内容 -->
       <slot
         v-else
         :name="getSlotName(uniqueKey, CONTENT_SUFFIX)"
@@ -37,11 +61,12 @@
 
 <script setup lang="ts">
 import { ElFormItem, ElTooltip, ElSpace, ElInput } from "element-plus";
+import MFormItem from "./form_item.vue";
 
 import type { MFormItemPropType } from "./type";
 
 import { computed, inject } from "vue";
-import { omit, pick } from "lodash";
+import { isArray, omit, pick } from "lodash";
 
 import { getSlotName } from "@/components/shared";
 
@@ -60,6 +85,12 @@ const slot_prop = computed(() => {
     label,
     content,
   };
+});
+
+const hasChildren = computed(() => {
+  const { _children } = $props;
+  if (!isArray(_children)) return [];
+  return _children;
 });
 </script>
 
