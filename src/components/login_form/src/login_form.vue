@@ -5,11 +5,7 @@
         <Transition name="el-fade-in-linear" appear>
           <ElForm :model="form" :rules="rules" ref="formRef">
             <ElFormItem prop="username">
-              <ElInput
-                type="text"
-                v-model="form.username"
-                placeholder="请输入账号"
-              >
+              <ElInput type="text" v-model="form.username" placeholder="请输入账号">
                 <template #prefix>
                   <m-icon name="User" />
                 </template>
@@ -28,10 +24,7 @@
               </ElInput>
             </ElFormItem>
             <ElFormItem prop="verifyCode">
-              <ElInput
-                v-model.number="form.verifyCode"
-                placeholder="请输入验证码"
-              >
+              <ElInput v-model.number="form.verifyCode" placeholder="请输入验证码">
                 <template #prefix>
                   <m-icon name="Help" />
                 </template>
@@ -49,12 +42,7 @@
                 >
                   登录
                 </ElButton>
-                <ElButton
-                  class="flex-1"
-                  round
-                  icon="Setting"
-                  @click="handleReset"
-                >
+                <ElButton class="flex-1" round icon="Setting" @click="handleReset">
                   重置
                 </ElButton>
               </div>

@@ -13,7 +13,12 @@ import { isArray, isFunction } from "lodash";
 import { getSlotName } from "@/components/shared";
 import { getCellValue, formatterValueWithEnum } from "./utils";
 
-import { DEFAULT_VALUE_KEY, ENUM_MAP_KEY, CLOUMN_SUFFIX, HEADER_SUFFIX } from "./enum";
+import {
+  DEFAULT_VALUE_KEY,
+  ENUM_MAP_KEY,
+  CLOUMN_SUFFIX,
+  HEADER_SUFFIX,
+} from "./constant";
 
 defineOptions({
   name: "MTableColumn",
@@ -25,6 +30,8 @@ const $slot = useSlots();
 
 const enumMap = inject(ENUM_MAP_KEY, void 0);
 const global_default_value = inject(DEFAULT_VALUE_KEY, void 0);
+
+const cellType = ["index", "expand", "selection"] as const;
 
 const TableCell = (column: MTableColumnPropType) => {
   const {
@@ -51,6 +58,7 @@ const TableCell = (column: MTableColumnPropType) => {
   if (!isShow) return;
   return (
     <ElTableColumn
+      type={type}
       label={label}
       prop={prop}
       width={width}

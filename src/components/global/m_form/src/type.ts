@@ -18,8 +18,11 @@ interface MFormItemPropType {
   label?: string;
   labelWidth?: string;
   rules?: Arrayable<FormItemRule>;
+  isShow?:boolean;
+  defaultValue?: any;
+  disabled?: boolean;
   tips?: () => VNode;
-  _renderLabel?: (prop: Pick<MFormItemPropType, "label" | "tips">) => VNode;
+  _renderLabel?: (prop: Pick<MFormItemPropType, "label" | "tips"> & { labelSuffix: string | undefined }) => VNode;
   _renderContent?: (prop: { item: MFormItemPropType }) => VNode;
 }
 

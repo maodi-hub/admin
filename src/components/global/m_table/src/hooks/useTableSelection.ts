@@ -1,6 +1,6 @@
-import type {} from "element-plus";
 
-import { computed, ref, unref } from "vue";
+
+import { computed, ref, unref, UnwrapRef } from "vue";
 
 interface Options {
   dataKey: string;
@@ -21,8 +21,18 @@ export function useTableSelection<
     return list;
   });
 
+  const addSelectionData = (value: CP[]) => {
+    selected_data_list.value = value as UnwrapRef<CP[]>;
+  }
+
+  const clearSelectionData = () => {
+    selected_data_list.value = [];
+  }
+
   return {
     selected_ids,
     selected_data_list,
+    addSelectionData,
+    clearSelectionData
   };
 }

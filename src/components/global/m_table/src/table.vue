@@ -6,6 +6,7 @@
     :border="border"
     :stripe="stripe"
     :row-key="rowKey"
+    @selection-change="addSelectionData"
     v-bind="$attrs"
     v-loading="loading"
     class="flex-1 min-w-0 min-h-0"
@@ -20,6 +21,7 @@
         </template>
       </MTableColumn>
     </template>
+
     <!-- 末尾添加行 -->
     <template #append>
       <slot name="append"></slot>
@@ -50,7 +52,7 @@ import { provide } from "vue";
 
 import { useTableData, useTableLayout, useTableSelection } from "./hooks";
 
-import { DEFAULT_VALUE_KEY } from "./enum";
+import { DEFAULT_VALUE_KEY } from "./constant";
 
 import { omit, pick } from "lodash";
 
@@ -95,7 +97,12 @@ const {
   onCurrentChange,
 } = useTableData(requestOptions, $props.isDeepReactive, $props.searchParam);
 
-const { selected_data_list, selected_ids } = useTableSelection<CP>({
+const {
+  selected_data_list,
+  selected_ids,
+  clearSelectionData,
+  addSelectionData,
+} = useTableSelection<CP>({
   dataKey: $props.rowKey,
 });
 
@@ -108,11 +115,13 @@ defineExpose({
   handleResetPagination,
   selected_ids,
   selected_data_list,
+  addSelectionData,
+  clearSelectionData,
 });
 </script>
 
 <style scoped lang="less">
 .el-table {
-  --el-table-header-bg-color: rgb(233, 236, 239, 0.7);
+  --el-table-header-bg-color: rgba(233, 236, 239, 0.409);
 }
 </style>

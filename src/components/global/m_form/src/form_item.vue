@@ -1,5 +1,11 @@
 <template>
-  <ElFormItem :label="label" :label-width="labelWidth" :prop="prop" :rules="rules">
+  <ElFormItem
+    v-if="isShow"
+    :label="label"
+    :label-width="labelWidth"
+    :prop="prop"
+    :rules="rules"
+  >
     <!-- label -->
     <template #label>
       <template v-if="_renderLabel">
@@ -13,9 +19,10 @@
               <template #content>
                 <component :is="tips" />
               </template>
-              <MIcon name="Warning" size="14px" />
+              <MIcon name="Warning" size="14px" color="var(--el-color-warning)" />
             </ElTooltip>
           </template>
+          <span v-if="labelSuffix">{{ labelSuffix }}</span>
         </slot>
       </ElSpace>
     </template>
@@ -45,11 +52,14 @@ import { omit, pick } from "lodash";
 
 import { getSlotName } from "@/components/shared";
 
-import { LABEL_SUFFIX, CONTENT_SUFFIX, PARAM_KEY } from "./enum";
+import { LABEL_SUFFIX, CONTENT_SUFFIX, PARAM_KEY, LABEL_SUFFIX_KEY } from "./constant";
 
-const $props = defineProps<MFormItemPropType>();
+const $props = withDefaults(defineProps<MFormItemPropType>(), {
+  isShow: true,
+});
 
 const searcParam = inject(PARAM_KEY, {});
+const labelSuffix = inject(LABEL_SUFFIX_KEY, void 0);
 
 const slot_prop = computed(() => {
   const label_includes = ["label", "tips"] as const;
@@ -57,10 +67,11 @@ const slot_prop = computed(() => {
 
   const content = omit($props, ...label_includes);
   return {
-    label,
+    label: { ...label, labelSuffix },
     content,
   };
 });
 </script>
 
 <style scoped></style>
+./contanst

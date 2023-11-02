@@ -112,3 +112,6 @@ dist
 
 # chunk analyze file
 stats.html
+
+# vscode counter file
+.VSCodeCounter/

@@ -1,10 +1,9 @@
 <template>
-  {{ searchParam }}
   <ElForm
+    ref="form_ref"
     :model="searchParam"
     :inline="inline"
     :label-width="labelWidth"
-    :label-suffix="labelSuffix"
     :label-position="labelPosition"
     :rules="rules"
   >
@@ -23,11 +22,13 @@
 import { ElForm } from "element-plus";
 import MFormItem from "./form_item.vue";
 
-import type { MFormPropType } from "./type";
+import type { Arrayable } from "@vueuse/core";
+import type { FormInstance, FormItemProp } from "element-plus";
+import type { MFormItemPropType, MFormPropType } from "./type";
 
-import { provide } from "vue";
+import { provide, ref, unref } from "vue";
 
-import { PARAM_KEY } from "./enum";
+import { LABEL_SUFFIX_KEY, PARAM_KEY } from "./constant";
 
 defineOptions({
   name: "MForm",
@@ -40,6 +41,59 @@ const $props = withDefaults(defineProps<MFormPropType>(), {
 });
 
 provide(PARAM_KEY, $props.searchParam);
+provide(LABEL_SUFFIX_KEY, $props.labelSuffix);
+
+const initParam = (searcParam: Record<string, any>, formItems: MFormItemPropType[]) => {
+  formItems.forEach(({ defaultValue, prop }) => {
+    if (!defaultValue) return;
+    searcParam[prop] = defaultValue;
+  });
+};
+
+const form_ref = ref<FormInstance>();
+
+const checkInstance = () => {
+  const form_instance = unref(form_ref);
+  if (!form_instance) {
+    throw new Error("form instance is null");
+  }
+};
+
+const validate = () => {
+  checkInstance();
+  return unref(form_ref)!.validate();
+};
+
+const validateField = (props?: Arrayable<FormItemProp>) => {
+  checkInstance();
+  return unref(form_ref)!.validateField(props);
+};
+
+const resetFields = (props?: Arrayable<FormItemProp>) => {
+  checkInstance();
+  return unref(form_ref)!.resetFields(props);
+};
+
+const scrollToField = (prop: FormItemProp) => {
+  checkInstance();
+  return unref(form_ref)!.resetFields(prop);
+};
+
+const clearValidate = (props?: Arrayable<FormItemProp>) => {
+  checkInstance();
+  return unref(form_ref)!.clearValidate(props);
+};
+
+initParam($props.searchParam, $props.formItems);
+
+defineExpose({
+  validate,
+  validateField,
+  resetFields,
+  scrollToField,
+  clearValidate,
+});
 </script>
 
 <style scoped></style>
+./contanst

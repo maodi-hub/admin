@@ -2,7 +2,7 @@ import type { MTableColumnType } from "../type";
 
 import { reactive, ref, provide } from "vue";
 
-import { ENUM_MAP_KEY } from "../enum";
+import { ENUM_MAP_KEY } from "../constant";
 import { getEnumMap, initColumns } from "../utils";
 
 export function useTableLayout<CP>(columns: MTableColumnType<CP>[]) {

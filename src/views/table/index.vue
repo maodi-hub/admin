@@ -1,8 +1,6 @@
 <template>
   <div class="table-page">
-    <MForm :search-param="searchParam" :form-items="form_items">
-      <template #a_label> sdfdf </template>
-      <template #a_content> gdfg</template>
+    <MForm :search-param="searchParam" :form-items="form_items" :label-suffix="':'">
     </MForm>
     <MTable :columns="columns" :request-fn="requestFn" :after-response="afterResponse">
     </MTable>
@@ -23,6 +21,7 @@ const form_items: MFormItemPropType[] = [
     label: "asasf",
     prop: "a",
     tips: () => <>asdasdasdasdasdasd</>,
+    defaultValue: "21423435345543",
   },
 ];
 
@@ -30,7 +29,7 @@ const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => 
   label: "asd" + idx,
   uniqueKey: "asd" + idx,
   prop: "asdasd" + (idx % 2),
-  type: idx % 2 ? "text" : "tag",
+  type: idx == 0 ? "expand" : undefined,
   enumOptionFn() {
     return [
       { label: "test", value: "asd" + idx, type: "success" },
