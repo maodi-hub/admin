@@ -54,6 +54,13 @@ export function formatterValueWithEnum(
   return cur;
 }
 
+export function filterColumnType(type?: string) {
+  if (!type) return;
+
+  const columnType = ["index", "expand", "selection"];
+  if (columnType.includes(type)) return type;
+}
+
 export function initColumns<CP>(
   columns: MTablePropType<any, CP, any>["columns"],
   callBack: (

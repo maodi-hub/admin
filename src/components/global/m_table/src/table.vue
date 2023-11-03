@@ -50,17 +50,15 @@ import { ElTable, ElEmpty, vLoading, ElTableColumn } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
 import type { TableInstance } from "element-plus";
-import type { MTableColumnType, MTablePropType } from "./type";
+import type { MTableColumnType, MTableEmitsType, MTablePropType } from "./type";
 
-import { provide, ref } from "vue";
+import { provide, ref, onMounted, unref } from "vue";
 import { omit, pick } from "lodash";
 import Sortable from "sortablejs";
 
-import { useTableData, useTableLayout, useTableSelection } from "./hooks";
+import { useTableData, useTableLayout, useTableSelection, useTableRadio } from "./hooks";
 
-import { DEFAULT_VALUE_KEY } from "./constant";
-import { unref } from "vue";
-import { onMounted } from "vue";
+import { DEFAULT_VALUE_KEY, ROW_KEY } from "./constant";
 
 defineOptions({
   name: "MTable",
@@ -77,8 +75,10 @@ const $props = withDefaults(defineProps<MTablePropType<P, CP, BR>>(), {
   showPagination: true,
   showTool: true,
 });
+defineEmits<MTableEmitsType<CP>>();
 
 provide(DEFAULT_VALUE_KEY, $props.defaultValue);
+provide(ROW_KEY, $props.rowKey);
 
 const { table_columns } = useTableLayout($props.columns);
 
@@ -103,6 +103,8 @@ const {
   onCurrentChange,
 } = useTableData(requestOptions, $props.isDeepReactive, $props.searchParam);
 
+const {} = useTableRadio(table_data, { dataKey: $props.rowKey });
+
 const {
   selected_data_list,
   selected_ids,
@@ -122,6 +124,7 @@ const dragSort = () => {
     handle: ".sort",
     animation: 300,
     onEnd({ newIndex, oldIndex }) {
+      console.log(newIndex, oldIndex);
       const [removedItem] = table_data.value.splice(oldIndex!, 1);
       table_data.value.splice(newIndex!, 0, removedItem);
       // emit("dargSort", { newIndex, oldIndex });
@@ -148,5 +151,10 @@ defineExpose({
 <style scoped lang="less">
 .el-table {
   --el-table-header-bg-color: rgba(233, 236, 239, 0.409);
+  :deep(.el-radio) {
+    &__label {
+      padding-left: 0;
+    }
+  }
 }
 </style>

@@ -2,7 +2,17 @@
   <div class="table-page">
     <MForm :search-param="searchParam" :form-items="form_items" :label-suffix="':'">
     </MForm>
-    <MTable :columns="columns" :request-fn="requestFn" :after-response="afterResponse">
+    <MTable
+      :columns="columns"
+      :request-fn="requestFn"
+      :after-response="afterResponse"
+      row-key="asdasd0"
+      is-deep-reactive
+      @radio-change="onRadioChange"
+    >
+      <template #asd2_expand="scope">
+        {{ scope }}
+      </template>
     </MTable>
   </div>
 </template>
@@ -49,8 +59,8 @@ const form_items: MFormItemPropType[] = [
 const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => ({
   label: "asd" + idx,
   uniqueKey: "asd" + idx,
-  prop: "asdasd" + (idx % 2),
-  type: idx % 2 ? "text" : "tag",
+  prop: "asdasd" + idx,
+  type: idx == 3 ? "radio" : idx == 2 ? "expand" : idx == 1 ? "selection" : undefined,
   enumOptionFn() {
     return [
       { label: "test", value: "asd" + idx, type: "success" },
@@ -66,6 +76,10 @@ const requestFn = () => {
     asdasd2: idx % 2 ? "asd" + idx : "",
   }));
   return data;
+};
+
+const onRadioChange = (newValue: any, oldValue: any) => {
+  console.log(newValue, oldValue);
 };
 
 const afterResponse = (res: { asdasd0: string; asdasd1: string; asdasd2: string }[]) => {

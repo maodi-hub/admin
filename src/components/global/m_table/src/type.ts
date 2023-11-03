@@ -54,7 +54,7 @@ type ColumnFixedPositionType = "right" | "left" | boolean;
 
 interface MTableColumnPropType<CP = any>
   extends Pick<MTablePropType, "defaultValue"> {
-  type?: "index" | "selection" | "expand" | "tag" | "text";
+  type?: "index" | "selection" | "expand" | "tag" | "text" | "radio" | "sort";
   label?: string;
   prop?: string;
   width?: string | number;
@@ -69,12 +69,21 @@ interface MTableColumnPropType<CP = any>
   _renderHeader?: () => VNode;
   _formatter?: CustomerRenderType<CP, "formatter">;
   _children?: MTableColumnType<CP>[];
+  sortable?: boolean;
   enumOptionFn?: enumFnType;
 }
 
 interface MTableColumnEditPropType<CP = any> extends MTableColumnPropType<CP> {
   prop: string;
   rule?: Arrayable<FormItemRule>;
+}
+
+interface MTableEmitsType<CP> {
+  (e: "radioChange", newValue?: CP, oldValue?:CP): void
+}
+
+interface SelectionHookOptionType {
+  dataKey: string
 }
 
 type MTableInstance = GenericComponentInstanceType<
@@ -87,6 +96,8 @@ export type {
   MTableColumnPropType,
   MTableColumnEditPropType,
   MTableColumnType,
+  MTableEmitsType,
+  SelectionHookOptionType,
   RenderScope,
   HeaderRenderScope,
 };

@@ -1,4 +1,3 @@
-import type { UnwrapRef } from "vue";
 import type { MTablePropType } from "../type";
 
 import { shallowRef, ref, toRaw } from "vue";
@@ -70,7 +69,7 @@ export function useTableData<P, CP, BR>(
       }
 
       table_data.value = [];
-      table_data.value = data as UnwrapRef<CP[]>;
+      table_data.value = data;
     } catch (err) {
       console.log("table request err ... ", err);
       table_data.value = [];

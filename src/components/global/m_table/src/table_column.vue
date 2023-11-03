@@ -3,21 +3,23 @@
 </template>
 
 <script setup lang="tsx">
-import { ElTableColumn, ElTag } from "element-plus";
+import { ElTableColumn, ElTag, ElRadio } from "element-plus";
 
 import type { HeaderRenderScope, MTableColumnPropType, RenderScope } from "./type";
 
-import { inject, useSlots, unref } from "vue";
+import { inject, useSlots, unref, ref } from "vue";
 import { isArray, isFunction } from "lodash";
 
 import { getSlotName } from "@/components/shared";
-import { getCellValue, formatterValueWithEnum } from "./utils";
+import { getCellValue, formatterValueWithEnum, filterColumnType } from "./utils";
+import { EXPAND_SUFFIX, RADIO_KEY } from "./constant";
 
 import {
   DEFAULT_VALUE_KEY,
   ENUM_MAP_KEY,
   CLOUMN_SUFFIX,
   HEADER_SUFFIX,
+  ROW_KEY,
 } from "./constant";
 
 defineOptions({
@@ -28,10 +30,11 @@ const $props = defineProps<MTableColumnPropType>();
 
 const $slot = useSlots();
 
+const radio_id = inject(RADIO_KEY, ref());
+
 const enumMap = inject(ENUM_MAP_KEY, void 0);
 const global_default_value = inject(DEFAULT_VALUE_KEY, void 0);
-
-const cellType = ["index", "expand", "selection"] as const;
+const row_key = inject(ROW_KEY, "id");
 
 const TableCell = (column: MTableColumnPropType) => {
   const {
@@ -47,25 +50,28 @@ const TableCell = (column: MTableColumnPropType) => {
     defaultValue,
     uniqueKey,
     showOverflowToolTip,
+    sortable,
     _children,
     _formatter,
     _renderHeader,
     _renderCell,
   } = column;
 
-  const enums = unref(enumMap)?.get(uniqueKey) ?? [];
+  const enums = unref(enumMap)?.get(uniqueKey);
 
   if (!isShow) return;
+
   return (
     <ElTableColumn
-      type={type}
+      type={filterColumnType(type)}
       label={label}
       prop={prop}
-      width={width}
+      width={type == "radio" ? width ?? "50px" : undefined}
       min-width={minWidth}
       header-align={headerAlign ?? cellAlign ?? "center"}
       align={cellAlign ?? "center"}
       fixed={fixed}
+      sortable={sortable}
       showOverflowTooltip={showOverflowToolTip ?? uniqueKey !== "operation"}
     >
       {{
@@ -75,6 +81,18 @@ const TableCell = (column: MTableColumnPropType) => {
           }
 
           const { row, $index } = scope;
+
+          if (type && enums) {
+            const enumOption = formatterValueWithEnum(
+              row,
+              enums,
+              prop,
+              global_default_value,
+              defaultValue
+            );
+
+            return RenderWithType(type, row, column, $index, enumOption);
+          }
 
           if (isFunction(_renderCell)) {
             return _renderCell(row, row[prop!], $index, column);
@@ -86,18 +104,6 @@ const TableCell = (column: MTableColumnPropType) => {
           }
 
           let cellValue = getCellValue(row, prop, global_default_value, defaultValue);
-
-          if (type && enums) {
-            const enumOption = formatterValueWithEnum(
-              row,
-              enums,
-              prop,
-              global_default_value,
-              defaultValue
-            );
-
-            return RenderWithEnum(type, enumOption);
-          }
 
           if (isFunction(_formatter)) {
             cellValue = _formatter(row, cellValue, $index, column);
@@ -121,8 +127,22 @@ const TableCell = (column: MTableColumnPropType) => {
   );
 };
 
-const RenderWithEnum = (type: string, enumOption: enumTagType) => {
+const RenderWithType = (
+  type: string,
+  row: any,
+  column: MTableColumnPropType,
+  $index: number,
+  enumOption: enumTagType
+) => {
+  const { prop, uniqueKey } = column;
+  const expand_slot = $slot[getSlotName(uniqueKey, EXPAND_SUFFIX)];
   const renderFn = {
+    radio: () => (
+      <ElRadio v-model={radio_id.value} label={row[row_key]}>
+        <i></i>
+      </ElRadio>
+    ),
+    expand: () => <>{expand_slot ? expand_slot({ row, column, $index }) : row[prop!]}</>,
     text: (opt: enumTagType) => opt.label,
     tag: (opt: enumTagType) => <ElTag type={opt.type}>{opt.label}</ElTag>,
   }[type];
