@@ -1,5 +1,5 @@
 import { isArray } from "lodash";
-import { login } from "./../../../../api/module/auth";
+
 import {
   MTableColumnEditPropType,
   MTableColumnPropType,
@@ -62,23 +62,25 @@ export function filterColumnType(type?: string) {
 }
 
 export function initColumns<CP>(
-  columns: MTablePropType<any, CP, any>["columns"],
-  callBack: (
-    column: MTableColumnPropType<CP> | MTableColumnEditPropType<CP>
-  ) => void
+  columns: MTablePropType<CP>["columns"],
 ) {
   if (!isArray(columns)) return [];
   return columns.map((col) => {
     const column = { ...col };
     column.isShow ??= true;
+    column.showOverflowToolTip ??= true;
     column.showOverflowHeadToolTip ??= true;
 
     if (column._children && isArray(column._children)) {
-      column._children = initColumns(column._children, callBack);
+      column._children = initColumns(column._children);
     }
-
-    callBack && callBack(column);
 
     return column;
   });
+}
+
+export function wWhetherSetOverFlow(uniqueKey: string, type: MTableColumnPropType["type"] ) {
+  if (type && ["sort", "selection"].includes(type)) return false;
+  if (uniqueKey == "operation") return false;
+  return true;
 }

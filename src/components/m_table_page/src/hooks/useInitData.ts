@@ -1,14 +1,13 @@
-import type { UnwrapRef } from "vue";
-import type { MTablePropType } from "../type";
+import type { MTablePagePropType } from "../type";
 
-import { ref, toRaw } from "vue";
+import { ref, toRaw, UnwrapRef } from "vue";
 import { debounce, isArray } from "lodash";
 
-import { usePagination } from "@/components/global/m_pagination";
+import type { PaginationType } from "@/components/global/m_pagination";
 
 interface RequestOptionsType<P, CP, BR>
   extends Pick<
-    MTablePropType<P, CP, BR>,
+    MTablePagePropType<P, CP, BR>,
     | "afterResponse"
     | "beforeRequest"
     | "requestFn"
@@ -16,28 +15,14 @@ interface RequestOptionsType<P, CP, BR>
     | "requestDebounce"
   > {}
 
-export function useTableData<P, CP, BR>(
+export function useInitData<P, CP, BR>(
   requestOptions: RequestOptionsType<P, CP, BR>,
-  isDeepReactive: MTablePropType["isDeepReactive"],
-  searchParam: MTablePropType["searchParam"]
+  isDeepReactive: MTablePagePropType["isDeepReactive"],
+  searchParam: MTablePagePropType["searchParam"],
+  pagination: PaginationType,
+  handleSetPagenation: (payload: Partial<PaginationType>) => void
 ) {
-  const {
-    pagination,
-    handleSetPagenation,
-    handleResetPagination,
-    onCurrentChange,
-    onSizeChange,
-  } = usePagination({
-    onSizeChangeAfter() {
-      handleDebounceData(searchParam);
-    },
-    onCurrentChangeAfter() {
-      handleDebounceData(searchParam);
-    },
-  });
-
   const loading = ref(false);
-  // const table_data = !isDeepReactive ? shallowRef<CP[]>([]) : ref<CP[]>([]);
   const table_data = ref<CP[]>([]);
 
   const {
@@ -80,17 +65,12 @@ export function useTableData<P, CP, BR>(
 
   const handleDebounceData = debounce(handleGetData, requestDebounce);
 
-  if (immediate) handleGetData(searchParam);
+  if (immediate) handleGetData({ ...searchParam, ...pagination });
 
   return {
     loading,
     table_data,
     handleGetData,
     handleDebounceData,
-    handleSetPagenation,
-    handleResetPagination,
-    pagination,
-    onCurrentChange,
-    onSizeChange,
   };
 }

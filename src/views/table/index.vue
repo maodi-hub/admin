@@ -1,33 +1,21 @@
 <template>
-  <div class="table-page">
-    <MForm
-      :search-param="searchParam"
-      :form-items="form_items"
-      :label-suffix="':'"
-    >
-    </MForm>
-    <MTable
-      :columns="columns"
-      :request-fn="requestFn"
-      :after-response="afterResponse"
-      row-key="asdasd0"
-      is-deep-reactive
-      @radio-change="onRadioChange"
-    >
-      <template #asd2_expand="scope">
-        {{ scope }}
-      </template>
-    </MTable>
-  </div>
+  <MTablePage
+    row-key="asdasd0"
+    :request-fn="requestFn"
+    :columns="columns"
+    :after-response="afterResponse"
+  >
+    <template #asd5_column="scope">{{ scope.row }}</template>
+  </MTablePage>
 </template>
 
 <script setup lang="tsx">
+import { MTablePage } from "@/components/m_table_page";
+
 import type { MFormItemPropType } from "@/components/global/m_form";
 import type { MTableColumnPropType } from "@/components/global/m_table";
 
-import { reactive } from "vue";
-
-const searchParam = reactive({ a: "sd", c: "Asd" });
+const searchParam = { a: "sd", c: "Asd" };
 
 const form_items: MFormItemPropType[] = [
   {
@@ -62,21 +50,19 @@ const form_items: MFormItemPropType[] = [
 
 const types = ["index", "selection", "radio", "sort", "expand"] as const;
 
-const columns: MTableColumnPropType[] = new Array(10)
-  .fill(0)
-  .map((val, idx) => ({
-    label: !idx || idx == 2 ? undefined : "test 11235666 " + idx,
-    uniqueKey: "asd" + idx,
-    prop: "asdasd" + idx,
-    type: types[idx],
-    // showOverflowHeadToolTip: idx <= 4 ? false : true,
-    enumOptionFn() {
-      return [
-        { label: "test", value: "asd" + idx, type: "success" },
-        { label: "test2", value: "", type: "danger" },
-      ];
-    },
-  }));
+const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => ({
+  label: !idx || idx == 2 ? undefined : "test 11235666 " + idx,
+  uniqueKey: "asd" + idx,
+  prop: "asdasd" + idx,
+  type: types[idx],
+  // showOverflowHeadToolTip: idx <= 4 ? false : true,
+  enumOptionFn() {
+    return [
+      { label: "test", value: "asd" + idx, type: "success" },
+      { label: "test2", value: "", type: "danger" },
+    ];
+  },
+}));
 
 const requestFn = () => {
   const data = new Array(20).fill(0).map((val, idx) => ({
@@ -96,9 +82,7 @@ const onRadioChange = (newValue: any, oldValue: any) => {
   console.log(newValue, oldValue);
 };
 
-const afterResponse = (
-  res: { asdasd0: string; asdasd1: string; asdasd2: string }[]
-) => {
+const afterResponse = (res: { asdasd0: string; asdasd1: string; asdasd2: string }[]) => {
   return res;
 };
 

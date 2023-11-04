@@ -1,26 +1,20 @@
 <template>
   <ElTable
     ref="table_ref"
-    :data="table_data"
+    :data="data"
     :height="height"
     :max-height="maxHeight"
     :border="border"
     :stripe="stripe"
     :row-key="rowKey"
     @selection-change="addSelectionData"
-    v-bind="$attrs"
-    v-loading="loading"
     class="flex-1 min-w-0 min-h-0"
   >
     <!-- 默认插槽 -->
     <slot />
-    <template v-for="column in table_columns" :key="column.uniqueKey">
+    <template v-for="column in columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
-        <template
-          v-for="slot in Object.keys($slots)"
-          #[slot]="scope"
-          :key="slot"
-        >
+        <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
           <slot :name="slot" v-bind="scope"></slot>
         </template>
       </MTableColumn>
@@ -38,78 +32,49 @@
       </slot>
     </template>
   </ElTable>
-  <MPagination
-    v-bind="pagination"
-    v-if="showPagination"
-    @size-change="onSizeChange"
-    @current-change="onCurrentChange"
-  />
 </template>
 
-<script setup lang="ts" generic="P, CP extends Record<string, any>, BR">
-import { ElTable, ElEmpty, vLoading, ElTableColumn } from "element-plus";
+<script setup lang="ts" generic="CP extends Record<string, any>">
+import { ElTable, ElEmpty } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
 import type { TableInstance } from "element-plus";
 import type { MTableColumnType, MTableEmitsType, MTablePropType } from "./type";
 
 import { provide, ref, onMounted, unref, watch } from "vue";
-import { omit, pick } from "lodash";
 import Sortable from "sortablejs";
 
-import {
-  useTableData,
-  useTableLayout,
-  useTableSelection,
-  useTableRadio,
-} from "./hooks";
+import { useTableSelection, useTableRadio } from "./hooks";
 
-import { DEFAULT_VALUE_KEY, ROW_KEY } from "./constant";
+import { DEFAULT_VALUE_KEY, ROW_KEY, RADIO_KEY, ENUM_MAP_KEY } from "./constant";
 
 defineOptions({
   name: "MTable",
 });
 
-const $props = withDefaults(defineProps<MTablePropType<P, CP, BR>>(), {
+const $props = withDefaults(defineProps<MTablePropType<CP>>(), {
   border: true,
   stripe: true,
   immediate: true,
   isDeepReactive: true,
   defaultValue: "--",
   rowKey: "id",
+  data: () => [],
   columns: () => [] as MTableColumnType<CP>[],
-  showPagination: true,
-  showTool: true,
 });
-defineEmits<MTableEmitsType<CP>>();
+const $emit = defineEmits<MTableEmitsType<CP>>();
 
-provide(DEFAULT_VALUE_KEY, $props.defaultValue);
-provide(ROW_KEY, $props.rowKey);
+const { radio_id, getRadioData } = useTableRadio<CP>({
+  dataKey: $props.rowKey,
+});
 
-const { table_columns } = useTableLayout($props.columns);
-
-const requestOptions = pick(
-  $props,
-  "afterResponse",
-  "beforeRequest",
-  "requestFn",
-  "immediate",
-  "requestDebounce"
+watch(
+  () => unref(radio_id),
+  (n, o) => {
+    console.log(n, o);
+    $emit("radioChange", getRadioData(n, $props.data), getRadioData(o, $props.data));
+  }
 );
-
-const {
-  loading,
-  table_data,
-  handleGetData,
-  handleDebounceData,
-  handleResetPagination,
-  handleSetPagenation,
-  pagination,
-  onSizeChange,
-  onCurrentChange,
-} = useTableData(requestOptions, $props.isDeepReactive, $props.searchParam);
-
-const {} = useTableRadio(table_data, { dataKey: $props.rowKey });
 
 const {
   selected_data_list,
@@ -131,22 +96,37 @@ const dragSort = () => {
     animation: 300,
     onEnd({ newIndex, oldIndex }) {
       console.log(newIndex, oldIndex);
-      const [removedItem] = table_data.value.splice(oldIndex!, 1);
-      table_data.value.splice(newIndex!, 0, removedItem);
+      const [removedItem] = $props.data.splice(oldIndex!, 1);
+      $props.data.splice(newIndex!, 0, removedItem);
       // emit("dargSort", { newIndex, oldIndex });
     },
   });
 };
 
+const enumMap = ref<Map<string, enumTagType[]>>(new Map());
+watch(
+  () => $props.columns,
+  (columns) => {
+    columns.forEach(async ({ uniqueKey, enumOptionFn }) => {
+      if (!enumOptionFn) return;
+      enumMap.value.set(uniqueKey, []);
+      const enumOpt = await enumOptionFn();
+      enumMap.value.set(uniqueKey, enumOpt);
+    });
+  },
+  {
+    immediate: true,
+  }
+);
+
+provide(DEFAULT_VALUE_KEY, $props.defaultValue);
+provide(ROW_KEY, $props.rowKey);
+provide(RADIO_KEY, radio_id);
+provide(ENUM_MAP_KEY, enumMap);
+
 onMounted(dragSort);
 
 defineExpose({
-  table_data,
-  table_columns,
-  handleGetData,
-  handleDebounceData,
-  handleSetPagenation,
-  handleResetPagination,
   selected_ids,
   selected_data_list,
   addSelectionData,
@@ -160,6 +140,13 @@ defineExpose({
   :deep(.el-radio) {
     &__label {
       padding-left: 0;
+    }
+  }
+  :deep(.el-table__cell) {
+    &.el-table-column--selection {
+      .cell {
+        justify-content: center;
+      }
     }
   }
 }

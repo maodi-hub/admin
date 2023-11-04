@@ -1,23 +1,13 @@
 import type { MTableColumnType } from "../type";
 
-import { reactive, ref, provide } from "vue";
+import { reactive } from "vue";
 
-import { ENUM_MAP_KEY } from "../constant";
-import { getEnumMap, initColumns } from "../utils";
+import { initColumns } from "../utils";
 
 export function useTableLayout<CP>(columns: MTableColumnType<CP>[]) {
   const table_columns = reactive<MTableColumnType<CP>[]>([]);
-  const enumMap = ref<Map<string, enumTagType[]>>(new Map());
-  provide(ENUM_MAP_KEY, enumMap);
 
-  const initialed_cols = initColumns<CP>(columns, (column) => {
-    if (column.enumOptionFn) {
-      enumMap.value.set(column.uniqueKey, []);
-      getEnumMap(column.enumOptionFn).then((res) => {
-        enumMap.value.set(column.uniqueKey, res);
-      })
-    }
-  })
+  const initialed_cols = initColumns<CP>(columns)
 
   table_columns.length = 0;
   table_columns.push(...initialed_cols);

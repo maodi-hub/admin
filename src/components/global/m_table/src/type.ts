@@ -20,26 +20,15 @@ type MTableColumnType<CP = any> =
   | MTableColumnPropType<CP>
   | MTableColumnEditPropType<CP>;
 
-interface MTablePropType<P = any, CP = any, BR = any> {
-  searchParam?: Record<string, any>;
+interface MTablePropType<CP = any> {
   border?: boolean;
   stripe?: boolean;
   rowKey?: string;
-  immediate?: boolean;
   defaultValue?: string | number;
   height?: string;
   maxHeight?: string;
-  requestDebounce?: number;
-  beforeRequest?: (...arg: any[]) => P;
-  requestFn?: (arg: P) => BR;
-  afterResponse?: (
-    res: BR,
-    set_pagination: (payload: Partial<PaginationType>) => void
-  ) => CP[];
   columns?: MTableColumnType<CP>[];
-  isDeepReactive?: boolean;
-  showPagination?: boolean;
-  showTool?: boolean;
+  data?: CP[];
 }
 
 type CustomerRenderType<CP, T extends "formatter" | "render"> = (
