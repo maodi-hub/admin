@@ -1,6 +1,7 @@
+import type { UnwrapRef } from "vue";
 import type { MTablePropType } from "../type";
 
-import { shallowRef, ref, toRaw } from "vue";
+import { ref, toRaw } from "vue";
 import { debounce, isArray } from "lodash";
 
 import { usePagination } from "@/components/global/m_pagination";
@@ -39,7 +40,6 @@ export function useTableData<P, CP, BR>(
   // const table_data = !isDeepReactive ? shallowRef<CP[]>([]) : ref<CP[]>([]);
   const table_data = ref<CP[]>([]);
 
-
   const {
     afterResponse,
     beforeRequest,
@@ -62,7 +62,7 @@ export function useTableData<P, CP, BR>(
 
       const data = (
         afterResponse ? afterResponse(res, handleSetPagenation) : res
-      ) as CP[];
+      ) as UnwrapRef<CP[]>;
 
       if (!isArray(data)) {
         throw new Error("Table data is expected to be an array!");
