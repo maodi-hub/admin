@@ -45,7 +45,7 @@ const $props = withDefaults(defineProps<MTablePagePropType<P, CP, BR>>(), {
   border: true,
   stripe: true,
   immediate: true,
-  isDeepReactive: true,
+  isDeepReactive: false,
   defaultValue: "--",
   rowKey: "id",
   columns: () => [] as MTableColumnType<CP>[],
@@ -91,6 +91,16 @@ const onRadioChange = (newValue?: CP, oldValue?: CP) => {
   console.log(newValue, oldValue);
   $emit("radioChange", newValue, oldValue);
 };
+
+defineExpose({
+  table_data,
+  table_columns,
+  handleGetData,
+  handleDebounceData,
+  pagination,
+  handleSetPagenation,
+  handleResetPagination,
+});
 </script>
 
 <style scoped></style>

@@ -4,8 +4,9 @@
     :request-fn="requestFn"
     :columns="columns"
     :after-response="afterResponse"
+    is-deep-reactive
   >
-    <template #asd5_column="scope">{{ scope.row }}</template>
+    <template #asd5_column="{ row, column }">{{ row }}</template>
   </MTablePage>
 </template>
 

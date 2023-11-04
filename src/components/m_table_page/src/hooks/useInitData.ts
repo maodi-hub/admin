@@ -1,6 +1,6 @@
 import type { MTablePagePropType } from "../type";
 
-import { ref, toRaw, UnwrapRef } from "vue";
+import { ref, shallowReactive, shallowRef, toRaw, UnwrapRef } from "vue";
 import { debounce, isArray } from "lodash";
 
 import type { PaginationType } from "@/components/global/m_pagination";
@@ -23,7 +23,7 @@ export function useInitData<P, CP, BR>(
   handleSetPagenation: (payload: Partial<PaginationType>) => void
 ) {
   const loading = ref(false);
-  const table_data = ref<CP[]>([]);
+  const table_data = !isDeepReactive ? shallowRef<CP[]>([]) : ref<CP[]>([]);
 
   const {
     afterResponse,
@@ -47,7 +47,7 @@ export function useInitData<P, CP, BR>(
 
       const data = (
         afterResponse ? afterResponse(res, handleSetPagenation) : res
-      ) as UnwrapRef<CP[]>;
+      ) as CP[];
 
       if (!isArray(data)) {
         throw new Error("Table data is expected to be an array!");
@@ -56,7 +56,7 @@ export function useInitData<P, CP, BR>(
       table_data.value = [];
       table_data.value = data;
     } catch (err) {
-      console.log("table request err ... ", err);
+      console.error("table request err ... ", err);
       table_data.value = [];
     } finally {
       loading.value = false;

@@ -18,7 +18,10 @@ interface MTablePagePropType<P = any, CP = any, BR = any> extends MTablePropType
 
 interface MTablePageEmitsType<CP = any> extends MTableEmitsType<CP> {}
 
+type MTablePageInstance = GenericComponentInstanceType<typeof import("./table_page.vue")["default"]>
+
 export type {
   MTablePagePropType,
-  MTablePageEmitsType
+  MTablePageEmitsType,
+  MTablePageInstance
 }
