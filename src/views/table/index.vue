@@ -1,6 +1,10 @@
 <template>
   <div class="table-page">
-    <MForm :search-param="searchParam" :form-items="form_items" :label-suffix="':'">
+    <MForm
+      :search-param="searchParam"
+      :form-items="form_items"
+      :label-suffix="':'"
+    >
     </MForm>
     <MTable
       :columns="columns"
@@ -56,24 +60,34 @@ const form_items: MFormItemPropType[] = [
   },
 ];
 
-const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => ({
-  label: "asd" + idx,
-  uniqueKey: "asd" + idx,
-  prop: "asdasd" + idx,
-  type: idx == 3 ? "radio" : idx == 2 ? "expand" : idx == 1 ? "selection" : undefined,
-  enumOptionFn() {
-    return [
-      { label: "test", value: "asd" + idx, type: "success" },
-      { label: "test2", value: "", type: "danger" },
-    ];
-  },
-}));
+const types = ["index", "selection", "radio", "sort", "expand"] as const;
+
+const columns: MTableColumnPropType[] = new Array(10)
+  .fill(0)
+  .map((val, idx) => ({
+    label: !idx || idx == 2 ? undefined : "test 11235666 " + idx,
+    uniqueKey: "asd" + idx,
+    prop: "asdasd" + idx,
+    type: types[idx],
+    // showOverflowHeadToolTip: idx <= 4 ? false : true,
+    enumOptionFn() {
+      return [
+        { label: "test", value: "asd" + idx, type: "success" },
+        { label: "test2", value: "", type: "danger" },
+      ];
+    },
+  }));
 
 const requestFn = () => {
   const data = new Array(20).fill(0).map((val, idx) => ({
     asdasd0: "asd" + idx,
     asdasd1: "",
     asdasd2: idx % 2 ? "asd" + idx : "",
+    asdasd3: "test" + idx,
+    asdasd4: "4 " + idx,
+    asdasd5: "5 " + idx,
+    asdasd6: "6 " + idx,
+    asdasd7: "7 " + idx,
   }));
   return data;
 };
@@ -82,7 +96,9 @@ const onRadioChange = (newValue: any, oldValue: any) => {
   console.log(newValue, oldValue);
 };
 
-const afterResponse = (res: { asdasd0: string; asdasd1: string; asdasd2: string }[]) => {
+const afterResponse = (
+  res: { asdasd0: string; asdasd1: string; asdasd2: string }[]
+) => {
   return res;
 };
 

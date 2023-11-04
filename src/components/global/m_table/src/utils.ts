@@ -71,6 +71,7 @@ export function initColumns<CP>(
   return columns.map((col) => {
     const column = { ...col };
     column.isShow ??= true;
+    column.showOverflowHeadToolTip ??= true;
 
     if (column._children && isArray(column._children)) {
       column._children = initColumns(column._children, callBack);
