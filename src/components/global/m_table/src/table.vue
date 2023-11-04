@@ -14,12 +14,13 @@
   >
     <!-- 默认插槽 -->
     <slot />
-    <ElTableColumn>
-      <div class="sort">sort</div>
-    </ElTableColumn>
     <template v-for="column in table_columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
-        <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
+        <template
+          v-for="slot in Object.keys($slots)"
+          #[slot]="scope"
+          :key="slot"
+        >
           <slot :name="slot" v-bind="scope"></slot>
         </template>
       </MTableColumn>
@@ -52,11 +53,16 @@ import MTableColumn from "./table_column.vue";
 import type { TableInstance } from "element-plus";
 import type { MTableColumnType, MTableEmitsType, MTablePropType } from "./type";
 
-import { provide, ref, onMounted, unref } from "vue";
+import { provide, ref, onMounted, unref, watch } from "vue";
 import { omit, pick } from "lodash";
 import Sortable from "sortablejs";
 
-import { useTableData, useTableLayout, useTableSelection, useTableRadio } from "./hooks";
+import {
+  useTableData,
+  useTableLayout,
+  useTableSelection,
+  useTableRadio,
+} from "./hooks";
 
 import { DEFAULT_VALUE_KEY, ROW_KEY } from "./constant";
 
@@ -121,7 +127,7 @@ const dragSort = () => {
     ".el-table__body-wrapper tbody"
   ) as HTMLElement;
   Sortable.create(tbody, {
-    handle: ".sort",
+    handle: ".dragable-sort",
     animation: 300,
     onEnd({ newIndex, oldIndex }) {
       console.log(newIndex, oldIndex);

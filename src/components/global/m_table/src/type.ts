@@ -65,6 +65,7 @@ interface MTableColumnPropType<CP = any>
   fixed?: ColumnFixedPositionType;
   isShow?: boolean;
   showOverflowToolTip?: boolean;
+  showOverflowHeadToolTip?: boolean;
   _renderCell?: CustomerRenderType<CP, "render">;
   _renderHeader?: () => VNode;
   _formatter?: CustomerRenderType<CP, "formatter">;
@@ -79,11 +80,11 @@ interface MTableColumnEditPropType<CP = any> extends MTableColumnPropType<CP> {
 }
 
 interface MTableEmitsType<CP> {
-  (e: "radioChange", newValue?: CP, oldValue?:CP): void
+  (e: "radioChange", newValue?: CP, oldValue?: CP): void;
 }
 
 interface SelectionHookOptionType {
-  dataKey: string
+  dataKey: string;
 }
 
 type MTableInstance = GenericComponentInstanceType<
