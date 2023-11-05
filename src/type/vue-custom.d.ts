@@ -13,7 +13,9 @@ declare module "vue" {
     MCountTo: typeof import("@/components/global/m_count_to")["MCountTo"];
     MForm: typeof import("@/components/global/m_form")["MForm"];
     MFormItem: typeof import("@/components/global/m_form")["MFormItem"];
-    // MSelection: typeof import("@/components/global/m_select")["MSelection"];
+    MInput: typeof import("@/components/global/m_input")["MInput"];
+    MSelect: typeof import("@/components/global/m_select")["MSelect"];
+    MTextArea: typeof import("@/components/global/m_textarea")["MTextArea"];
     MPagination: typeof import("@/components/global/m_pagination")["MPagiantion"];
   }
 }

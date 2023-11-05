@@ -48,7 +48,7 @@
         :name="getSlotName(uniqueKey, CONTENT_SUFFIX)"
         v-bind="slot_prop.content"
       >
-        <ElInput v-model="searcParam[prop!]" />
+        <MInput v-model="searcParam[prop!]" />
       </slot>
     </template>
   </ElFormItem>
