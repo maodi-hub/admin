@@ -1,8 +1,7 @@
 import { isArray } from "lodash";
 
 import {
-  MTableColumnEditPropType,
-  MTableColumnPropType,
+  MTableColumnType,
   MTablePropType,
 } from "./type";
 
@@ -16,13 +15,19 @@ export function getCellValue(
   return cellValue || (cell_defalut ?? global_defalut);
 }
 
-export async function getEnumMap(fn: MTableColumnPropType["enumOptionFn"]) {
-  try {
-    const list = await fn!();
-    return list;
-  } catch {
-    return [];
-  }
+export async function getEnumMap(
+  columns: MTableColumnType[],
+  callBack: (
+    option: Pick<Required<MTableColumnType>, "enumOptionFn" | "uniqueKey">
+  ) => void
+) {
+  columns.forEach(async ({ uniqueKey, enumOptionFn, _children }) => {
+    if (isArray(_children) && _children.length)
+      return getEnumMap(_children, callBack);
+    if (!enumOptionFn) return;
+
+    callBack && callBack({ enumOptionFn, uniqueKey });
+  });
 }
 
 export function formatterValueWithEnum(
@@ -61,9 +66,7 @@ export function filterColumnType(type?: string) {
   if (columnType.includes(type)) return type;
 }
 
-export function initColumns<CP>(
-  columns: MTablePropType<CP>["columns"],
-) {
+export function initColumns<CP>(columns: MTablePropType<CP>["columns"]) {
   if (!isArray(columns)) return [];
   return columns.map((col) => {
     const column = { ...col };
@@ -79,7 +82,10 @@ export function initColumns<CP>(
   });
 }
 
-export function wWhetherSetOverFlow(uniqueKey: string, type: MTableColumnPropType["type"] ) {
+export function wWhetherSetOverFlow(
+  uniqueKey: string,
+  type: MTableColumnType["type"]
+) {
   if (type && ["sort", "selection"].includes(type)) return false;
   if (uniqueKey == "operation") return false;
   return true;

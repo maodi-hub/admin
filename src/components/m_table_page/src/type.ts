@@ -1,8 +1,8 @@
-import type { PaginationType } from "@/components/global/m_pagination";
+import type { MFormPropType } from "@/components/global/m_form";
 import type { MTableEmitsType, MTablePropType } from "@/components/global/m_table";
+import type { PaginationType } from "@/components/global/m_pagination";
 
-interface MTablePagePropType<P = any, CP = any, BR = any> extends MTablePropType<CP> {
-  searchParam?: Record<string, any>;
+interface MTablePagePropType<P = any, CP = any, BR = any> extends MTablePropType<CP>, MFormPropType {
   immediate?: boolean;
   requestDebounce?: number;
   beforeRequest?: (...arg: any[]) => P;

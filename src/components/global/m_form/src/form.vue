@@ -1,7 +1,8 @@
 <template>
+  {{ initParam }}
   <ElForm
     ref="form_ref"
-    :model="searchParam"
+    :model="initParam"
     :inline="inline"
     :label-width="labelWidth"
     :label-position="labelPosition"
@@ -24,7 +25,7 @@ import MFormItem from "./form_item.vue";
 
 import type { Arrayable } from "@vueuse/core";
 import type { FormInstance, FormItemProp } from "element-plus";
-import type { MFormItemPropType, MFormPropType } from "./type";
+import type { MFormPropType } from "./type";
 
 import { provide, ref, unref } from "vue";
 
@@ -37,18 +38,8 @@ defineOptions({
 const $props = withDefaults(defineProps<MFormPropType>(), {
   labelPosition: "right",
   formItems: () => [],
-  searchParam: () => ({}),
+  initParam: () => ({}),
 });
-
-provide(PARAM_KEY, $props.searchParam);
-provide(LABEL_SUFFIX_KEY, $props.labelSuffix);
-
-const initParam = (searcParam: Record<string, any>, formItems: MFormItemPropType[]) => {
-  formItems.forEach(({ defaultValue, prop }) => {
-    if (!defaultValue || !prop) return;
-    searcParam[prop] = defaultValue;
-  });
-};
 
 const form_ref = ref<FormInstance>();
 
@@ -84,7 +75,8 @@ const clearValidate = (props?: Arrayable<FormItemProp>) => {
   return unref(form_ref)!.clearValidate(props);
 };
 
-initParam($props.searchParam, $props.formItems);
+provide(PARAM_KEY, $props.initParam);
+provide(LABEL_SUFFIX_KEY, $props.labelSuffix);
 
 defineExpose({
   validate,

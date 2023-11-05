@@ -39,14 +39,22 @@ import { ElTable, ElEmpty } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
 import type { TableInstance } from "element-plus";
-import type { MTableColumnType, MTableEmitsType, MTablePropType } from "./type";
+import type { MTableEmitsType, MTablePropType } from "./type";
 
 import { provide, ref, onMounted, unref, watch } from "vue";
 import Sortable from "sortablejs";
 
 import { useTableSelection, useTableRadio } from "./hooks";
 
-import { DEFAULT_VALUE_KEY, ROW_KEY, RADIO_KEY, ENUM_MAP_KEY } from "./constant";
+import { getEnumMap } from "./utils";
+
+import {
+  DEFAULT_VALUE_KEY,
+  ROW_KEY,
+  RADIO_KEY,
+  ENUM_MAP_KEY,
+  DEFAULT_ROW_KEY,
+} from "./constant";
 
 defineOptions({
   name: "MTable",
@@ -58,9 +66,9 @@ const $props = withDefaults(defineProps<MTablePropType<CP>>(), {
   immediate: true,
   isDeepReactive: true,
   defaultValue: "--",
-  rowKey: "id",
+  rowKey: DEFAULT_ROW_KEY,
   data: () => [],
-  columns: () => [] as MTableColumnType<CP>[],
+  columns: () => [],
 });
 const $emit = defineEmits<MTableEmitsType<CP>>();
 
@@ -71,7 +79,6 @@ const { radio_id, getRadioData } = useTableRadio<CP>({
 watch(
   () => unref(radio_id),
   (n, o) => {
-    console.log(n, o);
     $emit("radioChange", getRadioData(n, $props.data), getRadioData(o, $props.data));
   }
 );
@@ -107,11 +114,12 @@ const enumMap = ref<Map<string, enumTagType[]>>(new Map());
 watch(
   () => $props.columns,
   (columns) => {
-    columns.forEach(async ({ uniqueKey, enumOptionFn }) => {
-      if (!enumOptionFn) return;
+    getEnumMap(columns, async ({ enumOptionFn, uniqueKey }) => {
       enumMap.value.set(uniqueKey, []);
-      const enumOpt = await enumOptionFn();
-      enumMap.value.set(uniqueKey, enumOpt);
+      try {
+        const enumOpt = await enumOptionFn();
+        enumMap.value.set(uniqueKey, enumOpt);
+      } catch {}
     });
   },
   {

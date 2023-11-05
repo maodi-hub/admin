@@ -4,9 +4,10 @@
     :request-fn="requestFn"
     :columns="columns"
     :after-response="afterResponse"
+    :form-items="form_items"
+    :init-param="initParam"
     is-deep-reactive
   >
-    <template #asd5_column="{ row, column }">{{ row }}</template>
   </MTablePage>
 </template>
 
@@ -16,63 +17,47 @@ import { MTablePage } from "@/components/m_table_page";
 import type { MFormItemPropType } from "@/components/global/m_form";
 import type { MTableColumnPropType } from "@/components/global/m_table";
 
-const searchParam = { a: "sd", c: "Asd" };
+const initParam = { a: "sd", c: "Asd" };
 
 const form_items: MFormItemPropType[] = [
   {
     uniqueKey: "a",
     label: "asasf",
-    prop: "a",
+    prop: "c",
     tips: () => <>asdasdasdasdasdasd</>,
-    _children: [
-      {
-        uniqueKey: "ab",
-        label: "asasf",
-        prop: "a",
-        tips: () => <>test</>,
-        _children: [
-          {
-            uniqueKey: "abc",
-            label: "asasf",
-            prop: "a",
-            tips: () => <>test123</>,
-          },
-          {
-            uniqueKey: "abd",
-            label: "asasf",
-            prop: "c",
-            tips: () => <>test123</>,
-          },
-        ],
-      },
-    ],
+    defaultValue: "test",
   },
 ];
 
-const types = ["index", "selection", "radio", "sort", "expand"] as const;
+const types = ["index", "selection", "radio", "sort", "expand", "tag"] as const;
 
-const columns: MTableColumnPropType[] = new Array(10).fill(0).map((val, idx) => ({
-  label: !idx || idx == 2 ? undefined : "test 11235666 " + idx,
-  uniqueKey: "asd" + idx,
-  prop: "asdasd" + idx,
-  type: types[idx],
-  // showOverflowHeadToolTip: idx <= 4 ? false : true,
-  enumOptionFn() {
-    return [
-      { label: "test", value: "asd" + idx, type: "success" },
-      { label: "test2", value: "", type: "danger" },
-    ];
+const columns: MTableColumnPropType[] = [
+  {
+    label: "test asd 1",
+    uniqueKey: "test asd11",
+    _children: new Array(10).fill(0).map((val, idx) => ({
+      label: !idx || idx == 2 ? undefined : "test 11235666 " + idx,
+      uniqueKey: "asd" + idx,
+      prop: "asdasd" + idx,
+      type: types[idx],
+      enumOptionFn() {
+        return [
+          { label: "test", value: "5 " + idx, type: "success" },
+          { label: "test2", value: "", type: "danger" },
+        ];
+      },
+    })),
   },
-}));
+];
 
 const requestFn = () => {
-  const data = new Array(20).fill(0).map((val, idx) => ({
+  const data = new Array(10).fill(0).map((val, idx) => ({
     asdasd0: "asd" + idx,
     asdasd1: "",
     asdasd2: idx % 2 ? "asd" + idx : "",
     asdasd3: "test" + idx,
     asdasd4: "4 " + idx,
-    asdasd5: "5 " + idx,
+    asdasd5: "",
     asdasd6: "6 " + idx,
     asdasd7: "7 " + idx,
   }));

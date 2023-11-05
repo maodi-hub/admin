@@ -7,3 +7,5 @@ export const MForm = withInstall(mForm);
 export const MFormItem = withInstall(mFormItem);
 
 export * from "./src/type";
+
+export * from "./src/hooks";

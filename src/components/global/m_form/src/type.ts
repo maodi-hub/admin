@@ -8,7 +8,7 @@ interface MFormPropType {
   rules?: FormRules;
   labelSuffix?: string;
   labelPosition?: "left" | "right" | "top";
-  searchParam?: Record<string, any>;
+  initParam?: Record<string, any>;
   formItems?: MFormItemPropType[];
 }
 

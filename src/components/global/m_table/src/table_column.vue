@@ -19,7 +19,7 @@ import {
   filterColumnType,
   wWhetherSetOverFlow,
 } from "./utils";
-import { EXPAND_SUFFIX, RADIO_KEY } from "./constant";
+import { EXPAND_SUFFIX, RADIO_KEY, DEFAULT_ROW_KEY } from "./constant";
 
 import {
   DEFAULT_VALUE_KEY,
@@ -42,7 +42,7 @@ const radio_id = inject(RADIO_KEY, ref());
 
 const enumMap = inject(ENUM_MAP_KEY, void 0);
 const global_default_value = inject(DEFAULT_VALUE_KEY, void 0);
-const row_key = inject(ROW_KEY, "id");
+const row_key = inject(ROW_KEY, DEFAULT_ROW_KEY);
 
 const TableCell = (column: MTableColumnPropType) => {
   const {

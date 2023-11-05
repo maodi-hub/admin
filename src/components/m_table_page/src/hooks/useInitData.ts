@@ -1,6 +1,6 @@
 import type { MTablePagePropType } from "../type";
 
-import { ref, shallowReactive, shallowRef, toRaw, UnwrapRef } from "vue";
+import { ref, shallowRef, toRaw, nextTick } from "vue";
 import { debounce, isArray } from "lodash";
 
 import type { PaginationType } from "@/components/global/m_pagination";
@@ -17,9 +17,9 @@ interface RequestOptionsType<P, CP, BR>
 
 export function useInitData<P, CP, BR>(
   requestOptions: RequestOptionsType<P, CP, BR>,
-  isDeepReactive: MTablePagePropType["isDeepReactive"],
-  searchParam: MTablePagePropType["searchParam"],
-  pagination: PaginationType,
+  isDeepReactive: MTablePagePropType<P, CP, BR>["isDeepReactive"],
+  searchParam: MTablePagePropType<P, CP, BR>["initParam"],
+  pagination:Pick<PaginationType, "currentPage" | "pageSize">,
   handleSetPagenation: (payload: Partial<PaginationType>) => void
 ) {
   const loading = ref(false);
@@ -35,10 +35,10 @@ export function useInitData<P, CP, BR>(
 
   const handleGetData = async (...arg: any) => {
     if (!requestFn) return;
-
+    await nextTick();
     loading.value = true;
     try {
-      console.log("requesting...");
+      console.log("requesting...", arg);
       const param: P = beforeRequest
         ? beforeRequest(arg, toRaw(pagination))
         : arg;

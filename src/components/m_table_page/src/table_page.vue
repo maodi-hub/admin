@@ -1,6 +1,17 @@
 <template>
   <div class="table-page">
+    <MForm
+      ref="form"
+      :form-items="formItems"
+      :init-param="form_param"
+      :inline="inline"
+      :label-position="labelPosition"
+      :label-suffix="labelSuffix"
+      :label-width="labelWidth"
+      :rules="rules"
+    />
     <MTable
+      ref="table"
       :row-key="rowKey"
       :border="border"
       :stripe="stripe"
@@ -29,10 +40,14 @@
 import { vLoading } from "element-plus";
 
 import type { MTablePagePropType, MTablePageEmitsType } from "./type";
-import type { MTableColumnType } from "@/components/global/m_table";
+import type { MFormInstance } from "@/components/global/m_form";
+import type { MTableInstance } from "@/components/global/m_table";
 
+import { unref } from "vue";
 import { pick } from "lodash";
 
+import { useRefs } from "@/hooks/useRefs";
+import { useForm } from "@/components/global/m_form";
 import { useTableLayout } from "@/components/global/m_table";
 import { usePagination } from "@/components/global/m_pagination";
 import { useInitData } from "./hooks";
@@ -48,10 +63,21 @@ const $props = withDefaults(defineProps<MTablePagePropType<P, CP, BR>>(), {
   isDeepReactive: false,
   defaultValue: "--",
   rowKey: "id",
-  columns: () => [] as MTableColumnType<CP>[],
+  columns: () => [],
+  initParam: () => ({}),
+  formItems: () => [],
 });
 
 const $emit = defineEmits<MTablePageEmitsType<CP>>();
+
+interface PageRefs {
+  form: MFormInstance;
+  table: MTableInstance;
+}
+
+const { componentRefs } = useRefs<PageRefs>();
+
+const { form_param } = useForm($props.initParam, $props.formItems);
 
 const {
   pagination,
@@ -77,11 +103,13 @@ const requestOptions = pick(
   "requestDebounce"
 );
 
+const requestPaginationOption = pick(pagination, "currentPage", "pageSize");
+
 const { loading, table_data, handleGetData, handleDebounceData } = useInitData(
   requestOptions,
   $props.isDeepReactive,
-  $props.searchParam,
-  pagination,
+  form_param,
+  requestPaginationOption,
   handleSetPagenation
 );
 
@@ -92,6 +120,10 @@ const onRadioChange = (newValue?: CP, oldValue?: CP) => {
   $emit("radioChange", newValue, oldValue);
 };
 
+const getInstance = <K extends keyof PageRefs>(refs_key: K) => {
+  return unref(componentRefs)(refs_key) as PageRefs[K];
+};
+
 defineExpose({
   table_data,
   table_columns,
@@ -100,6 +132,7 @@ defineExpose({
   pagination,
   handleSetPagenation,
   handleResetPagination,
+  getInstance,
 });
 </script>
 

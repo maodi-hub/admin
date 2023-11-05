@@ -18,3 +18,5 @@ export const HEADER_SUFFIX = "_header";
 export const EXPAND_SUFFIX = "_expand";
 
 export const INDEX_SUFFIX = "_index";
+
+export const DEFAULT_ROW_KEY = "id";
