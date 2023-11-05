@@ -1,5 +1,4 @@
 <template>
-  {{ initParam }}
   <ElForm
     ref="form_ref"
     :model="initParam"
@@ -88,4 +87,3 @@ defineExpose({
 </script>
 
 <style scoped></style>
-./contanst

@@ -62,7 +62,6 @@ const $props = withDefaults(defineProps<MTablePagePropType<P, CP, BR>>(), {
   immediate: true,
   isDeepReactive: false,
   defaultValue: "--",
-  rowKey: "id",
   columns: () => [],
   initParam: () => ({}),
   formItems: () => [],

@@ -1,7 +1,6 @@
 import type { FormItemRule, TableColumnCtx } from "element-plus";
 import type { Arrayable } from "@vueuse/core";
 import type { VNode } from "vue";
-import type { PaginationType } from "../../m_pagination";
 
 interface RenderScope<T> {
   row: T;

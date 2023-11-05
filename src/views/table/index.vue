@@ -5,7 +5,6 @@
     :columns="columns"
     :after-response="afterResponse"
     :form-items="form_items"
-    :init-param="initParam"
     is-deep-reactive
   >
   </MTablePage>
@@ -23,7 +22,7 @@ const form_items: MFormItemPropType[] = [
   {
     uniqueKey: "a",
     label: "asasf",
-    prop: "c",
+    prop: "d",
     tips: () => <>asdasdasdasdasdasd</>,
     defaultValue: "test",
   },

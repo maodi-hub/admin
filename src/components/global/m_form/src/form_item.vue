@@ -12,21 +12,14 @@
         <component :is="_renderLabel" v-bind="slot_prop.label" />
       </template>
       <ElSpace :size="2" v-else>
-        <slot
-          :name="getSlotName(uniqueKey, LABEL_SUFFIX)"
-          v-bind="slot_prop.label"
-        >
+        <slot :name="getSlotName(uniqueKey, LABEL_SUFFIX)" v-bind="slot_prop.label">
           <span>{{ label }}</span>
           <template v-if="tips">
             <ElTooltip placement="top">
               <template #content>
                 <component :is="tips" />
               </template>
-              <MIcon
-                name="Warning"
-                size="14px"
-                color="var(--el-color-warning)"
-              />
+              <MIcon name="Warning" size="14px" color="var(--el-color-warning)" />
             </ElTooltip>
           </template>
           <span v-if="labelSuffix">{{ labelSuffix }}</span>
@@ -39,11 +32,7 @@
       <template v-if="hasChildren">
         <template v-for="item in hasChildren" :key="item.uniqueKey">
           <MFormItem v-bind="item">
-            <template
-              v-for="slot in Object.keys($slots)"
-              :key="slot"
-              #[slot]="scope"
-            >
+            <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]="scope">
               <slot :name="slot" v-bind="scope" />
             </template>
           </MFormItem>
@@ -75,12 +64,7 @@ import { isArray, omit, pick } from "lodash";
 
 import { getSlotName } from "@/components/shared";
 
-import {
-  LABEL_SUFFIX,
-  CONTENT_SUFFIX,
-  PARAM_KEY,
-  LABEL_SUFFIX_KEY,
-} from "./constant";
+import { LABEL_SUFFIX, CONTENT_SUFFIX, PARAM_KEY, LABEL_SUFFIX_KEY } from "./constant";
 
 defineOptions({
   name: "MFormItem",
@@ -114,4 +98,3 @@ defineSlots<Record<string, any>>();
 </script>
 
 <style scoped></style>
-./contanst
