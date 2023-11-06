@@ -9,7 +9,7 @@
   >
     <slot />
     <template v-for="item in formItems" :key="item.uniqueKey">
-      <MFormItem v-bind="item">
+      <MFormItem v-bind="item" v-if="item.isShow ?? true">
         <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]="scope">
           <slot :name="slot" v-bind="scope" />
         </template>

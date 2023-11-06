@@ -5,6 +5,7 @@
     :columns="columns"
     :after-response="afterResponse"
     :form-items="form_items"
+    label-width="auto"
     is-deep-reactive
   >
   </MTablePage>
@@ -23,8 +24,29 @@ const form_items: MFormItemPropType[] = [
     uniqueKey: "a",
     label: "asasf",
     prop: "d",
-    tips: () => <>asdasdasdasdasdasd</>,
+    tips() {
+      return <>asd</>;
+    },
     defaultValue: "test",
+    component: {
+      name: "MSelect",
+    },
+  },
+  {
+    uniqueKey: "as",
+    prop: "a",
+    label: "Asdasd",
+    component: {
+      name: "MInput",
+    },
+  },
+  {
+    uniqueKey: "asd",
+    prop: "dc",
+    label: "dvdv",
+    component: {
+      name: "MInput",
+    },
   },
 ];
 

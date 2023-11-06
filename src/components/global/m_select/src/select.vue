@@ -1,18 +1,13 @@
 <template>
-  <ElSelect
-    v-model="input_value"
-    :disabled="disabled"
-    @[trigger]="enumOptionFn"
-  >
-    <template #prefix>
-      <slot name="prefix" />
+  <ElSelect v-model="input_value" :disabled="disabled">
+    <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
+      <slot :name="slot" v-bind="scope"></slot>
     </template>
     <template v-for="item in optionsList" :key="item[propsOption.value]">
-      <el-option
-        :value="item[propsOption.value]"
-        :disabled="item[propsOption.disabled]"
-      >
-        {{ item[propsOption.label] }}
+      <el-option :value="item[propsOption.value]" :disabled="item[propsOption.disabled]">
+        <slot name="option_item" v-bind="item">
+          {{ item[propsOption.label] }}
+        </slot>
       </el-option>
     </template>
   </ElSelect>
@@ -48,11 +43,7 @@ const input_value = computed({
 });
 
 const propsOption = computed(() => {
-  const {
-    label = "label",
-    value = "value",
-    disabled = "disabled",
-  } = $props.props || {};
+  const { label = "label", value = "value", disabled = "disabled" } = $props.props || {};
   return {
     label,
     value,

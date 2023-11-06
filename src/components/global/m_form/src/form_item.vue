@@ -31,7 +31,7 @@
       <!-- 嵌套表单项 -->
       <template v-if="hasChildren">
         <template v-for="item in hasChildren" :key="item.uniqueKey">
-          <MFormItem v-bind="item">
+          <MFormItem v-bind="item" v-if="item.isShow ?? true">
             <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]="scope">
               <slot :name="slot" v-bind="scope" />
             </template>
@@ -48,7 +48,11 @@
         :name="getSlotName(uniqueKey, CONTENT_SUFFIX)"
         v-bind="slot_prop.content"
       >
-        <MInput v-model="searcParam[prop!]" />
+        <component
+          v-if="component"
+          :is="component.name"
+          v-model="searcParam[prop!]"
+        ></component>
       </slot>
     </template>
   </ElFormItem>

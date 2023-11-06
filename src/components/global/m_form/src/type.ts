@@ -25,6 +25,20 @@ interface MFormItemPropType {
   _renderLabel?: (prop: Pick<MFormItemPropType, "label" | "tips"> & { labelSuffix: string | undefined }) => VNode;
   _renderContent?: (prop: { item: MFormItemPropType }) => VNode;
   _children?: MFormItemPropType[];
+  // name: "MInput" | "MSelect" | "MTextarea" | (string & {})
+  component: InputType | TextareaType | SelectType
+}
+
+interface InputType {
+  name: "MInput"
+}
+
+interface TextareaType {
+  name: "MTextarea"
+}
+
+interface SelectType {
+  name: "MSelect"
 }
 
 type MFormInstance = InstanceType<typeof import("./form.vue")["default"]>;
