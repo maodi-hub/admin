@@ -1,5 +1,10 @@
 <template>
-  <ElSelect v-model="input_value" :disabled="disabled">
+  <ElSelect
+    v-model="input_value"
+    :disabled="disabled"
+    :multiple="mutiple"
+    :clearable="clearable"
+  >
     <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
       <slot :name="slot" v-bind="scope"></slot>
     </template>
@@ -28,6 +33,7 @@ defineOptions({
 
 const $props = withDefaults(defineProps<MSelectPropType<OP>>(), {
   immediate: true,
+  clearable: true,
 });
 const $emit = defineEmits<MSelectEmitType>();
 

@@ -52,6 +52,7 @@
           v-if="component"
           :is="component.name"
           v-model="searcParam[prop!]"
+          v-bind="component"
         ></component>
       </slot>
     </template>
@@ -59,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElFormItem, ElTooltip, ElSpace, ElInput } from "element-plus";
+import { ElFormItem, ElTooltip, ElSpace } from "element-plus";
 
 import type { MFormItemPropType } from "./type";
 

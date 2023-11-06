@@ -30,6 +30,18 @@ const form_items: MFormItemPropType[] = [
     defaultValue: "test",
     component: {
       name: "MSelect",
+      enumOptionFn() {
+        return [
+          {
+            label: "asdd",
+            value: "asdd asd",
+          },
+          {
+            label: "fgsdf",
+            value: "agdfg",
+          },
+        ];
+      },
     },
   },
   {

@@ -1,13 +1,16 @@
-interface MTeatareaPropType {
+interface MTextareaPropType {
   modelValue?: any;
   disabled?: boolean;
 }
 
-interface MTeatareaEmitType {
-  (e: "update:modelValue", v: MTeatareaPropType["modelValue"]): void
+interface MTextareaEmitType {
+  (e: "update:modelValue", v: MTextareaPropType["modelValue"]): void
 }
 
+type MTextAreaInstance = InstanceType<typeof import("./textarea.vue")["default"]>;
+
 export type {
-  MTeatareaPropType,
-  MTeatareaEmitType
+  MTextAreaInstance,
+  MTextareaPropType,
+  MTextareaEmitType
 }

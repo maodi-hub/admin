@@ -1,6 +1,9 @@
 import type { Arrayable } from "@vueuse/core";
 import type { FormItemRule, FormRules } from "element-plus";
 import type { VNode } from "vue";
+import type { MInputPropType } from "../../m_input";
+import type { MTextareaPropType } from "../../m_textarea";
+import type { MSelectPropType } from "../../m_select";
 
 interface MFormPropType {
   inline?: boolean;
@@ -20,24 +23,22 @@ interface MFormItemPropType {
   rules?: Arrayable<FormItemRule>;
   isShow?:boolean;
   defaultValue?: any;
-  disabled?: boolean;
   tips?: () => VNode;
   _renderLabel?: (prop: Pick<MFormItemPropType, "label" | "tips"> & { labelSuffix: string | undefined }) => VNode;
   _renderContent?: (prop: { item: MFormItemPropType }) => VNode;
   _children?: MFormItemPropType[];
-  // name: "MInput" | "MSelect" | "MTextarea" | (string & {})
   component: InputType | TextareaType | SelectType
 }
 
-interface InputType {
+interface InputType extends MInputPropType {
   name: "MInput"
 }
 
-interface TextareaType {
+interface TextareaType extends MTextareaPropType {
   name: "MTextarea"
 }
 
-interface SelectType {
+interface SelectType extends MSelectPropType {
   name: "MSelect"
 }
 

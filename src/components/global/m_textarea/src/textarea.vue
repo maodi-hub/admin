@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { ElInput } from "element-plus";
 
-import type { MTeatareaPropType, MTeatareaEmitType } from "./type";
+import type { MTextareaPropType, MTextareaEmitType } from "./type";
 
 import { computed } from "vue";
 
@@ -17,8 +17,8 @@ defineOptions({
   name: "MTextarea",
 });
 
-const $props = withDefaults(defineProps<MTeatareaPropType>(), {});
-const $emit = defineEmits<MTeatareaEmitType>();
+const $props = withDefaults(defineProps<MTextareaPropType>(), {});
+const $emit = defineEmits<MTextareaEmitType>();
 
 const input_value = computed({
   get() {

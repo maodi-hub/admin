@@ -2,6 +2,8 @@ interface MSelectPropType<OP = any> {
   modelValue?: any;
   disabled?: boolean;
   immediate?: boolean;
+  clearable?: boolean;
+  mutiple?: boolean;
   props?: {
     label: string | number;
     value: string | number;
@@ -14,4 +16,8 @@ interface MSelectEmitType {
   (e: "update:modelValue", v: MSelectPropType["modelValue"]): void;
 }
 
-export type { MSelectPropType, MSelectEmitType };
+type MSelectInstance = GenericComponentInstanceType<
+  typeof import("./select.vue")["default"]
+>;
+
+export type { MSelectInstance, MSelectPropType, MSelectEmitType };
