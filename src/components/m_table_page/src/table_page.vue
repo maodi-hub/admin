@@ -86,10 +86,10 @@ const {
   onSizeChange,
 } = usePagination({
   onCurrentChangeAfter() {
-    handleDebounceData;
+    handleDebounceData();
   },
   onSizeChangeAfter() {
-    handleDebounceData;
+    handleDebounceData();
   },
 });
 
