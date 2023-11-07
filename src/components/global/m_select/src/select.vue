@@ -4,12 +4,16 @@
     :disabled="disabled"
     :multiple="mutiple"
     :clearable="clearable"
+    :loading="loading"
   >
     <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
       <slot :name="slot" v-bind="scope"></slot>
     </template>
     <template v-for="item in optionsList" :key="item[propsOption.value]">
-      <el-option :value="item[propsOption.value]" :disabled="item[propsOption.disabled]">
+      <el-option
+        :value="item[propsOption.value]"
+        :disabled="item[propsOption.disabled]"
+      >
         <slot name="option_item" v-bind="item">
           {{ item[propsOption.label] }}
         </slot>
@@ -37,7 +41,9 @@ const $props = withDefaults(defineProps<MSelectPropType<OP>>(), {
 });
 const $emit = defineEmits<MSelectEmitType>();
 
-const { optionsList, handleGetData } = useSelect<OP>($props.enumOptionFn);
+const { loading, optionsList, handleGetData } = useSelect<OP>(
+  $props.enumOptionFn
+);
 
 const input_value = computed({
   get() {
@@ -49,7 +55,11 @@ const input_value = computed({
 });
 
 const propsOption = computed(() => {
-  const { label = "label", value = "value", disabled = "disabled" } = $props.props || {};
+  const {
+    label = "label",
+    value = "value",
+    disabled = "disabled",
+  } = $props.props || {};
   return {
     label,
     value,

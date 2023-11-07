@@ -7,14 +7,18 @@
     :border="border"
     :stripe="stripe"
     :row-key="rowKey"
-    @selection-change="addSelectionData"
+    @selection-change="$emit('selectionChange', $event)"
     class="flex-1 min-w-0 min-h-0"
   >
     <!-- 默认插槽 -->
     <slot />
     <template v-for="column in columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
-        <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
+        <template
+          v-for="slot in Object.keys($slots)"
+          #[slot]="scope"
+          :key="slot"
+        >
           <slot :name="slot" v-bind="scope"></slot>
         </template>
       </MTableColumn>
@@ -44,7 +48,7 @@ import type { MTableEmitsType, MTablePropType } from "./type";
 import { provide, ref, onMounted, unref, watch } from "vue";
 import Sortable from "sortablejs";
 
-import { useTableSelection, useTableRadio } from "./hooks";
+import { useTableRadio } from "./hooks";
 
 import { getEnumMap } from "./utils";
 
@@ -72,25 +76,20 @@ const $props = withDefaults(defineProps<MTablePropType<CP>>(), {
 });
 const $emit = defineEmits<MTableEmitsType<CP>>();
 
-const { radio_id, getRadioData } = useTableRadio<CP>({
+const { radio_id, getRadioData, setRadio } = useTableRadio<CP>({
   dataKey: $props.rowKey,
 });
 
 watch(
   () => unref(radio_id),
   (n, o) => {
-    $emit("radioChange", getRadioData(n, $props.data), getRadioData(o, $props.data));
+    $emit(
+      "radioChange",
+      getRadioData(n, $props.data),
+      getRadioData(o, $props.data)
+    );
   }
 );
-
-const {
-  selected_data_list,
-  selected_ids,
-  clearSelectionData,
-  addSelectionData,
-} = useTableSelection<CP>({
-  dataKey: $props.rowKey,
-});
 
 const table_ref = ref<TableInstance>();
 // 拖拽排序
@@ -135,10 +134,9 @@ provide(ENUM_MAP_KEY, enumMap);
 onMounted(dragSort);
 
 defineExpose({
-  selected_ids,
-  selected_data_list,
-  addSelectionData,
-  clearSelectionData,
+  radio_id,
+  setRadio,
+  getRadioData,
 });
 </script>
 

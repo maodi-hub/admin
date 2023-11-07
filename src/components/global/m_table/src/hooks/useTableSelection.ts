@@ -18,18 +18,13 @@ export function useTableSelection<
     return list;
   });
 
-  const addSelectionData = (value: UnwrapRef<CP[]>) => {
-    selected_data_list.value = value;
-  };
-
-  const clearSelectionData = () => {
-    selected_data_list.value = [];
+  const setSelectionData = (value: CP[]) => {
+    selected_data_list.value = value as UnwrapRef<CP[]>;
   };
 
   return {
     selected_ids,
     selected_data_list,
-    addSelectionData,
-    clearSelectionData,
+    setSelectionData,
   };
 }

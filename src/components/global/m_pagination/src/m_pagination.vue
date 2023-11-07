@@ -5,6 +5,7 @@
         <ElScrollbar>
           <ElPagination
             :class="[align]"
+            :small="$global.size == 'small'"
             :current-page="currentPage"
             :page-size="pageSize"
             :total="total"
@@ -26,6 +27,8 @@ import type { PaginationEmitType, PaginationPropType } from "./type";
 
 import { isArray } from "lodash";
 
+import { useGlobalStore } from "@/store/modules/global";
+
 defineOptions({
   name: "MPagination",
 });
@@ -40,6 +43,8 @@ withDefaults(defineProps<PaginationPropType>(), {
 });
 
 const $emit = defineEmits<PaginationEmitType>();
+
+const $global = useGlobalStore();
 
 const handleParsePaginationLayout = (layout: string[]) => {
   if (!isArray(layout)) return "";

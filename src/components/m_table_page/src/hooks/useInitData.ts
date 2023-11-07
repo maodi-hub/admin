@@ -8,30 +8,19 @@ import type { PaginationType } from "@/components/global/m_pagination";
 interface RequestOptionsType<P, CP, BR>
   extends Pick<
     MTablePagePropType<P, CP, BR>,
-    | "afterResponse"
-    | "beforeRequest"
-    | "requestFn"
-    | "immediate"
-    | "requestDebounce"
+    "afterResponse" | "beforeRequest" | "requestFn" | "requestDebounce"
   > {}
 
 export function useInitData<P, CP, BR>(
   requestOptions: RequestOptionsType<P, CP, BR>,
   isDeepReactive: MTablePagePropType<P, CP, BR>["isDeepReactive"],
-  searchParam: MTablePagePropType<P, CP, BR>["initParam"],
-  pagination:Pick<PaginationType, "currentPage" | "pageSize">,
   handleSetPagenation: (payload: Partial<PaginationType>) => void
 ) {
   const loading = ref(false);
   const table_data = !isDeepReactive ? shallowRef<CP[]>([]) : ref<CP[]>([]);
 
-  const {
-    afterResponse,
-    beforeRequest,
-    requestFn,
-    immediate,
-    requestDebounce,
-  } = requestOptions;
+  const { afterResponse, beforeRequest, requestFn, requestDebounce } =
+    requestOptions;
 
   const handleGetData = async (...arg: any) => {
     if (!requestFn) return;
@@ -39,9 +28,7 @@ export function useInitData<P, CP, BR>(
     loading.value = true;
     try {
       console.log("requesting...", arg);
-      const param: P = beforeRequest
-        ? beforeRequest(arg, toRaw(pagination))
-        : arg;
+      const param: P = beforeRequest ? beforeRequest(arg) : arg;
 
       const res = await requestFn(param);
 
@@ -64,8 +51,6 @@ export function useInitData<P, CP, BR>(
   };
 
   const handleDebounceData = debounce(handleGetData, requestDebounce);
-
-  if (immediate) handleGetData({ ...searchParam, ...pagination });
 
   return {
     loading,

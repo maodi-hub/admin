@@ -8,10 +8,14 @@
     label-width="auto"
     is-deep-reactive
   >
+    <template #custom-button>
+      <ElButton type="primary">新增</ElButton>
+    </template>
   </MTablePage>
 </template>
 
 <script setup lang="tsx">
+import { ElButton } from "element-plus";
 import { MTablePage } from "@/components/m_table_page";
 
 import type { MFormItemPropType } from "@/components/global/m_form";
@@ -69,7 +73,7 @@ const columns: MTableColumnPropType[] = [
     label: "test asd 1",
     uniqueKey: "test asd11",
     _children: new Array(10).fill(0).map((val, idx) => ({
-      label: !idx || idx == 2 ? undefined : "test 11235666 " + idx,
+      label: !idx || idx == 2 ? void 0 : "test 11235666 " + idx,
       uniqueKey: "asd" + idx,
       prop: "asdasd" + idx,
       type: types[idx],
@@ -101,7 +105,9 @@ const onRadioChange = (newValue: any, oldValue: any) => {
   console.log(newValue, oldValue);
 };
 
-const afterResponse = (res: { asdasd0: string; asdasd1: string; asdasd2: string }[]) => {
+const afterResponse = (
+  res: { asdasd0: string; asdasd1: string; asdasd2: string }[]
+) => {
   return res;
 };
 
