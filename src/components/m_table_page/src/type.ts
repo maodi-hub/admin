@@ -8,7 +8,7 @@ interface MTablePagePropType<P = any, CP = any, BR = any> extends MTablePropType
   beforeRequest?: (...arg: any[]) => P;
   requestFn?: (arg: P) => Promise<BR> | BR;
   afterResponse?: (
-    res: BR,
+    res: BR | CP[],
     set_pagination: (payload: Partial<PaginationType>) => void
   ) => CP[];
   isDeepReactive?: boolean;

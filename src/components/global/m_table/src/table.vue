@@ -104,6 +104,7 @@ const dragSort = () => {
     onEnd({ newIndex, oldIndex }) {
       console.log(newIndex, oldIndex);
       const [removedItem] = $props.data.splice(oldIndex!, 1);
+      console.log($props.data);
       $props.data.splice(newIndex!, 0, removedItem);
       // emit("dargSort", { newIndex, oldIndex });
     },

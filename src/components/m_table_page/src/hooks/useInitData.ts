@@ -19,7 +19,7 @@ export function useInitData<P, CP, BR>(
   requestOptions: RequestOptionsType<P, CP, BR>,
   isDeepReactive: MTablePagePropType<P, CP, BR>["isDeepReactive"],
   searchParam: MTablePagePropType<P, CP, BR>["initParam"],
-  pagination:Pick<PaginationType, "currentPage" | "pageSize">,
+  pagination: Pick<PaginationType, "currentPage" | "pageSize">,
   handleSetPagenation: (payload: Partial<PaginationType>) => void
 ) {
   const loading = ref(false);
@@ -40,7 +40,7 @@ export function useInitData<P, CP, BR>(
     try {
       console.log("requesting...", arg);
       const param: P = beforeRequest
-        ? beforeRequest(arg, toRaw(pagination))
+        ? beforeRequest(...arg, toRaw(pagination))
         : arg;
 
       const res = await requestFn(param);

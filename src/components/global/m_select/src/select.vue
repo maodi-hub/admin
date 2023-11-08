@@ -23,7 +23,7 @@ import { ElSelect, ElOption } from "element-plus";
 
 import type { MSelectEmitType, MSelectPropType } from "./type";
 
-import { computed } from "vue";
+import { computed, watch } from "vue";
 
 import { useSelect } from "./hooks";
 
@@ -37,7 +37,7 @@ const $props = withDefaults(defineProps<MSelectPropType<OP>>(), {
 });
 const $emit = defineEmits<MSelectEmitType>();
 
-const { optionsList, handleGetData } = useSelect<OP>($props.enumOptionFn);
+const { optionsList, handleGetData } = useSelect<OP>($props.enumOption);
 
 const input_value = computed({
   get() {
@@ -58,6 +58,8 @@ const propsOption = computed(() => {
 });
 
 if ($props.immediate) handleGetData();
+
+watch(() => $props.enumOption, handleGetData);
 
 defineExpose({
   optionsList,

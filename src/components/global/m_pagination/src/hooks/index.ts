@@ -13,7 +13,7 @@ const DEFAULT_PAGINATION = () => ({
   currentPage: 1,
   pageSize: 10,
   pageSizes: [10, 20, 30, 50, 100],
-  total: 100,
+  total: 0,
   layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
 });
 

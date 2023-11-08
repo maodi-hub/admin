@@ -9,7 +9,7 @@ interface MSelectPropType<OP = any> {
     value: string | number;
     disabled?: string | number;
   };
-  enumOptionFn?: (...arg: any[]) => Promise<OP[]> | OP[];
+  enumOption?: OP[] | ((...arg: any[]) => Promise<OP[]> | OP[]);
 }
 
 interface MSelectEmitType {

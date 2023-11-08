@@ -1,8 +1,8 @@
 <template>
   <MTablePage
     row-key="asdasd0"
-    :request-fn="requestFn"
     :columns="columns"
+    :data="data"
     :after-response="afterResponse"
     :form-items="form_items"
     label-width="auto"
@@ -16,6 +16,7 @@ import { MTablePage } from "@/components/m_table_page";
 
 import type { MFormItemPropType } from "@/components/global/m_form";
 import type { MTableColumnPropType } from "@/components/global/m_table";
+import { reactive } from "vue";
 
 const initParam = { a: "sd", c: "Asd" };
 
@@ -30,7 +31,7 @@ const form_items: MFormItemPropType[] = [
     defaultValue: "test",
     component: {
       name: "MSelect",
-      enumOptionFn() {
+      enumOption() {
         return [
           {
             label: "asdd",
@@ -84,7 +85,7 @@ const columns: MTableColumnPropType[] = [
 ];
 
 const requestFn = () => {
-  const data = new Array(10).fill(0).map((val, idx) => ({
+  const data = new Array(100).fill(0).map((val, idx) => ({
     asdasd0: "asd" + idx,
     asdasd1: "",
     asdasd2: idx % 2 ? "asd" + idx : "",
@@ -96,6 +97,19 @@ const requestFn = () => {
   }));
   return data;
 };
+
+const data = reactive(
+  new Array(80).fill(0).map((val, idx) => ({
+    asdasd0: "asd" + idx,
+    asdasd1: "",
+    asdasd2: idx % 2 ? "asd" + idx : "",
+    asdasd3: "test" + idx,
+    asdasd4: "4 " + idx,
+    asdasd5: "5 " + idx,
+    asdasd6: "6 " + idx,
+    asdasd7: "7 " + idx,
+  }))
+);
 
 const onRadioChange = (newValue: any, oldValue: any) => {
   console.log(newValue, oldValue);

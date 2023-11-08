@@ -19,7 +19,7 @@
       :max-height="maxHeight"
       :default-value="defaultValue"
       :columns="table_columns"
-      :data="table_data"
+      :data="list_data"
       @radio-change="onRadioChange"
       v-bind="$attrs"
       v-loading="loading"
@@ -43,7 +43,7 @@ import type { MTablePagePropType, MTablePageEmitsType } from "./type";
 import type { MFormInstance } from "@/components/global/m_form";
 import type { MTableInstance } from "@/components/global/m_table";
 
-import { unref } from "vue";
+import { computed, unref } from "vue";
 import { pick } from "lodash";
 
 import { useRefs } from "@/hooks/useRefs";
@@ -85,13 +85,14 @@ const {
   onCurrentChange,
   onSizeChange,
 } = usePagination({
-  onCurrentChangeAfter() {
-    handleDebounceData();
-  },
-  onSizeChangeAfter() {
-    handleDebounceData();
-  },
+  onCurrentChangeAfter: () => onPagenationChange(),
+  onSizeChangeAfter: () => onPagenationChange(),
 });
+
+const onPagenationChange = () => {
+  if ($props.data) return;
+  handleDebounceData(form_param);
+};
 
 const requestOptions = pick(
   $props,
@@ -114,6 +115,19 @@ const { loading, table_data, handleGetData, handleDebounceData } = useInitData(
 
 const { table_columns } = useTableLayout($props.columns);
 
+const list_data = computed(() => {
+  const { afterResponse, data } = $props;
+  const { pageSize, currentPage } = pagination;
+
+  let list: CP[] = data ?? table_data.value;
+  handleSetPagenation({ total: list.length });
+  if (data) {
+    list = afterResponse ? afterResponse(data, handleSetPagenation) : data;
+    return list.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  }
+  return list;
+});
+
 const onRadioChange = (newValue?: CP, oldValue?: CP) => {
   console.log(newValue, oldValue);
   $emit("radioChange", newValue, oldValue);
@@ -124,7 +138,7 @@ const getInstance = <K extends keyof PageRefs>(refs_key: K) => {
 };
 
 defineExpose({
-  table_data,
+  list_data,
   table_columns,
   handleGetData,
   handleDebounceData,
