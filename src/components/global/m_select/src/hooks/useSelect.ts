@@ -33,6 +33,7 @@ export function useSelect<OP extends Record<string, any>>(
   };
 
   return {
+    loading,
     optionsList,
     handleGetData,
   };

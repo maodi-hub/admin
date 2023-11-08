@@ -69,6 +69,7 @@ interface MTableColumnEditPropType<CP = any> extends MTableColumnPropType<CP> {
 
 interface MTableEmitsType<CP> {
   (e: "radioChange", newValue?: CP, oldValue?: CP): void;
+  (e: "selectionChange", value: CP[]): void;
 }
 
 interface SelectionHookOptionType {

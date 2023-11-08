@@ -1,6 +1,7 @@
 <template>
   <div class="table-page">
     <MForm
+      v-if="showForm"
       ref="form"
       :form-items="formItems"
       :init-param="form_param"
@@ -10,6 +11,17 @@
       :label-width="labelWidth"
       :rules="rules"
     />
+    <ToolBar v-if="showTool">
+      <div class="custom-button">
+        <slot name="custom-button"></slot>
+      </div>
+      <div class="tool-button">
+        <slot name="tool-button"></slot>
+        <el-button circle icon="Refresh" />
+        <el-button circle icon="Download" />
+        <el-button circle icon="Operation" />
+      </div>
+    </ToolBar>
     <MTable
       ref="table"
       :row-key="rowKey"
@@ -21,6 +33,7 @@
       :columns="table_columns"
       :data="list_data"
       @radio-change="onRadioChange"
+      @selection-change="setSelectionData"
       v-bind="$attrs"
       v-loading="loading"
     >
@@ -29,6 +42,7 @@
       </template>
     </MTable>
     <MPagination
+      v-if="showPagination"
       v-bind="pagination"
       @current-change="onCurrentChange"
       @size-change="onSizeChange"
@@ -37,7 +51,8 @@
 </template>
 
 <script setup lang="ts" generic="P, CP extends Record<string, any>, BR">
-import { vLoading } from "element-plus";
+import { vLoading, ElButton } from "element-plus";
+import ToolBar from "./components/tool_bar/index.vue";
 
 import type { MTablePagePropType, MTablePageEmitsType } from "./type";
 import type { MFormInstance } from "@/components/global/m_form";
@@ -48,7 +63,7 @@ import { pick } from "lodash";
 
 import { useRefs } from "@/hooks/useRefs";
 import { useForm } from "@/components/global/m_form";
-import { useTableLayout } from "@/components/global/m_table";
+import { useTableLayout, useTableSelection } from "@/components/global/m_table";
 import { usePagination } from "@/components/global/m_pagination";
 import { useInitData } from "./hooks";
 
@@ -62,9 +77,13 @@ const $props = withDefaults(defineProps<MTablePagePropType<P, CP, BR>>(), {
   immediate: true,
   isDeepReactive: false,
   defaultValue: "--",
+  rowKey: "id",
   columns: () => [],
   initParam: () => ({}),
   formItems: () => [],
+  showForm: true,
+  showTool: true,
+  showPagination: true,
 });
 
 const $emit = defineEmits<MTablePageEmitsType<CP>>();
@@ -99,17 +118,12 @@ const requestOptions = pick(
   "afterResponse",
   "beforeRequest",
   "requestFn",
-  "immediate",
   "requestDebounce"
 );
 
-const requestPaginationOption = pick(pagination, "currentPage", "pageSize");
-
-const { loading, table_data, handleGetData, handleDebounceData } = useInitData(
+const { loading, table_data, handleGetData, handleDebounceData } = useInitData<P, CP, BR>(
   requestOptions,
   $props.isDeepReactive,
-  form_param,
-  requestPaginationOption,
   handleSetPagenation
 );
 
@@ -128,6 +142,10 @@ const list_data = computed(() => {
   return list;
 });
 
+const { selected_ids, selected_data_list, setSelectionData } = useTableSelection<CP>({
+  dataKey: $props.rowKey,
+});
+
 const onRadioChange = (newValue?: CP, oldValue?: CP) => {
   console.log(newValue, oldValue);
   $emit("radioChange", newValue, oldValue);
@@ -136,6 +154,13 @@ const onRadioChange = (newValue?: CP, oldValue?: CP) => {
 const getInstance = <K extends keyof PageRefs>(refs_key: K) => {
   return unref(componentRefs)(refs_key) as PageRefs[K];
 };
+
+if ($props.immediate) {
+  handleGetData({
+    ...form_param,
+    ...pick(pagination, "currentPage", "pageSize"),
+  });
+}
 
 defineExpose({
   list_data,
@@ -146,6 +171,8 @@ defineExpose({
   handleSetPagenation,
   handleResetPagination,
   getInstance,
+  selected_ids,
+  selected_data_list,
 });
 </script>
 

@@ -4,6 +4,7 @@
     :disabled="disabled"
     :multiple="mutiple"
     :clearable="clearable"
+    :loading="loading"
   >
     <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
       <slot :name="slot" v-bind="scope"></slot>
@@ -37,7 +38,7 @@ const $props = withDefaults(defineProps<MSelectPropType<OP>>(), {
 });
 const $emit = defineEmits<MSelectEmitType>();
 
-const { optionsList, handleGetData } = useSelect<OP>($props.enumOption);
+const { loading, optionsList, handleGetData } = useSelect<OP>($props.enumOption);
 
 const input_value = computed({
   get() {
