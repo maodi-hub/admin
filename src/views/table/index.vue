@@ -2,12 +2,13 @@
   <MTablePage
     row-key="asdasd0"
     :columns="columns"
-    :data="data"
+    :request-fn="requestFn"
     :after-response="afterResponse"
     :form-items="form_items"
     label-width="auto"
     is-deep-reactive
   >
+    <template #asd6_edit_column> dasd </template>
     <template #custom-button>
       <ElButton type="primary">新增</ElButton>
     </template>
@@ -19,7 +20,8 @@ import { ElButton } from "element-plus";
 import { MTablePage } from "@/components/m_table_page";
 
 import type { MFormItemPropType } from "@/components/global/m_form";
-import type { MTableColumnPropType } from "@/components/global/m_table";
+import type { MTableColumnType } from "@/components/global/m_table";
+
 import { reactive } from "vue";
 
 const initParam = { a: "sd", c: "Asd" };
@@ -69,7 +71,7 @@ const form_items: MFormItemPropType[] = [
 
 const types = ["index", "selection", "radio", "sort", "expand", "tag"] as const;
 
-const columns: MTableColumnPropType[] = [
+const columns: MTableColumnType[] = [
   {
     label: "test asd 1",
     uniqueKey: "test asd11",
@@ -78,13 +80,20 @@ const columns: MTableColumnPropType[] = [
       uniqueKey: "asd" + idx,
       prop: "asdasd" + idx,
       type: types[idx],
-      enumOptionFn() {
-        return [
-          { label: "test", value: "5 " + idx, type: "success" },
-          { label: "test2", value: "", type: "danger" },
-        ];
-      },
+      enumOption: [
+        { label: "test", value: "5 " + idx, type: "success" },
+        { label: "test2", value: "", type: "danger" },
+      ],
     })),
+  },
+  {
+    label: "可编辑列",
+    uniqueKey: "asd" + 11,
+    prop: "asdasd" + 6,
+    type: "edit",
+    component: {
+      name: "MInput",
+    },
   },
 ];
 

@@ -1,15 +1,16 @@
+import type {
+  OptionProps,
+  EnumOptionType,
+} from "@/components/shared/type/common";
+
 interface MSelectPropType<OP = any> {
   modelValue?: any;
   disabled?: boolean;
   immediate?: boolean;
   clearable?: boolean;
   mutiple?: boolean;
-  props?: {
-    label: string | number;
-    value: string | number;
-    disabled?: string | number;
-  };
-  enumOption?: OP[] | ((...arg: any[]) => Promise<OP[]> | OP[]);
+  props?: OptionProps;
+  enumOption?: EnumOptionType<OP>;
 }
 
 interface MSelectEmitType {

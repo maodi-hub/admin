@@ -93,10 +93,13 @@ interface PageRefs {
   table: MTableInstance;
 }
 
+// 子组件实例
 const { componentRefs } = useRefs<PageRefs>();
 
+// 查询参数配置
 const { form_param } = useForm($props.initParam, $props.formItems);
 
+// 分页配置
 const {
   pagination,
   handleResetPagination,
@@ -121,14 +124,17 @@ const requestOptions = pick(
   "requestDebounce"
 );
 
+// 初始化数据
 const { loading, table_data, handleGetData, handleDebounceData } = useInitData<
   P,
   CP,
   BR
 >(requestOptions, $props.isDeepReactive, handleSetPagenation);
 
+// 表格列
 const { table_columns } = useTableLayout($props.columns);
 
+// 表格数据
 const list_data = computed(() => {
   const { afterResponse, data } = $props;
   const { pageSize, currentPage } = pagination;
@@ -142,6 +148,7 @@ const list_data = computed(() => {
   return list;
 });
 
+// 多选设置
 const { selected_ids, selected_data_list, setSelectionData } =
   useTableSelection<CP>({
     dataKey: $props.rowKey,
@@ -152,10 +159,12 @@ const onRadioChange = (newValue?: CP, oldValue?: CP) => {
   $emit("radioChange", newValue, oldValue);
 };
 
+// 获取子组件实例
 const getInstance = <K extends keyof PageRefs>(refs_key: K) => {
   return unref(componentRefs)(refs_key) as PageRefs[K];
 };
 
+// 初始化数据
 if ($props.immediate) {
   handleGetData({
     ...form_param,

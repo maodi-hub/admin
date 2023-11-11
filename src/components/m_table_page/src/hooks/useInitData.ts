@@ -24,7 +24,7 @@ export function useInitData<P, CP, BR>(
 
   const handleGetData = async (...arg: any) => {
     if (!requestFn) return;
-    await nextTick();
+
     loading.value = true;
     try {
       console.log("requesting...", arg);

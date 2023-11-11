@@ -6,24 +6,35 @@
 import { ElTableColumn, ElTag, ElRadio } from "element-plus";
 import { MIcon } from "@/components/global/m_icon";
 import { MOverflowPrompt } from "@/components/style/overflow_prompt";
+import { MFormItem } from "@/components/global/m_form";
 
-import type { HeaderRenderScope, MTableColumnPropType, RenderScope } from "./type";
+import type { OptionProps } from "@/components/shared/type/common";
+import type {
+  HeaderRenderScope,
+  MTableColumnEditPropType,
+  MTableColumnType,
+  RenderScope,
+} from "./type";
 
 import { inject, useSlots, unref, ref } from "vue";
 import { isArray, isFunction } from "lodash";
 
 import { getSlotName } from "@/components/shared";
+
 import {
   getCellValue,
   formatterValueWithEnum,
   filterColumnType,
-  wWhetherSetOverFlow,
+  whetherSetOverFlow,
 } from "./utils";
-import { EXPAND_SUFFIX, RADIO_KEY, DEFAULT_ROW_KEY } from "./constant";
 
 import {
+  EXPAND_SUFFIX,
+  RADIO_KEY,
+  DEFAULT_ROW_KEY,
   DEFAULT_VALUE_KEY,
   ENUM_MAP_KEY,
+  EDIT_CLOUMN_SUFFIX,
   CLOUMN_SUFFIX,
   HEADER_SUFFIX,
   ROW_KEY,
@@ -34,17 +45,16 @@ defineOptions({
   name: "MTableColumn",
 });
 
-const $props = defineProps<MTableColumnPropType>();
+const $props = defineProps<MTableColumnType>();
 
 const $slot = useSlots();
 
+const global_default_value = inject(DEFAULT_VALUE_KEY, void 0);
+const enumMap = inject(ENUM_MAP_KEY, void 0);
+const row_key = inject(ROW_KEY, DEFAULT_ROW_KEY);
 const radio_id = inject(RADIO_KEY, ref());
 
-const enumMap = inject(ENUM_MAP_KEY, void 0);
-const global_default_value = inject(DEFAULT_VALUE_KEY, void 0);
-const row_key = inject(ROW_KEY, DEFAULT_ROW_KEY);
-
-const TableCell = (column: MTableColumnPropType) => {
+const TableCell = (column: MTableColumnType) => {
   const {
     type,
     isShow,
@@ -68,6 +78,9 @@ const TableCell = (column: MTableColumnPropType) => {
 
   const enums = unref(enumMap)?.get(uniqueKey) ?? [];
 
+  const column_slot = $slot[getSlotName(uniqueKey, CLOUMN_SUFFIX)];
+  const header_slot = $slot[getSlotName(uniqueKey, HEADER_SUFFIX)];
+
   if (!isShow) return;
 
   return (
@@ -75,13 +88,17 @@ const TableCell = (column: MTableColumnPropType) => {
       type={filterColumnType(type)}
       label={label}
       prop={prop}
-      width={type && ["radio", "sort"].includes(type) ? width ?? "50px" : void 0}
+      width={
+        type && ["radio", "sort"].includes(type) ? width ?? "50px" : void 0
+      }
       min-width={minWidth}
       header-align={headerAlign ?? cellAlign ?? "center"}
       align={cellAlign ?? "center"}
       fixed={fixed}
       sortable={sortable}
-      showOverflowTooltip={wWhetherSetOverFlow(uniqueKey, type) || showOverflowToolTip}
+      showOverflowTooltip={
+        whetherSetOverFlow(uniqueKey, type) || showOverflowToolTip
+      }
     >
       {{
         default: (scope: RenderScope<any>) => {
@@ -107,12 +124,16 @@ const TableCell = (column: MTableColumnPropType) => {
             return _renderCell(row, row[prop!], $index, column);
           }
 
-          const column_slot = $slot[getSlotName(uniqueKey, CLOUMN_SUFFIX)];
           if (column_slot) {
             return column_slot({ row, cellValue: row[prop!], column, $index });
           }
 
-          let cellValue = getCellValue(row, prop, global_default_value, defaultValue);
+          let cellValue = getCellValue(
+            row,
+            prop,
+            global_default_value,
+            defaultValue
+          );
 
           if (isFunction(_formatter)) {
             cellValue = _formatter(row, cellValue, $index, column);
@@ -125,14 +146,18 @@ const TableCell = (column: MTableColumnPropType) => {
 
           const { $index } = scope;
 
-          const column_slot = $slot[getSlotName(uniqueKey, HEADER_SUFFIX)];
-          if (column_slot) {
-            return column_slot({ column, $index });
+          if (header_slot) {
+            return header_slot({ column, $index });
           }
           return (
             <>
-              <MOverflowPrompt style="width: 100%" canShow={showOverflowHeadToolTip}>
-                {type && ["index", "sort", "radio"].includes(type) ? label ?? "#" : label}
+              <MOverflowPrompt
+                style="width: 100%"
+                canShow={showOverflowHeadToolTip}
+              >
+                {type && ["index", "sort", "radio"].includes(type)
+                  ? label ?? "#"
+                  : label}
               </MOverflowPrompt>
             </>
           );
@@ -145,14 +170,46 @@ const TableCell = (column: MTableColumnPropType) => {
 const RenderWithType = (
   type: string,
   row: any,
-  column: MTableColumnPropType,
+  column: MTableColumnType,
   $index: number,
-  enumOption: enumTagType
+  enumOption: OptionProps
 ) => {
   const { prop, uniqueKey, _renderCell } = column;
+
   const expand_slot = $slot[getSlotName(uniqueKey, EXPAND_SUFFIX)];
   const index_slot = $slot[getSlotName(uniqueKey, INDEX_SUFFIX)];
   const renderFn = {
+    edit: () => {
+      const form_item = column as MTableColumnEditPropType;
+      const edit_slot = $slot[getSlotName(uniqueKey, EDIT_CLOUMN_SUFFIX)];
+      return (
+        <MFormItem
+          labelWidth="unset"
+          uniqueKey={uniqueKey}
+          prop={prop}
+          searchParam={row}
+          rules={form_item.rules}
+          component={form_item.component}
+        >
+          {{
+            default: () => {
+              if (isFunction(_renderCell)) {
+                return _renderCell(row, row[prop!], $index, column);
+              }
+
+              if (edit_slot) {
+                return edit_slot({
+                  row,
+                  cellValue: row[prop!],
+                  column,
+                  $index,
+                });
+              }
+            },
+          }}
+        </MFormItem>
+      );
+    },
     radio: () => (
       <ElRadio v-model={radio_id.value} label={row[row_key]}>
         <i></i>
@@ -163,21 +220,25 @@ const RenderWithType = (
         return _renderCell(row, row[prop!], $index, column);
       }
 
-      return <>{expand_slot ? expand_slot({ row, column, $index }) : row[prop!]}</>;
+      return (
+        <>{expand_slot ? expand_slot({ row, column, $index }) : row[prop!]}</>
+      );
     },
     index: () => {
       if (isFunction(_renderCell)) {
         return _renderCell(row, row[prop!], $index, column);
       }
-      return <>{index_slot ? index_slot({ row, column, $index }) : $index + 1}</>;
+      return (
+        <>{index_slot ? index_slot({ row, column, $index }) : $index + 1}</>
+      );
     },
     sort: () => (
       <div class="flex jc-center ai-center" style="height: 100%">
         <MIcon name="rank" class="dragable-sort" />
       </div>
     ),
-    text: (opt: enumTagType) => opt.label,
-    tag: (opt: enumTagType) => <ElTag type={opt.type}>{opt.label}</ElTag>,
+    text: (opt: OptionProps) => opt.label,
+    tag: (opt: OptionProps) => <ElTag type={opt.type}>{opt.label}</ElTag>,
   }[type];
 
   return renderFn && renderFn(enumOption);

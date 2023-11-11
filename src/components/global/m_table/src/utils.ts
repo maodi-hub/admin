@@ -1,9 +1,7 @@
-import { isArray } from "lodash";
+import type { OptionProps } from "@/components/shared/type/common";
+import type { MTableColumnType, MTablePropType } from "./type";
 
-import {
-  MTableColumnType,
-  MTablePropType,
-} from "./type";
+import { isArray } from "lodash";
 
 export function getCellValue(
   row: any,
@@ -18,25 +16,25 @@ export function getCellValue(
 export async function getEnumMap(
   columns: MTableColumnType[],
   callBack: (
-    option: Pick<Required<MTableColumnType>, "enumOptionFn" | "uniqueKey">
+    option: Pick<Required<MTableColumnType>, "enumOption" | "uniqueKey">
   ) => void
 ) {
-  columns.forEach(async ({ uniqueKey, enumOptionFn, _children }) => {
+  columns.forEach(async ({ uniqueKey, enumOption, _children }) => {
     if (isArray(_children) && _children.length)
       return getEnumMap(_children, callBack);
-    if (!enumOptionFn) return;
+    if (!enumOption) return;
 
-    callBack && callBack({ enumOptionFn, uniqueKey });
+    callBack && callBack({ enumOption, uniqueKey });
   });
 }
 
 export function formatterValueWithEnum(
   row: any,
-  enums: enumTagType[],
+  enums: OptionProps[],
   prop?: string | number,
   global_defalut?: string | number,
   cell_defalut?: string | number
-): enumTagType {
+): OptionProps {
   const cellValue = row[prop!];
   if (!cellValue) {
     return {
@@ -82,7 +80,7 @@ export function initColumns<CP>(columns: MTablePropType<CP>["columns"]) {
   });
 }
 
-export function wWhetherSetOverFlow(
+export function whetherSetOverFlow(
   uniqueKey: string,
   type: MTableColumnType["type"]
 ) {

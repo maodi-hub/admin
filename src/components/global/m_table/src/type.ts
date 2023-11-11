@@ -1,6 +1,12 @@
 import type { FormItemRule, TableColumnCtx } from "element-plus";
 import type { Arrayable } from "@vueuse/core";
 import type { VNode } from "vue";
+import type { MFormItemPropType } from "@/components/global/m_form";
+
+import type {
+  EnumOptionType,
+  OptionProps,
+} from "@/components/shared/type/common";
 
 interface RenderScope<T> {
   row: T;
@@ -42,7 +48,15 @@ type ColumnFixedPositionType = "right" | "left" | boolean;
 
 interface MTableColumnPropType<CP = any>
   extends Pick<MTablePropType, "defaultValue"> {
-  type?: "index" | "selection" | "expand" | "tag" | "text" | "radio" | "sort";
+  type?:
+    | "index"
+    | "selection"
+    | "expand"
+    | "tag"
+    | "text"
+    | "radio"
+    | "sort"
+    | "edit";
   label?: string;
   prop?: string;
   width?: string | number;
@@ -59,12 +73,13 @@ interface MTableColumnPropType<CP = any>
   _formatter?: CustomerRenderType<CP, "formatter">;
   _children?: MTableColumnType<CP>[];
   sortable?: boolean;
-  enumOptionFn?: enumFnType;
+  enumOption?: EnumOptionType<OptionProps>;
 }
 
-interface MTableColumnEditPropType<CP = any> extends MTableColumnPropType<CP> {
-  prop: string;
-  rule?: Arrayable<FormItemRule>;
+interface MTableColumnEditPropType<CP = any>
+  extends MTableColumnPropType<CP>,
+    Partial<Pick<MFormItemPropType, "rules" | "component">> {
+  type: "edit";
 }
 
 interface MTableEmitsType<CP> {

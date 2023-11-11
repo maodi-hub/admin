@@ -16,30 +16,35 @@ interface MFormPropType {
 }
 
 interface MFormItemPropType {
+  searchParam?: Record<string, any>;
   uniqueKey: string;
   prop?: string;
   label?: string;
   labelWidth?: string;
   rules?: Arrayable<FormItemRule>;
-  isShow?:boolean;
+  isShow?: boolean;
   defaultValue?: any;
   tips?: () => VNode;
-  _renderLabel?: (prop: Pick<MFormItemPropType, "label" | "tips"> & { labelSuffix: string | undefined }) => VNode;
+  _renderLabel?: (
+    prop: Pick<MFormItemPropType, "label" | "tips"> & {
+      labelSuffix: string | undefined;
+    }
+  ) => VNode;
   _renderContent?: (prop: { item: MFormItemPropType }) => VNode;
   _children?: MFormItemPropType[];
-  component: InputType | TextareaType | SelectType
+  component?: InputType | TextareaType | SelectType;
 }
 
 interface InputType extends MInputPropType {
-  name: "MInput"
+  name: "MInput";
 }
 
 interface TextareaType extends MTextareaPropType {
-  name: "MTextarea"
+  name: "MTextarea";
 }
 
 interface SelectType extends MSelectPropType {
-  name: "MSelect"
+  name: "MSelect";
 }
 
 type MFormInstance = InstanceType<typeof import("./form.vue")["default"]>;

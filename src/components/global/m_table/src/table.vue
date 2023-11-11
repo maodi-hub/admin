@@ -42,6 +42,7 @@
 import { ElTable, ElEmpty } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
+import type { OptionProps } from "@/components/shared/type/common";
 import type { TableInstance } from "element-plus";
 import type { MTableEmitsType, MTablePropType } from "./type";
 
@@ -59,6 +60,7 @@ import {
   ENUM_MAP_KEY,
   DEFAULT_ROW_KEY,
 } from "./constant";
+import { isArray } from "lodash";
 
 defineOptions({
   name: "MTable",
@@ -110,14 +112,20 @@ const dragSort = () => {
   });
 };
 
-const enumMap = ref<Map<string, enumTagType[]>>(new Map());
+const enumMap = ref<Map<string, OptionProps[]>>(new Map());
 watch(
   () => $props.columns,
   (columns) => {
-    getEnumMap(columns, async ({ enumOptionFn, uniqueKey }) => {
+    getEnumMap(columns, async ({ enumOption, uniqueKey }) => {
       enumMap.value.set(uniqueKey, []);
+
+      if (isArray(enumOption)) {
+        enumMap.value.set(uniqueKey, enumOption);
+        return;
+      }
+
       try {
-        const enumOpt = await enumOptionFn();
+        const enumOpt = await enumOption();
         enumMap.value.set(uniqueKey, enumOpt);
       } catch {}
     });
@@ -153,6 +161,12 @@ defineExpose({
     &.el-table-column--selection {
       .cell {
         justify-content: center;
+      }
+    }
+    .el-form-item {
+      margin: 0;
+      .el-form-item__label {
+        display: none;
       }
     }
   }

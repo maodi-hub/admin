@@ -1,8 +1,8 @@
 import type { UnwrapRef } from "vue";
 import type { MSelectPropType } from "../type";
 
-import { ref,shallowRef } from "vue";
-import { isArray } from "lodash";
+import { ref, shallowRef } from "vue";
+import { isFunction } from "lodash";
 
 export function useSelect<OP extends Record<string, any>>(
   enumOption: MSelectPropType<OP>["enumOption"]
@@ -12,13 +12,7 @@ export function useSelect<OP extends Record<string, any>>(
   const optionsList = shallowRef<OP[]>([]);
 
   const handleGetData = async (...arg: any[]) => {
-
-    if (!enumOption) return;
-
-    if (isArray(enumOption)) {
-      optionsList.value = enumOption;
-      return;
-    };
+    if (!isFunction(enumOption)) return;
 
     loading.value = true;
     try {

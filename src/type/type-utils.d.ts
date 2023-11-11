@@ -4,15 +4,6 @@ type RemoveReadonly<T> = {
 
 type MetaGlobTypeWithDefault<T> = Record<string, { default: T }>;
 
-type enumTagType = {
-  value: any;
-  label: string | number;
-  disabled?: boolean;
-  type?: "" | "success" | "warning" | "info" | "danger";
-};
-
-type enumFnType = () => Promise<enumTagType[]> | enumTagType[];
-
 /**泛型组件实例类型 */
 type GenericComponentInstanceType<D extends (...p: any[]) => any> =
   //组件通用类型
