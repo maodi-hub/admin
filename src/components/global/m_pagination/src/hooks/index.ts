@@ -17,8 +17,10 @@ const DEFAULT_PAGINATION = () => ({
   layout: ["sizes", "prev", "pager", "next", "jumper", "total"],
 });
 
-export const usePagination = (afterFn: ChangeOptions,config: PaginationType = DEFAULT_PAGINATION()) => {
-
+export const usePagination = (
+  afterFn: ChangeOptions,
+  config: PaginationType = DEFAULT_PAGINATION()
+) => {
   const { onSizeChangeAfter, onCurrentChangeAfter } = afterFn;
 
   const initPagenation = omit(
@@ -43,7 +45,7 @@ export const usePagination = (afterFn: ChangeOptions,config: PaginationType = DE
   };
 
   const onSizeChange = (value: number) => {
-    handleSetPagenation({ pageSize: value });
+    handleSetPagenation({ pageSize: value, currentPage: 1 });
     onSizeChangeAfter && onSizeChangeAfter();
   };
 
@@ -57,6 +59,6 @@ export const usePagination = (afterFn: ChangeOptions,config: PaginationType = DE
     handleSetPagenation,
     handleResetPagination,
     onCurrentChange,
-    onSizeChange
+    onSizeChange,
   };
 };

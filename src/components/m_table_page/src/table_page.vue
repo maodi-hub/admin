@@ -121,11 +121,11 @@ const requestOptions = pick(
   "requestDebounce"
 );
 
-const { loading, table_data, handleGetData, handleDebounceData } = useInitData<P, CP, BR>(
-  requestOptions,
-  $props.isDeepReactive,
-  handleSetPagenation
-);
+const { loading, table_data, handleGetData, handleDebounceData } = useInitData<
+  P,
+  CP,
+  BR
+>(requestOptions, $props.isDeepReactive, handleSetPagenation);
 
 const { table_columns } = useTableLayout($props.columns);
 
@@ -142,9 +142,10 @@ const list_data = computed(() => {
   return list;
 });
 
-const { selected_ids, selected_data_list, setSelectionData } = useTableSelection<CP>({
-  dataKey: $props.rowKey,
-});
+const { selected_ids, selected_data_list, setSelectionData } =
+  useTableSelection<CP>({
+    dataKey: $props.rowKey,
+  });
 
 const onRadioChange = (newValue?: CP, oldValue?: CP) => {
   console.log(newValue, oldValue);
