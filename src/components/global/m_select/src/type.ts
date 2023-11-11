@@ -1,7 +1,7 @@
 import type {
   OptionProps,
   EnumOptionType,
-} from "@/components/shared/type/common";
+} from "@/shared/type/common";
 
 interface MSelectPropType<OP = any> {
   modelValue?: any;

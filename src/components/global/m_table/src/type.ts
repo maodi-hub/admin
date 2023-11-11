@@ -6,7 +6,7 @@ import type { MFormItemPropType } from "@/components/global/m_form";
 import type {
   EnumOptionType,
   OptionProps,
-} from "@/components/shared/type/common";
+} from "@/shared/type/common";
 
 interface RenderScope<T> {
   row: T;

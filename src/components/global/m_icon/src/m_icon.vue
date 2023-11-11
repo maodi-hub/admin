@@ -36,7 +36,7 @@ const $global = useGlobalStore();
 
 const icon_size = computed<Props["size"]>(() => {
   const { size, injectGSize } = $props;
-  return size ? size : injectGSize ? ICON_SIZE[$global.size] || "" : "";
+  return size ?? injectGSize ? ICON_SIZE[$global.size] || "" : "";
 });
 </script>
 

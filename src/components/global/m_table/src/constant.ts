@@ -1,5 +1,5 @@
 import type { InjectionKey, Ref } from "vue";
-import type { OptionProps } from "@/components/shared/type/common";
+import type { OptionProps } from "@/shared/type/common";
 
 export const DEFAULT_VALUE_KEY: InjectionKey<string | number> = Symbol(
   "global_default_value"

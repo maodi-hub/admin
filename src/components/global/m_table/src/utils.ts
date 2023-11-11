@@ -1,4 +1,4 @@
-import type { OptionProps } from "@/components/shared/type/common";
+import type { OptionProps } from "@/shared/type/common";
 import type { MTableColumnType, MTablePropType } from "./type";
 
 import { isArray } from "lodash";

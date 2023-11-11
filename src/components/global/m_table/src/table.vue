@@ -42,7 +42,7 @@
 import { ElTable, ElEmpty } from "element-plus";
 import MTableColumn from "./table_column.vue";
 
-import type { OptionProps } from "@/components/shared/type/common";
+import type { OptionProps } from "@/shared/type/common";
 import type { TableInstance } from "element-plus";
 import type { MTableEmitsType, MTablePropType } from "./type";
 

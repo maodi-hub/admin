@@ -98,7 +98,7 @@ const columns: MTableColumnType[] = [
 ];
 
 const requestFn = () => {
-  const data = new Array(100).fill(0).map((val, idx) => ({
+  const data = new Array(10).fill(0).map((val, idx) => ({
     asdasd0: "asd" + idx,
     asdasd1: "",
     asdasd2: idx % 2 ? "asd" + idx : "",
@@ -128,9 +128,7 @@ const onRadioChange = (newValue: any, oldValue: any) => {
   console.log(newValue, oldValue);
 };
 
-const afterResponse = (
-  res: { asdasd0: string; asdasd1: string; asdasd2: string }[]
-) => {
+const afterResponse = (res: { asdasd0: string; asdasd1: string; asdasd2: string }[]) => {
   return res;
 };
 

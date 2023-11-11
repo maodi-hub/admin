@@ -9,11 +9,8 @@
     <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
       <slot :name="slot" v-bind="scope"></slot>
     </template>
-    <template v-for="item in select_list" :key="item[propsOption.value]">
-      <el-option
-        :value="item[propsOption.value]"
-        :disabled="item[propsOption.disabled]"
-      >
+    <template v-for="item in optionList" :key="item[propsOption.value]">
+      <el-option :value="item[propsOption.value]" :disabled="item[propsOption.disabled]">
         <slot name="option_item" v-bind="item">
           {{ item[propsOption.label] }}
         </slot>
@@ -27,10 +24,9 @@ import { ElSelect, ElOption } from "element-plus";
 
 import type { MSelectEmitType, MSelectPropType } from "./type";
 
-import { computed, watch } from "vue";
-import { isArray } from "lodash";
+import { computed } from "vue";
 
-import { useSelect } from "./hooks";
+import { useOptions } from "@/hooks/useOptions";
 
 defineOptions({
   name: "MSelect",
@@ -42,8 +38,9 @@ const $props = withDefaults(defineProps<MSelectPropType<OP>>(), {
 });
 const $emit = defineEmits<MSelectEmitType>();
 
-const { loading, optionsList, handleGetData } = useSelect<OP>(
-  $props.enumOption
+const { loading, optionList, propsOption, handleGetData } = useOptions<OP>(
+  $props.enumOption,
+  $props.props
 );
 
 const input_value = computed({
@@ -55,32 +52,10 @@ const input_value = computed({
   },
 });
 
-const select_list = computed(() => {
-  if (isArray($props.enumOption)) {
-    return $props.enumOption;
-  }
-  return optionsList.value;
-});
-
-const propsOption = computed(() => {
-  const {
-    label = "label",
-    value = "value",
-    disabled = "disabled",
-  } = $props.props || {};
-  return {
-    label,
-    value,
-    disabled,
-  };
-});
-
 if ($props.immediate) handleGetData();
 
-watch(() => $props.enumOption, handleGetData);
-
 defineExpose({
-  optionsList,
+  optionList,
   handleGetData,
 });
 </script>

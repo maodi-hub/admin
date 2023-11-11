@@ -12,21 +12,14 @@
         <component :is="_renderLabel" v-bind="slot_prop.label" />
       </template>
       <ElSpace :size="2" v-else>
-        <slot
-          :name="getSlotName(uniqueKey, FORM_LABEL_SUFFIX)"
-          v-bind="slot_prop.label"
-        >
+        <slot :name="getSlotName(uniqueKey, FORM_LABEL_SUFFIX)" v-bind="slot_prop.label">
           <span>{{ label }}</span>
           <template v-if="tips">
             <ElTooltip placement="top">
               <template #content>
                 <component :is="tips" />
               </template>
-              <MIcon
-                name="Warning"
-                size="14px"
-                color="var(--el-color-warning)"
-              />
+              <MIcon name="Warning" size="14px" color="var(--el-color-warning)" />
             </ElTooltip>
           </template>
           <span v-if="labelSuffix">{{ labelSuffix }}</span>
@@ -41,11 +34,7 @@
       <template v-if="hasChildren">
         <template v-for="item in hasChildren" :key="item.uniqueKey">
           <MFormItem v-bind="item" v-if="item.isShow ?? true">
-            <template
-              v-for="slot in Object.keys($slots)"
-              :key="slot"
-              #[slot]="scope"
-            >
+            <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]="scope">
               <slot :name="slot" v-bind="scope" />
             </template>
           </MFormItem>
@@ -61,13 +50,13 @@
         :name="getSlotName(uniqueKey, FORM_CONTENT_SUFFIX)"
         v-bind="slot_prop.content"
       >
+        <component
+          v-if="component"
+          :is="component.name"
+          v-model="searcParam[prop!]"
+          v-bind="component"
+        ></component>
       </slot>
-      <component
-        v-if="component"
-        :is="component.name"
-        v-model="searcParam[prop!]"
-        v-bind="component"
-      ></component>
     </template>
   </ElFormItem>
 </template>
@@ -80,7 +69,7 @@ import type { MFormItemPropType } from "./type";
 import { computed, inject } from "vue";
 import { isArray, omit, pick } from "lodash";
 
-import { getSlotName } from "@/components/shared";
+import { getSlotName } from "@/shared";
 
 import {
   FORM_LABEL_SUFFIX,
