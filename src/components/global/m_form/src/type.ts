@@ -4,6 +4,8 @@ import type { VNode } from "vue";
 import type { MInputPropType } from "../../m_input";
 import type { MTextareaPropType } from "../../m_textarea";
 import type { MSelectPropType } from "../../m_select";
+import type { MCheckboxPropType } from "../../m_checkbox";
+import type { MRadioPropType } from "../../m_radio";
 
 interface MFormPropType {
   inline?: boolean;
@@ -32,7 +34,7 @@ interface MFormItemPropType {
   ) => VNode;
   _renderContent?: (prop: { item: MFormItemPropType }) => VNode;
   _children?: MFormItemPropType[];
-  component?: InputType | TextareaType | SelectType;
+  component?: InputType | TextareaType | SelectType | CheckBoxType | RadioType;
 }
 
 interface InputType extends MInputPropType {
@@ -45,6 +47,14 @@ interface TextareaType extends MTextareaPropType {
 
 interface SelectType extends MSelectPropType {
   name: "MSelect";
+}
+
+interface CheckBoxType extends MCheckboxPropType {
+  name: "MCheckbox"
+}
+
+interface RadioType extends MRadioPropType {
+  name: "MRadio"
 }
 
 type MFormInstance = InstanceType<typeof import("./form.vue")["default"]>;

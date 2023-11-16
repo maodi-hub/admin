@@ -1,13 +1,13 @@
 <template>
   <ElSelect
-    v-model="input_value"
+    v-model="value"
     :disabled="disabled"
     :multiple="mutiple"
     :clearable="clearable"
     :loading="loading"
   >
-    <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
-      <slot :name="slot" v-bind="scope"></slot>
+    <template #prefix>
+      <slot name="prefix" />
     </template>
     <template v-for="item in optionList" :key="item[propsOption.value]">
       <el-option :value="item[propsOption.value]" :disabled="item[propsOption.disabled]">
@@ -43,7 +43,7 @@ const { loading, optionList, propsOption, handleGetData } = useOptions<OP>(
   $props.props
 );
 
-const input_value = computed({
+const value = computed({
   get() {
     return $props.modelValue;
   },

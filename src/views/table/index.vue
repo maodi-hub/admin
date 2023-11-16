@@ -55,6 +55,9 @@ const form_items: MFormItemPropType[] = [
     uniqueKey: "as",
     prop: "a",
     label: "Asdasd",
+    tips() {
+      return <>asd</>;
+    },
     component: {
       name: "MInput",
     },
@@ -65,6 +68,42 @@ const form_items: MFormItemPropType[] = [
     label: "dvdv",
     component: {
       name: "MInput",
+    },
+  },
+  {
+    uniqueKey: "asdad",
+    prop: "dc",
+    label: "dvdv",
+    component: {
+      name: "MCheckbox",
+      enumOption: [
+        {
+          value: "A",
+          label: "test1",
+        },
+        {
+          value: "B",
+          label: "test2",
+        },
+      ],
+    },
+  },
+  {
+    uniqueKey: "asdasdf",
+    prop: "dcff",
+    label: "dvdv",
+    component: {
+      name: "MRadio",
+      enumOption: [
+        {
+          value: "A",
+          label: "test1",
+        },
+        {
+          value: "B",
+          label: "test2",
+        },
+      ],
     },
   },
 ];

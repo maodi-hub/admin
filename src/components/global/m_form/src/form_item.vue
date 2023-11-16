@@ -11,20 +11,12 @@
       <template v-if="_renderLabel">
         <component :is="_renderLabel" v-bind="slot_prop.label" />
       </template>
-      <ElSpace :size="2" v-else>
+      <template v-else>
         <slot :name="getSlotName(uniqueKey, FORM_LABEL_SUFFIX)" v-bind="slot_prop.label">
-          <span>{{ label }}</span>
-          <template v-if="tips">
-            <ElTooltip placement="top">
-              <template #content>
-                <component :is="tips" />
-              </template>
-              <MIcon name="Warning" size="14px" color="var(--el-color-warning)" />
-            </ElTooltip>
-          </template>
+          {{ label }}
           <span v-if="labelSuffix">{{ labelSuffix }}</span>
         </slot>
-      </ElSpace>
+      </template>
     </template>
     <!-- 默认内容 -->
     <template #default>
@@ -57,6 +49,14 @@
           v-bind="component"
         ></component>
       </slot>
+      <template v-if="tips">
+        <ElTooltip placement="top">
+          <template #content>
+            <component :is="tips" />
+          </template>
+          <MIcon name="Warning" size="14px" color="var(--el-color-warning)" />
+        </ElTooltip>
+      </template>
     </template>
   </ElFormItem>
 </template>

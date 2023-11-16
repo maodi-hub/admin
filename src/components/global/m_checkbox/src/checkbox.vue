@@ -1,28 +1,31 @@
 <template>
-  <ElRadioGroup v-model="value" :disabled="disabled">
-    <template v-for="item in optionList" :key="item.value">
-      <ElRadio :label="item[propsOption.value]" :disabled="item[propsOption.disabled]">
+  <ElCheckboxGroup v-model="value" :disabled="disabled">
+    <template v-for="item in optionList" :key="item[propsOption.value]">
+      <ElCheckbox :label="item[propsOption.value]" :disabled="item[propsOption.disabled]">
         {{ item[propsOption.label] }}
-      </ElRadio>
+      </ElCheckbox>
     </template>
-  </ElRadioGroup>
+  </ElCheckboxGroup>
 </template>
 
 <script setup lang="ts" generic="OP extends Record<string, any>">
-import { ElRadio, ElRadioGroup } from "element-plus";
+import { ElCheckboxGroup, ElCheckbox } from "element-plus";
 
-import type { MRadioEmitType, MRadioPropType } from "./type";
+import type { MCheckboxEmitType, MCheckboxPropType } from "./type";
 
 import { computed } from "vue";
 
 import { useOptions } from "@/hooks/useOptions";
 
 defineOptions({
-  name: "MRadio",
+  name: "MCheckbox",
 });
 
-const $props = withDefaults(defineProps<MRadioPropType<OP>>(), {});
-const $emit = defineEmits<MRadioEmitType>();
+const $props = withDefaults(defineProps<MCheckboxPropType<OP>>(), {
+  immediate: true,
+  clearable: true,
+});
+const $emit = defineEmits<MCheckboxEmitType>();
 
 const { optionList, propsOption, handleGetData } = useOptions<OP>(
   $props.enumOption,

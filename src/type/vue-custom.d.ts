@@ -16,6 +16,7 @@ declare module "vue" {
     MInput: typeof import("@/components/global/m_input")["MInput"];
     MSelect: typeof import("@/components/global/m_select")["MSelect"];
     MRadio: typeof import("@/components/global/m_radio")["MRadio"];
+    MCheckbox: typeof import("@/components/global/m_checkbox")["MCheckbox"];
     MTextArea: typeof import("@/components/global/m_textarea")["MTextArea"];
     MPagination: typeof import("@/components/global/m_pagination")["MPagiantion"];
   }
