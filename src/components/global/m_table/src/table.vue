@@ -1,6 +1,6 @@
 <template>
   <ElTable
-    ref="table_ref"
+    ref="tableInstance"
     :data="data"
     :height="height"
     :max-height="maxHeight"
@@ -14,11 +14,7 @@
     <slot />
     <template v-for="column in columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
-        <template
-          v-for="slot in Object.keys($slots)"
-          #[slot]="scope"
-          :key="slot"
-        >
+        <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
           <slot :name="slot" v-bind="scope"></slot>
         </template>
       </MTableColumn>
@@ -85,18 +81,14 @@ const { radio_id, getRadioData, setRadio } = useTableRadio<CP>({
 watch(
   () => unref(radio_id),
   (n, o) => {
-    $emit(
-      "radioChange",
-      getRadioData(n, $props.data),
-      getRadioData(o, $props.data)
-    );
+    $emit("radioChange", getRadioData(n, $props.data), getRadioData(o, $props.data));
   }
 );
 
-const table_ref = ref<TableInstance>();
+const tableInstance = ref<TableInstance>();
 // 拖拽排序
 const dragSort = () => {
-  const tbody = unref(table_ref)!.$el.querySelector(
+  const tbody = unref(tableInstance)!.$el.querySelector(
     ".el-table__body-wrapper tbody"
   ) as HTMLElement;
   Sortable.create(tbody, {
@@ -146,6 +138,7 @@ defineExpose({
   radio_id,
   setRadio,
   getRadioData,
+  tableInstance,
 });
 </script>
 

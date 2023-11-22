@@ -12,7 +12,11 @@
     <template #custom-button>
       <ElButton type="primary">新增</ElButton>
     </template>
+    <template #operation_column>
+      <el-button type="primary" @click="show = true">asdd</el-button>
+    </template>
   </MTablePage>
+  <MModal v-model:visible="show" type="drawer" />
 </template>
 
 <script setup lang="tsx">
@@ -22,7 +26,9 @@ import { MTablePage } from "@/components/m_table_page";
 import type { MFormItemPropType } from "@/components/global/m_form";
 import type { MTableColumnType } from "@/components/global/m_table";
 
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+
+const show = ref(true);
 
 const initParam = { a: "sd", c: "Asd" };
 
@@ -126,13 +132,8 @@ const columns: MTableColumnType[] = [
     })),
   },
   {
-    label: "可编辑列",
-    uniqueKey: "asd" + 11,
-    prop: "asdasd" + 6,
-    type: "edit",
-    component: {
-      name: "MInput",
-    },
+    label: "操作",
+    uniqueKey: "operation",
   },
 ];
 

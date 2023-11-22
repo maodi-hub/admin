@@ -1,6 +1,6 @@
 <template>
   <ElForm
-    ref="form_ref"
+    ref="formInstance"
     :model="initParam"
     :inline="inline"
     :label-width="labelWidth"
@@ -40,49 +40,13 @@ const $props = withDefaults(defineProps<MFormPropType>(), {
   initParam: () => ({}),
 });
 
-const form_ref = ref<FormInstance>();
-
-const checkInstance = () => {
-  const form_instance = unref(form_ref);
-  if (!form_instance) {
-    throw new Error("form instance is null");
-  }
-};
-
-const validate = () => {
-  checkInstance();
-  return unref(form_ref)!.validate();
-};
-
-const validateField = (props?: Arrayable<FormItemProp>) => {
-  checkInstance();
-  return unref(form_ref)!.validateField(props);
-};
-
-const resetFields = (props?: Arrayable<FormItemProp>) => {
-  checkInstance();
-  return unref(form_ref)!.resetFields(props);
-};
-
-const scrollToField = (prop: FormItemProp) => {
-  checkInstance();
-  return unref(form_ref)!.resetFields(prop);
-};
-
-const clearValidate = (props?: Arrayable<FormItemProp>) => {
-  checkInstance();
-  return unref(form_ref)!.clearValidate(props);
-};
+const formInstance = ref<FormInstance>();
 
 provide(PARAM_KEY, $props.initParam);
 provide(LABEL_SUFFIX_KEY, $props.labelSuffix);
 
 defineExpose({
-  validate,
-  validateField,
-  resetFields,
-  scrollToField,
-  clearValidate,
+  formInstance,
 });
 </script>
 
