@@ -10,7 +10,11 @@
     <slot />
     <template v-for="item in formItems" :key="item.uniqueKey">
       <MFormItem v-bind="item" v-if="item.isShow ?? true">
-        <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]="scope">
+        <template
+          v-for="slot in Object.keys($slots)"
+          :key="slot"
+          #[slot]="scope"
+        >
           <slot :name="slot" v-bind="scope" />
         </template>
       </MFormItem>
@@ -22,11 +26,10 @@
 import { ElForm } from "element-plus";
 import MFormItem from "./form_item.vue";
 
-import type { Arrayable } from "@vueuse/core";
-import type { FormInstance, FormItemProp } from "element-plus";
+import type { FormInstance } from "element-plus";
 import type { MFormPropType } from "./type";
 
-import { provide, ref, unref } from "vue";
+import { provide, ref } from "vue";
 
 import { LABEL_SUFFIX_KEY, PARAM_KEY } from "./constant";
 

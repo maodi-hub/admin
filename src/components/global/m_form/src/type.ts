@@ -6,6 +6,7 @@ import type { MTextareaPropType } from "../../m_textarea";
 import type { MSelectPropType } from "../../m_select";
 import type { MCheckboxPropType } from "../../m_checkbox";
 import type { MRadioPropType } from "../../m_radio";
+import { MTipsPropType } from "../../m_tips";
 
 interface MFormPropType {
   inline?: boolean;
@@ -17,7 +18,7 @@ interface MFormPropType {
   formItems?: MFormItemPropType[];
 }
 
-interface MFormItemPropType {
+interface MFormItemPropType extends MTipsPropType {
   searchParam?: Record<string, any>;
   uniqueKey: string;
   prop?: string;
@@ -26,14 +27,13 @@ interface MFormItemPropType {
   rules?: Arrayable<FormItemRule>;
   isShow?: boolean;
   defaultValue?: any;
-  tips?: () => VNode;
   _renderLabel?: (
     prop: Pick<MFormItemPropType, "label" | "tips"> & {
       labelSuffix: string | undefined;
     }
   ) => VNode;
   _renderContent?: (prop: { item: MFormItemPropType }) => VNode;
-  _children?: MFormItemPropType[];
+  // _children?: MFormItemPropType[];
   component?: InputType | TextareaType | SelectType | CheckBoxType | RadioType;
 }
 
@@ -50,11 +50,11 @@ interface SelectType extends MSelectPropType {
 }
 
 interface CheckBoxType extends MCheckboxPropType {
-  name: "MCheckbox"
+  name: "MCheckbox";
 }
 
 interface RadioType extends MRadioPropType {
-  name: "MRadio"
+  name: "MRadio";
 }
 
 type MFormInstance = InstanceType<typeof import("./form.vue")["default"]>;

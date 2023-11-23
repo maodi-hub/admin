@@ -1,12 +1,8 @@
-import type { FormItemRule, TableColumnCtx } from "element-plus";
-import type { Arrayable } from "@vueuse/core";
+import type { TableColumnCtx } from "element-plus";
 import type { VNode } from "vue";
 import type { MFormItemPropType } from "@/components/global/m_form";
-
-import type {
-  EnumOptionType,
-  OptionProps,
-} from "@/shared/type/common";
+import type { EnumOptionType, OptionProps } from "@/shared/type/common";
+import type { MTipsPropType } from "../../m_tips";
 
 interface RenderScope<T> {
   row: T;
@@ -47,7 +43,8 @@ type CellAlignType = "right" | "left" | "center" | (string & {});
 type ColumnFixedPositionType = "right" | "left" | boolean;
 
 interface MTableColumnPropType<CP = any>
-  extends Pick<MTablePropType, "defaultValue"> {
+  extends Pick<MTablePropType, "defaultValue">,
+    MTipsPropType {
   type?:
     | "index"
     | "selection"

@@ -8,6 +8,7 @@ declare module "vue" {
     MDialog: typeof import("@/components/global/m_modal")["MDialog"];
     MDrawer: typeof import("@/components/global/m_modal")["MDrawer"];
     MModal: typeof import("@/components/global/m_modal")["MModal"];
+    MTips: typeof import("@/components/global/m_tips")["MTips"];
     MTable: typeof import("@/components/global/m_table")["MTable"];
     MIcon: typeof import("@/components/global/m_icon")["MIcon"];
     MEcharts: typeof import("@/components/global/m_echarts")["MEcharts"];

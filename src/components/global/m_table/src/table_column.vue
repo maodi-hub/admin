@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="tsx">
-import { ElTableColumn, ElTag, ElRadio } from "element-plus";
+import { ElTableColumn, ElTag, ElRadio, ElTooltip } from "element-plus";
 import { MIcon } from "@/components/global/m_icon";
 import { MOverflowPrompt } from "@/components/style/overflow_prompt";
 import { MFormItem } from "@/components/global/m_form";
@@ -40,6 +40,7 @@ import {
   ROW_KEY,
   INDEX_SUFFIX,
 } from "./constant";
+import { MTips } from "../../m_tips";
 
 defineOptions({
   name: "MTableColumn",
@@ -74,6 +75,7 @@ const TableCell = (column: MTableColumnType) => {
     _formatter,
     _renderHeader,
     _renderCell,
+    tips,
   } = column;
 
   const enums = unref(enumMap)?.get(uniqueKey) ?? [];
@@ -88,13 +90,17 @@ const TableCell = (column: MTableColumnType) => {
       type={filterColumnType(type)}
       label={label}
       prop={prop}
-      width={type && ["radio", "sort"].includes(type) ? width ?? "50px" : void 0}
+      width={
+        type && ["radio", "sort"].includes(type) ? width ?? "50px" : void 0
+      }
       min-width={minWidth}
       header-align={headerAlign ?? cellAlign ?? "center"}
       align={cellAlign ?? "center"}
       fixed={fixed}
       sortable={sortable}
-      showOverflowTooltip={whetherSetOverFlow(uniqueKey, type) || showOverflowToolTip}
+      showOverflowTooltip={
+        whetherSetOverFlow(uniqueKey, type) || showOverflowToolTip
+      }
     >
       {{
         default: (scope: RenderScope<any>) => {
@@ -124,7 +130,12 @@ const TableCell = (column: MTableColumnType) => {
             return column_slot({ row, cellValue: row[prop!], column, $index });
           }
 
-          let cellValue = getCellValue(row, prop, global_default_value, defaultValue);
+          let cellValue = getCellValue(
+            row,
+            prop,
+            global_default_value,
+            defaultValue
+          );
 
           if (isFunction(_formatter)) {
             cellValue = _formatter(row, cellValue, $index, column);
@@ -142,9 +153,12 @@ const TableCell = (column: MTableColumnType) => {
           }
           return (
             <>
-              <MOverflowPrompt style="width: 100%" canShow={showOverflowHeadToolTip}>
-                {type && ["index", "sort", "radio"].includes(type) ? label ?? "#" : label}
-              </MOverflowPrompt>
+              {tips && <MTips tips={tips} />}
+              <span>
+                {type && ["index", "sort", "radio"].includes(type)
+                  ? label ?? "#"
+                  : label}
+              </span>
             </>
           );
         },
@@ -181,14 +195,18 @@ const RenderWithType = (
         return _renderCell(row, row[prop!], $index, column);
       }
 
-      return <>{expand_slot ? expand_slot({ row, column, $index }) : row[prop!]}</>;
+      return (
+        <>{expand_slot ? expand_slot({ row, column, $index }) : row[prop!]}</>
+      );
     },
     index: () => {
       const index_slot = $slot[getSlotName(uniqueKey, INDEX_SUFFIX)];
       if (isFunction(_renderCell)) {
         return _renderCell(row, row[prop!], $index, column);
       }
-      return <>{index_slot ? index_slot({ row, column, $index }) : $index + 1}</>;
+      return (
+        <>{index_slot ? index_slot({ row, column, $index }) : $index + 1}</>
+      );
     },
     sort: () => (
       <div class="flex jc-center ai-center" style="height: 100%">
@@ -208,7 +226,7 @@ const RenderEditContent = (props: {
   $index: number;
   enumOption: OptionProps;
 }) => {
-  const { column, $index, enumOption, row } = props;
+  const { column, $index, row } = props;
   const { prop, uniqueKey, _renderCell } = column;
   const form_item = column as MTableColumnEditPropType;
   const edit_slot = $slot[getSlotName(uniqueKey, EDIT_CLOUMN_SUFFIX)];

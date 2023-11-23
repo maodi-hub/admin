@@ -1,11 +1,12 @@
 <template>
   <MTablePage
     row-key="asdasd0"
+    inline
+    :init-param="initParam"
     :columns="columns"
     :request-fn="requestFn"
     :after-response="afterResponse"
     :form-items="form_items"
-    label-width="auto"
     is-deep-reactive
   >
     <template #asd6_edit_column> dasd </template>
@@ -30,7 +31,7 @@ import { reactive, ref } from "vue";
 
 const show = ref(true);
 
-const initParam = { a: "sd", c: "Asd" };
+const initParam = { a: "sd", d: "Asd", dc: "123" };
 
 const form_items: MFormItemPropType[] = [
   {
@@ -61,9 +62,7 @@ const form_items: MFormItemPropType[] = [
     uniqueKey: "as",
     prop: "a",
     label: "Asdasd",
-    tips() {
-      return <>asd</>;
-    },
+    tips: "asdsdfs",
     component: {
       name: "MInput",
     },
@@ -76,42 +75,6 @@ const form_items: MFormItemPropType[] = [
       name: "MInput",
     },
   },
-  {
-    uniqueKey: "asdad",
-    prop: "dc",
-    label: "dvdv",
-    component: {
-      name: "MCheckbox",
-      enumOption: [
-        {
-          value: "A",
-          label: "test1",
-        },
-        {
-          value: "B",
-          label: "test2",
-        },
-      ],
-    },
-  },
-  {
-    uniqueKey: "asdasdf",
-    prop: "dcff",
-    label: "dvdv",
-    component: {
-      name: "MRadio",
-      enumOption: [
-        {
-          value: "A",
-          label: "test1",
-        },
-        {
-          value: "B",
-          label: "test2",
-        },
-      ],
-    },
-  },
 ];
 
 const types = ["index", "selection", "radio", "sort", "expand", "tag"] as const;
@@ -121,7 +84,7 @@ const columns: MTableColumnType[] = [
     label: "test asd 1",
     uniqueKey: "test asd11",
     _children: new Array(10).fill(0).map((val, idx) => ({
-      label: !idx || idx == 2 ? void 0 : "test 11235666 " + idx,
+      label: idx < 5 ? void 0 : "test 11235666 " + idx,
       uniqueKey: "asd" + idx,
       prop: "asdasd" + idx,
       type: types[idx],
@@ -129,7 +92,10 @@ const columns: MTableColumnType[] = [
         { label: "test", value: "5 " + idx, type: "success" },
         { label: "test2", value: "", type: "danger" },
       ],
+      tips: idx > 5 ? "test message" : "",
+      sortable: idx > 5,
     })),
+    tips: "test message",
   },
   {
     label: "操作",
@@ -168,7 +134,9 @@ const onRadioChange = (newValue: any, oldValue: any) => {
   console.log(newValue, oldValue);
 };
 
-const afterResponse = (res: { asdasd0: string; asdasd1: string; asdasd2: string }[]) => {
+const afterResponse = (
+  res: { asdasd0: string; asdasd1: string; asdasd2: string }[]
+) => {
   return res;
 };
 

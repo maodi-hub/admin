@@ -14,7 +14,11 @@
     <slot />
     <template v-for="column in columns" :key="column.uniqueKey">
       <MTableColumn v-bind="column">
-        <template v-for="slot in Object.keys($slots)" #[slot]="scope" :key="slot">
+        <template
+          v-for="slot in Object.keys($slots)"
+          #[slot]="scope"
+          :key="slot"
+        >
           <slot :name="slot" v-bind="scope"></slot>
         </template>
       </MTableColumn>
@@ -81,7 +85,11 @@ const { radio_id, getRadioData, setRadio } = useTableRadio<CP>({
 watch(
   () => unref(radio_id),
   (n, o) => {
-    $emit("radioChange", getRadioData(n, $props.data), getRadioData(o, $props.data));
+    $emit(
+      "radioChange",
+      getRadioData(n, $props.data),
+      getRadioData(o, $props.data)
+    );
   }
 );
 
@@ -150,16 +158,18 @@ defineExpose({
       padding-left: 0;
     }
   }
-  :deep(.el-table__cell) {
-    &.el-table-column--selection {
-      .cell {
-        justify-content: center;
+  :deep(.el-table__body) {
+    .el-table__cell {
+      &.el-table-column--selection {
+        .cell {
+          justify-content: center;
+        }
       }
-    }
-    .el-form-item {
-      margin: 0;
-      .el-form-item__label {
-        display: none;
+      .el-form-item {
+        margin: 0;
+        .el-form-item__label {
+          display: none;
+        }
       }
     }
   }

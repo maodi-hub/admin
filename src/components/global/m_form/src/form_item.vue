@@ -12,7 +12,10 @@
         <component :is="_renderLabel" v-bind="slot_prop.label" />
       </template>
       <template v-else>
-        <slot :name="getSlotName(uniqueKey, FORM_LABEL_SUFFIX)" v-bind="slot_prop.label">
+        <slot
+          :name="getSlotName(uniqueKey, FORM_LABEL_SUFFIX)"
+          v-bind="slot_prop.label"
+        >
           {{ label }}
           <span v-if="labelSuffix">{{ labelSuffix }}</span>
         </slot>
@@ -20,54 +23,40 @@
     </template>
     <!-- 默认内容 -->
     <template #default>
-      <!-- 默认内容 -->
-      <slot />
-      <!-- 嵌套表单项 -->
-      <template v-if="hasChildren">
-        <template v-for="item in hasChildren" :key="item.uniqueKey">
-          <MFormItem v-bind="item" v-if="item.isShow ?? true">
-            <template v-for="slot in Object.keys($slots)" :key="slot" #[slot]="scope">
-              <slot :name="slot" v-bind="scope" />
-            </template>
-          </MFormItem>
+      <div class="flex flex-1 ai-center gap-5 min-w-0 f-wrap">
+        <!-- 自定义渲染 -->
+        <template v-if="_renderContent">
+          <component :is="_renderContent" :item="$props" />
         </template>
-      </template>
-      <!-- 自定义渲染 -->
-      <template v-else-if="_renderContent">
-        <component :is="_renderContent" :item="$props" />
-      </template>
-      <!-- unikey插槽内容 -->
-      <slot
-        v-else
-        :name="getSlotName(uniqueKey, FORM_CONTENT_SUFFIX)"
-        v-bind="slot_prop.content"
-      >
-        <component
-          v-if="component"
-          :is="component.name"
-          v-model="searcParam[prop!]"
-          v-bind="component"
-        ></component>
-      </slot>
-      <template v-if="tips">
-        <ElTooltip placement="top">
-          <template #content>
-            <component :is="tips" />
-          </template>
-          <MIcon name="Warning" size="14px" color="var(--el-color-warning)" />
-        </ElTooltip>
-      </template>
+        <!-- 默认内容 -->
+        <slot v-else>
+          <component
+            v-if="component"
+            :is="component.name"
+            v-model="searcParam[prop!]"
+            v-bind="component"
+            class="flex-1 min-w-0"
+          ></component>
+        </slot>
+        <!-- unikey插槽内容 -->
+        <slot
+          :name="getSlotName(uniqueKey, FORM_CONTENT_SUFFIX)"
+          v-bind="slot_prop.content"
+        >
+        </slot>
+        <MTips :tips="tips" v-if="tips" />
+      </div>
     </template>
   </ElFormItem>
 </template>
 
 <script setup lang="ts">
-import { ElFormItem, ElTooltip, ElSpace } from "element-plus";
+import { ElFormItem } from "element-plus";
 
 import type { MFormItemPropType } from "./type";
 
 import { computed, inject } from "vue";
-import { isArray, omit, pick } from "lodash";
+import { omit, pick } from "lodash";
 
 import { getSlotName } from "@/shared";
 
@@ -98,12 +87,6 @@ const slot_prop = computed(() => {
     label: { ...label, labelSuffix },
     content,
   };
-});
-
-const hasChildren = computed(() => {
-  const { _children } = $props;
-  if (!isArray(_children)) return;
-  return _children;
 });
 
 defineSlots<Record<string, any>>();
